@@ -11,7 +11,8 @@ import {
   Users,
   Instagram,
   Facebook,
-  Youtube
+  Youtube,
+  Brain
 } from "lucide-react"
 
 // AdEase Color System
@@ -75,7 +76,7 @@ export const steps = [
     step: "02", 
     title: "AI Creates Everything",
     description: "Our AI generates viral captions, hashtags, and optimizes content for each platform automatically.",
-    icon: Sparkles,
+    icon: Brain,
   },
   {
     step: "03",

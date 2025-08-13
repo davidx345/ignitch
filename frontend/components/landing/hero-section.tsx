@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Instagram, Sparkles } from "lucide-react"
+import { Instagram, Brain } from "lucide-react"
 import { colors } from "@/constants/landing"
 
 interface HeroSectionProps {
@@ -23,7 +23,7 @@ export default function HeroSection({ email, onEmailChange, onEmailSubmit }: Her
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
             <div>
               <Badge className="px-4 py-2 mb-6" style={{ backgroundColor: `${colors.mint}20`, color: colors.mint }}>
-                🚀 AI-Powered Business Growth
+                  AI-Powered Business Growth
               </Badge>
               <h1 className="text-5xl lg:text-6xl font-bold leading-tight mb-6" style={{ color: colors.ink }}>
                 Generate Social Media Ads in{" "}
@@ -76,14 +76,14 @@ export default function HeroSection({ email, onEmailChange, onEmailSubmit }: Her
                   <div className="bg-gradient-to-br from-purple-600 to-blue-600 p-8 text-white">
                     <div className="flex items-center space-x-3 mb-6">
                       <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                        <Sparkles className="w-5 h-5" />
+                        <Brain className="w-5 h-5" />
                       </div>
                       <span className="font-semibold">AI Working...</span>
                     </div>
                     <div className="space-y-4">
                       <div className="bg-white/10 rounded-lg p-4">
                         <p className="text-sm opacity-90">
-                          ✨ Just dropped this amazing piece! The quality is unreal...
+                           Just dropped this amazing piece! The quality is unreal...
                         </p>
                       </div>
                       <div className="flex space-x-2">

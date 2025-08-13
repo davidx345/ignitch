@@ -18,7 +18,7 @@ export default function LandingNavigation() {
             </div>
             <div>
               <h1 className="text-xl font-bold" style={{ color: colors.ink }}>
-                AdEase
+                Ignitch
               </h1>
             </div>
           </div>

@@ -17,7 +17,7 @@ export default function Footer() {
                 A
               </div>
               <h3 className="text-xl font-bold" style={{ color: colors.ink }}>
-                AdEase
+                Ignitch
               </h3>
             </div>
             <p className="text-gray-600 mb-6">

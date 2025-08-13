@@ -3,9 +3,9 @@ import './globals.css'
 import { AuthProvider } from '@/contexts/auth-context'
 
 export const metadata: Metadata = {
-  title: 'AdFlow - AI-Powered Social Media Marketing',
+  title: 'Ignitch - AI-Powered Social Media Marketing',
   description: 'Create, schedule, and optimize your social media content with AI',
-  generator: 'AdFlow',
+  generator: 'Ignitch',
 }
 
 export default function RootLayout({
