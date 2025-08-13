@@ -69,56 +69,64 @@ export default function Dashboard() {
     <div className="min-h-screen" style={{ backgroundColor: colors.gray }}>
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-3">
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{ backgroundColor: colors.primary }}
-              >
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
               <div>
-                <h1 className="text-2xl font-bold" style={{ color: colors.ink }}>
+                <h1 className="text-xl sm:text-2xl font-bold" style={{ color: colors.ink }}>
                   Ignitch Dashboard
                 </h1>
-                <p className="text-sm text-gray-600">Welcome back! Your AI-powered social media assistant is ready.</p>
+                <p className="text-xs sm:text-sm text-gray-600">Welcome back! Your AI-powered social media assistant is ready.</p>
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
-              <Card className="px-4 py-2">
-                <div className="flex items-center space-x-3">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+              <Card className="px-3 py-2 sm:px-4">
+                <div className="flex items-center space-x-2 sm:space-x-3">
                   <Award className="w-4 h-4" style={{ color: colors.mint }} />
-                  <span className="text-sm font-semibold">Visibility Score: {visibilityScore}/100</span>
+                  <span className="text-xs sm:text-sm font-semibold">Visibility Score: {visibilityScore}/100</span>
                 </div>
               </Card>
-              <Button variant="outline" onClick={() => (window.location.href = "/billboards")}>
-                Billboard Marketplace
-              </Button>
-              <Button style={{ backgroundColor: colors.primary }} onClick={() => (window.location.href = "/upload")}>
-                <Upload className="w-4 h-4 mr-2" />
-                Create New Ad
-              </Button>
+              <div className="flex space-x-2 w-full sm:w-auto">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="flex-1 sm:flex-none text-xs sm:text-sm"
+                  onClick={() => (window.location.href = "/billboards")}
+                >
+                  Billboard Marketplace
+                </Button>
+                <Button 
+                  size="sm"
+                  className="flex-1 sm:flex-none text-xs sm:text-sm"
+                  style={{ backgroundColor: colors.primary }} 
+                  onClick={() => (window.location.href = "/upload")}
+                >
+                  <Upload className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  Create Ad
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         {/* Main Dashboard Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="ai-coach" className="flex items-center gap-2">
-              <Brain className="h-4 w-4" />
-              AI Coach
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto">
+            <TabsTrigger value="overview" className="text-xs sm:text-sm">Overview</TabsTrigger>
+            <TabsTrigger value="ai-coach" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+              <Brain className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">AI Coach</span>
+              <span className="sm:hidden">AI</span>
             </TabsTrigger>
-            <TabsTrigger value="auto-pilot" className="flex items-center gap-2">
-              <Bot className="h-4 w-4" />
-              Auto-Pilot
+            <TabsTrigger value="auto-pilot" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+              <Bot className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Auto-Pilot</span>
+              <span className="sm:hidden">Auto</span>
             </TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="analytics" className="text-xs sm:text-sm">Analytics</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -199,27 +207,27 @@ export default function Dashboard() {
                 <h3 className="text-xl font-bold mb-6" style={{ color: colors.ink }}>
                   Quick Actions
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   <Button
                     size="lg"
-                    className="h-16 flex-col space-y-2"
+                    className="h-12 sm:h-16 flex-col space-y-1 sm:space-y-2 text-xs sm:text-sm"
                     style={{ backgroundColor: colors.primary }}
                     onClick={() => (window.location.href = "/upload")}
                   >
-                    <Upload className="w-6 h-6" />
+                    <Upload className="w-4 h-4 sm:w-6 sm:h-6" />
                     <span>Upload & Create</span>
                   </Button>
-                  <Button size="lg" variant="outline" className="h-16 flex-col space-y-2 bg-transparent">
-                    <Calendar className="w-6 h-6" />
+                  <Button size="lg" variant="outline" className="h-12 sm:h-16 flex-col space-y-1 sm:space-y-2 bg-transparent text-xs sm:text-sm">
+                    <Calendar className="w-4 h-4 sm:w-6 sm:h-6" />
                     <span>Schedule Posts</span>
                   </Button>
                   <Button 
                     size="lg" 
                     variant="outline" 
-                    className="h-16 flex-col space-y-2 bg-transparent"
+                    className="h-12 sm:h-16 flex-col space-y-1 sm:space-y-2 bg-transparent text-xs sm:text-sm"
                     onClick={() => (window.location.href = "/billboards")}
                   >
-                    <BarChart3 className="w-6 h-6" />
+                    <BarChart3 className="w-4 h-4 sm:w-6 sm:h-6" />
                     <span>Billboard Ads</span>
                   </Button>
                 </div>

@@ -488,8 +488,8 @@ export default function BillboardMarketplace() {
   const renderBookingModal = () => (
     <div className={`fixed inset-0 z-50 ${showBookingModal ? '' : 'hidden'}`}>
       <div className="fixed inset-0 bg-black/50" onClick={() => setShowBookingModal(false)} />
-      <div className="fixed left-1/2 top-1/2 z-50 w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
+      <div className="fixed left-1/2 top-1/2 z-50 w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg max-h-[90vh] overflow-y-auto mx-4">
+        <div className="p-4 sm:p-6">
           <div className="flex justify-between items-start mb-6">
             <div>
               <h2 className="text-2xl font-bold">Book Billboard</h2>
@@ -653,14 +653,14 @@ export default function BillboardMarketplace() {
   )
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="max-w-7xl mx-auto p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Billboard Marketplace</h1>
-          <p className="text-gray-600">Find the perfect billboard for your advertising campaign</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Billboard Marketplace</h1>
+          <p className="text-sm sm:text-base text-gray-600">Find the perfect billboard for your advertising campaign</p>
         </div>
         
-        <Button variant="outline" onClick={() => setShowFilters(!showFilters)}>
+        <Button variant="outline" onClick={() => setShowFilters(!showFilters)} className="w-full sm:w-auto">
           <Filter className="w-4 h-4 mr-2" />
           {showFilters ? 'Hide Filters' : 'Show Filters'}
         </Button>
@@ -674,7 +674,7 @@ export default function BillboardMarketplace() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {loading ? (
           Array.from({ length: 6 }).map((_, index) => (
             <Card key={index} className="animate-pulse">

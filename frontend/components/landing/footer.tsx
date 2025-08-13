@@ -14,7 +14,7 @@ export default function Footer() {
                 className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg"
                 style={{ backgroundColor: colors.primary }}
               >
-                A
+                I
               </div>
               <h3 className="text-xl font-bold" style={{ color: colors.ink }}>
                 Ignitch

@@ -8,12 +8,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Sparkles, Mail, Lock, Eye, EyeOff, Github } from "lucide-react"
+import { Mail, Lock, Eye, EyeOff, Github } from "lucide-react"
 import Link from "next/link"
 import { useAuth } from "@/contexts/auth-context"
 import { useRouter } from "next/navigation"
 
-// AdEase Color System
+// Ignitch Color System
 const colors = {
   primary: "#3D5AFE",
   coral: "#FF6B6B",
@@ -89,40 +89,10 @@ export default function SignInPage() {
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center px-4"
       style={{ backgroundColor: colors.gray }}
     >
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="absolute -top-40 -right-40 w-80 h-80 rounded-full opacity-20"
-          style={{ backgroundColor: colors.primary }}
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-        <motion.div
-          className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full opacity-20"
-          style={{ backgroundColor: colors.coral }}
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [360, 180, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-      </div>
-
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-md">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -130,14 +100,6 @@ export default function SignInPage() {
         >
           {/* Logo & Header */}
           <div className="text-center mb-8">
-            <motion.div
-              className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6"
-              style={{ backgroundColor: colors.primary }}
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
-            >
-              <Sparkles className="w-8 h-8 text-white" />
-            </motion.div>
             <h1 className="text-3xl font-bold mb-2" style={{ color: colors.ink }}>
               Welcome Back
             </h1>
