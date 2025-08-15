@@ -9,13 +9,8 @@ RUN apt-get update && apt-get install -y \
     libmagic1 \
     libmagic-dev \
     file \
-    libopencv-dev \
-    python3-opencv \
     curl \
     && rm -rf /var/lib/apt/lists/*
-
-# Create non-root user for security
-RUN groupadd -r appuser && useradd -r -g appuser appuser
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
@@ -27,19 +22,15 @@ RUN pip install --no-cache-dir gunicorn uvicorn[standard]
 # Copy application code
 COPY . .
 
-# Create uploads directory with proper permissions
-RUN mkdir -p uploads logs && \
-    chown -R appuser:appuser /app
-
-# Switch to non-root user
-USER appuser
+# Create uploads directory
+RUN mkdir -p uploads logs
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:${PORT:-8000}/health || exit 1
 
-# Expose port
-EXPOSE 8000
+# Expose port (Railway uses PORT env var, default to 8000)
+EXPOSE ${PORT:-8000}
 
-# Production command with multiple workers
-CMD ["gunicorn", "main:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000", "--access-logfile", "-", "--error-logfile", "-", "--log-level", "info"]
+# Production command optimized for Railway
+CMD gunicorn main:app -w 2 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:${PORT:-8000} --access-logfile - --error-logfile - --log-level info --timeout 120
