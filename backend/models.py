@@ -78,11 +78,11 @@ class MediaFile(Base):
     # Bulk upload tracking
     upload_batch_id = Column(String)  # Groups files uploaded together
     
-    # Dimensions and metadata
+        # Dimensions and metadata
     width = Column(Integer)
     height = Column(Integer)
-    duration = Column(Integer)  # For videos, in seconds
-    metadata = Column(JSON)  # EXIF data, etc.
+    duration = Column(Float)  # For videos
+    file_metadata = Column(JSON)  # EXIF data, etc. (renamed from metadata)
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     processed_at = Column(DateTime)
