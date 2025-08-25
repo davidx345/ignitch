@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from 'next/navigation'
 
 // Landing page components
 import LandingNavigation from "@/components/landing/navigation"
@@ -17,11 +18,17 @@ import Footer from "@/components/landing/footer"
 export default function LandingPage() {
   const [email, setEmail] = useState("")
 
+  const router = useRouter()
+  
   const handleEmailSubmit = () => {
     if (email.trim()) {
-      // Store email and redirect to signup
-      localStorage.setItem('adease_email', email)
-      window.location.href = "/signup"
+      try {
+        // Store email and redirect to signup
+        localStorage.setItem('adease_email', email)
+        router.push("/signup")
+      } catch (error) {
+        console.error('Error handling email submit:', error)
+      }
     }
   }
 
