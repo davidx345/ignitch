@@ -2,6 +2,7 @@
 
 import React from "react"
 import { motion } from "framer-motion"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { 
@@ -257,15 +258,15 @@ export default function Footer() {
             © 2024 Ignitch. All rights reserved. Enterprise AI Platform.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="text-slate-400 hover:text-white text-sm transition-colors duration-200">
+            <Link href="/privacy" className="text-slate-400 hover:text-white text-sm transition-colors duration-200">
               Privacy Policy
-            </a>
-            <a href="#" className="text-slate-400 hover:text-white text-sm transition-colors duration-200">
+            </Link>
+            <Link href="/terms" className="text-slate-400 hover:text-white text-sm transition-colors duration-200">
               Terms of Service
-            </a>
-            <a href="#" className="text-slate-400 hover:text-white text-sm transition-colors duration-200">
-              Cookie Policy
-            </a>
+            </Link>
+            <Link href="/data-deletion" className="text-slate-400 hover:text-white text-sm transition-colors duration-200">
+              Data Deletion
+            </Link>
           </div>
         </motion.div>
       </div>
