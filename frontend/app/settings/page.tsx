@@ -31,6 +31,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+// Update the import path to the correct location of Navigation component
 import Navigation from '@/components/enhanced-navigation'
 import { useAuth } from '@/contexts/auth-context'
 
@@ -83,7 +84,7 @@ interface UserSettings {
 }
 
 export default function SettingsPage() {
-  const { user, session, isLoading } = useAuth()
+  const { user, session, loading } = useAuth()
   const router = useRouter()
   const [settings, setSettings] = useState<UserSettings | null>(null)
   const [isSaving, setSaving] = useState(false)
@@ -91,10 +92,10 @@ export default function SettingsPage() {
   const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
-    if (!isLoading && !session) {
+    if (!loading && !session) {
       router.push('/signin?redirect=/settings')
     }
-  }, [session, isLoading, router])
+  }, [session, loading, router])
 
   // Load user settings
   useEffect(() => {
@@ -173,7 +174,7 @@ export default function SettingsPage() {
     // Reload settings from API
   }
 
-  if (isLoading || !settings) {
+  if (loading || !settings) {
     return (
       <div className="min-h-screen" style={{ backgroundColor: colors.gray }}>
         <Navigation />
