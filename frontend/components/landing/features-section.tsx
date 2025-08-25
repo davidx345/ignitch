@@ -4,49 +4,98 @@ import React from "react"
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { CheckCircle, ArrowRight } from "lucide-react"
 import { features, colors } from "@/constants/landing"
 
 export default function FeaturesSection() {
   return (
-    <section id="features" className="py-20 px-6 bg-white">
-      <div className="max-w-6xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} className="text-center mb-16">
-          <Badge className="px-4 py-2 mb-6" style={{ backgroundColor: `${colors.coral}20`, color: colors.coral }}>
-            🎯 Business-Focused Features
-          </Badge>
-          <h2 className="text-4xl font-bold mb-6" style={{ color: colors.ink }}>
-            Everything You Need to Turn Posts into{" "}
-            <span>Profit</span>
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Not just another social media tool. Ignitch is built specifically for businesses that want real results -
-            more sales, customers, and growth.
-          </p>
+    <section id="features" className="relative py-24 px-6 bg-white overflow-hidden">
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50/50 via-white to-slate-50/50"></div>
+      
+      <div className="relative max-w-7xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }} 
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-20"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="mb-8"
+          >
+            <Badge 
+              className="px-4 py-2 mb-6 border-0 font-medium tracking-wide"
+              style={{ 
+                backgroundColor: `${colors.coral}15`, 
+                color: colors.coral,
+                backdropFilter: 'blur(10px)'
+              }}
+            >
+              Enterprise-Grade Features
+            </Badge>
+          </motion.div>
+
+          <motion.h2 
+            className="text-5xl lg:text-6xl font-bold mb-8 tracking-tight"
+            style={{ color: colors.ink }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+          >
+            Everything You Need to{" "}
+            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              Scale Your Business
+            </span>
+          </motion.h2>
+
+          <motion.p 
+            className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+          >
+            Not just another social media tool. Ignitch is built specifically for enterprise businesses 
+            that demand real results - measurable ROI, scalable growth, and professional automation.
+          </motion.p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -5 }}
-              className="h-full"
+              transition={{ delay: index * 0.1, duration: 0.6 }}
+              whileHover={{ y: -8 }}
+              className="group"
             >
-              <Card className="h-full shadow-lg hover:shadow-xl transition-all duration-300 border-0 overflow-hidden">
-                <CardContent className="p-8 h-full flex flex-col">
-                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-6`}>
-                    <feature.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-4" style={{ color: colors.ink }}>
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed flex-grow">{feature.description}</p>
-                  <div className="mt-6 pt-4 border-t border-gray-100">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className="text-sm text-green-600 font-medium">Active & Working</span>
+              <Card className="h-full shadow-lg hover:shadow-2xl transition-all duration-500 border-0 overflow-hidden bg-white/80 backdrop-blur-sm group-hover:bg-white">
+                <CardContent className="p-8 h-full flex flex-col relative">
+                  {/* Gradient overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative z-10">
+                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110`}>
+                      <feature.icon className="w-8 h-8 text-white" />
+                    </div>
+                    
+                    <h3 className="text-xl font-bold mb-4 group-hover:text-slate-900 transition-colors duration-300" style={{ color: colors.ink }}>
+                      {feature.title}
+                    </h3>
+                    
+                    <p className="text-slate-600 leading-relaxed flex-grow mb-6 group-hover:text-slate-700 transition-colors duration-300">
+                      {feature.description}
+                    </p>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t border-slate-100 group-hover:border-slate-200 transition-colors duration-300">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-green-600 font-medium">Enterprise Ready</span>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 group-hover:translate-x-1 transition-all duration-300" />
                     </div>
                   </div>
                 </CardContent>
@@ -54,6 +103,38 @@ export default function FeaturesSection() {
             </motion.div>
           ))}
         </div>
+
+        {/* Enterprise highlights */}
+        <motion.div 
+          className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+        >
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+              <CheckCircle className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900">99.9% Uptime</h3>
+            <p className="text-slate-600">Enterprise-grade reliability with SLA guarantees</p>
+          </div>
+          
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+              <CheckCircle className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900">SOC 2 Compliant</h3>
+            <p className="text-slate-600">Bank-level security and data protection</p>
+          </div>
+          
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+              <CheckCircle className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900">24/7 Support</h3>
+            <p className="text-slate-600">Dedicated enterprise support team</p>
+          </div>
+        </motion.div>
       </div>
     </section>
   )
