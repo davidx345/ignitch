@@ -18,7 +18,7 @@ export default function AuthCallback() {
       }
 
       if (data.session) {
-        // Successful authentication - redirect to dashboard or upload
+        // Successful authentication - redirect to upload
         router.push('/upload')
       } else {
         // No session - redirect to sign in

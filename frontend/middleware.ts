@@ -73,6 +73,11 @@ export async function middleware(request: NextRequest) {
   const protectedRoutes = ['/upload', '/dashboard', '/settings']
   const authRoutes = ['/signin', '/signup']
   
+  // Skip middleware for auth callback routes
+  if (request.nextUrl.pathname.startsWith('/auth/')) {
+    return response
+  }
+  
   const isProtectedRoute = protectedRoutes.some(route => 
     request.nextUrl.pathname.startsWith(route)
   )
