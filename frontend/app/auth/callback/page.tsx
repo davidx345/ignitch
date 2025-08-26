@@ -31,10 +31,16 @@ export default function AuthCallback() {
           // If we have tokens in the hash, set the session
           if (accessToken && refreshToken) {
             console.log('Setting session with tokens')
-            const { data, error } = await supabase.auth.setSession({
+            // First set the session
+            const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
               access_token: accessToken,
               refresh_token: refreshToken,
             })
+            
+            // Then explicitly get the user to ensure session is persisted
+            const { data: userData, error: userError } = await supabase.auth.getUser()
+            
+            const error = sessionError || userError
             
             if (error) {
               console.error('Session set error:', error)
@@ -44,7 +50,7 @@ export default function AuthCallback() {
               return
             }
             
-            if (data.session) {
+            if (sessionData.session && userData.user) {
               console.log('Session set successfully')
               setStatus('success')
               setMessage('Authentication successful! Redirecting...')
