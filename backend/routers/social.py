@@ -22,10 +22,10 @@ OAUTH_CONFIGS = {
         "client_id": os.getenv("INSTAGRAM_CLIENT_ID", "your_instagram_client_id"),
         "client_secret": os.getenv("INSTAGRAM_CLIENT_SECRET", "your_instagram_client_secret"),
         "redirect_uri": os.getenv("INSTAGRAM_REDIRECT_URI", "http://localhost:3000/auth/instagram/callback"),
-        "auth_url": "https://api.instagram.com/oauth/authorize",
-        "token_url": "https://api.instagram.com/oauth/access_token",
-        "api_base": "https://graph.instagram.com",
-        "scopes": ["user_profile", "user_media"]
+        "auth_url": "https://www.facebook.com/v18.0/dialog/oauth",
+        "token_url": "https://graph.facebook.com/v18.0/oauth/access_token",
+        "api_base": "https://graph.facebook.com/v18.0",
+        "scopes": ["instagram_basic", "instagram_content_publish", "pages_show_list", "pages_read_engagement"]
     },
     "facebook": {
         "client_id": os.getenv("FACEBOOK_CLIENT_ID", "your_facebook_client_id"),

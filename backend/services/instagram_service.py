@@ -15,16 +15,16 @@ class InstagramService:
         self.client_id = os.getenv("INSTAGRAM_CLIENT_ID")
         self.client_secret = os.getenv("INSTAGRAM_CLIENT_SECRET")
         self.redirect_uri = os.getenv("INSTAGRAM_REDIRECT_URI", "http://localhost:3000/auth/instagram/callback")
-        self.base_url = "https://graph.instagram.com"
-        self.auth_url = "https://api.instagram.com/oauth/authorize"
-        self.token_url = "https://api.instagram.com/oauth/access_token"
+        self.base_url = "https://graph.facebook.com/v18.0"
+        self.auth_url = "https://www.facebook.com/v18.0/dialog/oauth"
+        self.token_url = "https://graph.facebook.com/v18.0/oauth/access_token"
         
     def get_auth_url(self, state: str) -> str:
-        """Generate Instagram OAuth authorization URL"""
+        """Generate Instagram Graph API OAuth authorization URL"""
         params = {
             "client_id": self.client_id,
             "redirect_uri": self.redirect_uri,
-            "scope": "user_profile,user_media",
+            "scope": "instagram_basic,instagram_content_publish,pages_show_list,pages_read_engagement",
             "response_type": "code",
             "state": state
         }
