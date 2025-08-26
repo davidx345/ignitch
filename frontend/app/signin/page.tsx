@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Mail, Lock, Eye, EyeOff, Github } from "lucide-react"
 import Link from "next/link"
 import { useAuth } from "@/contexts/auth-context"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 
 // Ignitch Color System
 const colors = {
@@ -26,6 +26,7 @@ const colors = {
 
 export default function SignInPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { signIn, signInWithGoogle, signInWithGitHub } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -46,7 +47,9 @@ export default function SignInPage() {
       if (error) {
         setError(error.message)
       } else {
-        router.push("/upload")
+        // Check for redirect parameter
+        const redirectTo = searchParams.get('redirect') || "/upload"
+        router.push(redirectTo)
       }
     } catch (err) {
       setError("An unexpected error occurred")

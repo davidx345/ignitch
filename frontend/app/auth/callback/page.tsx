@@ -1,11 +1,12 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
 export default function AuthCallback() {
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   useEffect(() => {
     const handleAuthCallback = async () => {
@@ -18,8 +19,9 @@ export default function AuthCallback() {
       }
 
       if (data.session) {
-        // Successful authentication - redirect to upload
-        router.push('/upload')
+        // Successful authentication - check for redirect parameter
+        const redirectTo = searchParams.get('redirect') || '/upload'
+        router.push(redirectTo)
       } else {
         // No session - redirect to sign in
         router.push('/signin')
