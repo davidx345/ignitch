@@ -31,16 +31,11 @@ export default function AuthCallback() {
           // If we have tokens in the hash, set the session
           if (accessToken && refreshToken) {
             console.log('Setting session with tokens')
-            // First set the session
-            const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+            
+            const { data, error } = await supabase.auth.setSession({
               access_token: accessToken,
               refresh_token: refreshToken,
             })
-            
-            // Then explicitly get the user to ensure session is persisted
-            const { data: userData, error: userError } = await supabase.auth.getUser()
-            
-            const error = sessionError || userError
             
             if (error) {
               console.error('Session set error:', error)
@@ -50,16 +45,20 @@ export default function AuthCallback() {
               return
             }
             
-            if (sessionData.session && userData.user) {
+            if (data.session) {
               console.log('Session set successfully')
               setStatus('success')
               setMessage('Authentication successful! Redirecting...')
+              
+              // Force a small delay to ensure session is persisted
+              await new Promise(resolve => setTimeout(resolve, 500))
               
               // Successful authentication - check for redirect parameter
               const redirectTo = searchParams.get('redirect') || '/upload'
               console.log('Redirecting to:', redirectTo)
               
-              setTimeout(() => router.push(redirectTo), 1000)
+              // Use window.location for hard redirect
+              window.location.href = redirectTo
               return
             }
           }
@@ -86,7 +85,8 @@ export default function AuthCallback() {
           const redirectTo = searchParams.get('redirect') || '/upload'
           console.log('Redirecting to:', redirectTo)
           
-          setTimeout(() => router.push(redirectTo), 1000)
+          // Use window.location for hard redirect
+          window.location.href = redirectTo
         } else {
           console.log('No session found')
           setStatus('error')

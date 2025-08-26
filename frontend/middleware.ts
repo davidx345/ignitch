@@ -2,6 +2,12 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
+  // TEMPORARILY DISABLE MIDDLEWARE TO TEST AUTH
+  console.log('Middleware - DISABLED for testing')
+  return NextResponse.next()
+  
+  // ORIGINAL MIDDLEWARE CODE (COMMENTED OUT)
+  /*
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -123,6 +129,7 @@ export async function middleware(request: NextRequest) {
   }
 
   return response
+  */
 }
 
 export const config = {
