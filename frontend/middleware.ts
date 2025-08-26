@@ -2,12 +2,6 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  // TEMPORARILY DISABLE MIDDLEWARE TO TEST AUTH
-  console.log('Middleware - DISABLED for testing')
-  return NextResponse.next()
-  
-  // ORIGINAL MIDDLEWARE CODE (COMMENTED OUT)
-  /*
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -21,7 +15,6 @@ export async function middleware(request: NextRequest) {
   if (!supabaseUrl || !supabaseKey || 
       supabaseUrl === 'https://placeholder.supabase.co' || 
       supabaseKey === 'placeholder_key') {
-    // Skip authentication if Supabase is not configured
     return response
   }
 
@@ -34,13 +27,13 @@ export async function middleware(request: NextRequest) {
           return request.cookies.get(name)?.value
         },
         set(name: string, value: string, options: CookieOptions) {
-          // Ensure cookie options are properly set for production
           const cookieOptions = {
             ...options,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax' as const,
             path: '/',
-            httpOnly: false, // Allow client-side access for auth cookies
+            httpOnly: false,
+            maxAge: 60 * 60 * 24 * 7, // 7 days
             domain: undefined
           }
 
@@ -66,7 +59,8 @@ export async function middleware(request: NextRequest) {
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax' as const,
             path: '/',
-            httpOnly: false, // Allow client-side access for auth cookies
+            httpOnly: false,
+            maxAge: 0,
             domain: undefined
           }
 
@@ -94,17 +88,13 @@ export async function middleware(request: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession()
 
-  // Debug logging
-  console.log('Middleware - Path:', request.nextUrl.pathname)
-  console.log('Middleware - Session exists:', !!session)
-  console.log('Middleware - User ID:', session?.user?.id)
-
   // Protected routes that require authentication
   const protectedRoutes = ['/upload', '/dashboard', '/settings']
   const authRoutes = ['/signin', '/signup']
   
-  // Skip middleware for auth callback routes
-  if (request.nextUrl.pathname.startsWith('/auth/')) {
+  // Skip middleware for auth callback routes and API routes
+  if (request.nextUrl.pathname.startsWith('/auth/') || 
+      request.nextUrl.pathname.startsWith('/api/')) {
     return response
   }
   
@@ -129,7 +119,6 @@ export async function middleware(request: NextRequest) {
   }
 
   return response
-  */
 }
 
 export const config = {

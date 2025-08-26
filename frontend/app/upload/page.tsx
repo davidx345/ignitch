@@ -41,6 +41,7 @@ import Link from "next/link"
 import ProductUpload from "@/components/product-upload"
 import ContentGenerator from "@/components/content-generator"
 import MultiPlatformDistribution from "@/components/multi-platform-distribution"
+import RealPlatformConnections from "@/components/real-platform-connections"
 
 // AdEase Color System
 const colors = {
@@ -918,56 +919,11 @@ export default function UploadPage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                {connectedPlatforms.map((platform) => (
-                  <Card key={platform.platform} className="shadow-lg hover:shadow-xl transition-all duration-300">
-                    <CardContent className="p-6 text-center">
-                      <div className="mb-4">
-                        <div
-                          className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-3"
-                          style={{ backgroundColor: `${colors.primary}20` }}
-                        >
-                          <platform.icon className="w-8 h-8" style={{ color: colors.primary }} />
-                        </div>
-                        <h3 className="font-semibold capitalize" style={{ color: colors.ink }}>
-                          {platform.platform}
-                        </h3>
-                      </div>
-
-                      {platform.connected ? (
-                        <div className="space-y-3">
-                          <Badge
-                            className="px-3 py-1"
-                            style={{ backgroundColor: `${colors.mint}20`, color: colors.mint }}
-                          >
-                            ✓ Connected
-                          </Badge>
-                          <div className="text-sm text-gray-600">
-                            <p>{platform.followers.toLocaleString()} followers</p>
-                            <p>{platform.engagement.toFixed(1)}% avg engagement</p>
-                          </div>
-                          <Button variant="outline" size="sm" className="w-full bg-transparent">
-                            <Settings className="w-4 h-4 mr-1" />
-                            Settings
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          <p className="text-sm text-gray-600">Connect to preview and auto-post your content</p>
-                          <Button
-                            onClick={() => connectPlatform(platform.platform)}
-                            className="w-full font-semibold"
-                            style={{ backgroundColor: colors.primary }}
-                          >
-                            <Share2 className="w-4 h-4 mr-2" />
-                            Connect {platform.platform}
-                          </Button>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              <RealPlatformConnections 
+                onConnectionsUpdate={(updatedConnections) => {
+                  setConnectedPlatforms(updatedConnections)
+                }}
+              />
 
               {/* Why Connect Explanation */}
               <Card className="mb-8 shadow-lg bg-gradient-to-r from-blue-50 to-purple-50">
