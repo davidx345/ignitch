@@ -34,7 +34,8 @@ export async function middleware(request: NextRequest) {
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax' as const,
             path: '/',
-            domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined
+            httpOnly: true,
+            domain: undefined
           }
 
           request.cookies.set({
@@ -59,7 +60,8 @@ export async function middleware(request: NextRequest) {
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax' as const,
             path: '/',
-            domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined
+            httpOnly: true,
+            domain: undefined
           }
 
           request.cookies.set({
