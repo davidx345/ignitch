@@ -34,7 +34,7 @@ export async function middleware(request: NextRequest) {
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax' as const,
             path: '/',
-            httpOnly: true,
+            httpOnly: false, // Allow client-side access for auth cookies
             domain: undefined
           }
 
@@ -60,7 +60,7 @@ export async function middleware(request: NextRequest) {
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax' as const,
             path: '/',
-            httpOnly: true,
+            httpOnly: false, // Allow client-side access for auth cookies
             domain: undefined
           }
 
@@ -87,6 +87,11 @@ export async function middleware(request: NextRequest) {
   const {
     data: { session },
   } = await supabase.auth.getSession()
+
+  // Debug logging
+  console.log('Middleware - Path:', request.nextUrl.pathname)
+  console.log('Middleware - Session exists:', !!session)
+  console.log('Middleware - User ID:', session?.user?.id)
 
   // Protected routes that require authentication
   const protectedRoutes = ['/upload', '/dashboard', '/settings']
