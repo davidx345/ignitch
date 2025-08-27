@@ -62,7 +62,10 @@ export default function SignInPage() {
         }
   // Check for redirect parameter
   const redirectTo = searchParams.get('redirect') || "/upload"
-  window.location.replace(redirectTo)
+        // Wait for cookies to be set before redirecting
+        setTimeout(() => {
+          window.location.replace(redirectTo)
+        }, 500)
       }
     } catch (err) {
       setError("An unexpected error occurred")

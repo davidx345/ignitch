@@ -11,9 +11,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   // Set cookies for SSR middleware
+  const isProd = process.env.NODE_ENV === 'production';
+  const secureFlag = isProd ? '; Secure' : '';
   res.setHeader('Set-Cookie', [
-    `sb-access-token=${access_token}; Path=/; Max-Age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure`,
-    `sb-refresh-token=${refresh_token}; Path=/; Max-Age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure`
+    `sb-access-token=${access_token}; Path=/; Max-Age=${60 * 60 * 24 * 7}; SameSite=Lax${secureFlag}`,
+    `sb-refresh-token=${refresh_token}; Path=/; Max-Age=${60 * 60 * 24 * 7}; SameSite=Lax${secureFlag}`
   ])
 
   return res.status(200).json({ success: true })
