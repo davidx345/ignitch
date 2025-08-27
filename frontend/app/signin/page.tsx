@@ -47,10 +47,18 @@ export default function SignInPage() {
       if (error) {
         setError(error.message)
       } else {
-        // Set session cookie for SSR middleware
+        // Call server-side API to set cookies for SSR
         if (data?.session) {
-          document.cookie = `sb-access-token=${data.session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}`;
-          document.cookie = `sb-refresh-token=${data.session.refresh_token}; path=/; max-age=${60 * 60 * 24 * 7}`;
+          await fetch('/api/auth/set-session', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              access_token: data.session.access_token,
+              refresh_token: data.session.refresh_token,
+            }),
+          })
         }
         // Check for redirect parameter
         const redirectTo = searchParams.get('redirect') || "/upload"
