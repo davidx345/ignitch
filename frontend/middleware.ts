@@ -1,69 +1,13 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { createMiddlewareSupabaseClient } from '@supabase/auth-helpers-nextjs'
 
 export async function middleware(request: NextRequest) {
-  // Create initial response
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  })
-
-  // Check if Supabase is configured
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-  if (!supabaseUrl || !supabaseKey || 
-      supabaseUrl === 'https://placeholder.supabase.co' || 
-      supabaseKey === 'placeholder_key') {
-    console.log('Middleware: Supabase not configured, skipping auth')
-    return response
-  }
-
-  // Create Supabase client with proper cookie handling
-  const supabase = createServerClient(
-    supabaseUrl,
-    supabaseKey,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          // Set cookie on the response
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax' as const,
-            path: '/',
-            httpOnly: false,
-            maxAge: 60 * 60 * 24 * 7, // 7 days
-          })
-        },
-        remove(name: string, options: CookieOptions) {
-          // Remove cookie from the response
-          response.cookies.set({
-            name,
-            value: '',
-            ...options,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax' as const,
-            path: '/',
-            httpOnly: false,
-            maxAge: 0,
-          })
-        },
-      },
-    }
-  )
-
-  // Get session
+  // Create Supabase client for middleware
+  const response = NextResponse.next()
+  const supabase = createMiddlewareSupabaseClient({ req: request, res: response })
   const {
     data: { session },
   } = await supabase.auth.getSession()
-
   // Debug logging
   console.log('Middleware:', {
     path: request.nextUrl.pathname,
