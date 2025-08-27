@@ -43,10 +43,15 @@ export default function SignInPage() {
     setError("")
     
     try {
-      const { error } = await signIn(email, password)
+      const { data, error } = await signIn(email, password)
       if (error) {
         setError(error.message)
       } else {
+        // Set session cookie for SSR middleware
+        if (data?.session) {
+          document.cookie = `sb-access-token=${data.session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}`;
+          document.cookie = `sb-refresh-token=${data.session.refresh_token}; path=/; max-age=${60 * 60 * 24 * 7}`;
+        }
         // Check for redirect parameter
         const redirectTo = searchParams.get('redirect') || "/upload"
         router.push(redirectTo)
