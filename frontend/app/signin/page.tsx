@@ -60,9 +60,9 @@ export default function SignInPage() {
             }),
           })
         }
-        // Check for redirect parameter
-        const redirectTo = searchParams.get('redirect') || "/upload"
-        router.push(redirectTo)
+  // Check for redirect parameter
+  const redirectTo = searchParams.get('redirect') || "/upload"
+  window.location.replace(redirectTo)
       }
     } catch (err) {
       setError("An unexpected error occurred")
