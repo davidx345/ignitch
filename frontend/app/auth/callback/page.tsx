@@ -47,6 +47,8 @@ export default function AuthCallback() {
             
             if (data.session) {
               console.log('Session set successfully')
+              // DEBUG: Log document cookies after session is set
+              console.log('Document cookies after setSession:', document.cookie)
               setStatus('success')
               setMessage('Authentication successful! Redirecting...')
               
