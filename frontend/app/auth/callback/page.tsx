@@ -38,8 +38,14 @@ export default function AuthCallback() {
           const redirectTo = searchParams?.get('redirect') || '/upload'
           console.log('Redirecting to:', redirectTo)
           
-          // Use router.replace to avoid adding to history
-          router.replace(redirectTo)
+          // Use window.location for hard redirect to ensure it works
+          window.location.href = redirectTo
+          
+          // Fallback: if redirect doesn't work within 3 seconds, try router
+          setTimeout(() => {
+            console.log('Fallback redirect using router')
+            router.replace(redirectTo)
+          }, 3000)
         } else {
           console.log('No session found after callback')
           setStatus('error')

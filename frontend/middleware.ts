@@ -3,6 +3,7 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 
 export async function middleware(request: NextRequest) {
   console.log('[MIDDLEWARE] Incoming request:', request.url);
+  console.log('[MIDDLEWARE] Pathname:', request.nextUrl.pathname);
 
   // Skip middleware for auth routes, API routes, and static files
   if (request.nextUrl.pathname.startsWith('/auth/') || 
@@ -27,12 +28,15 @@ export async function middleware(request: NextRequest) {
     }
     
     console.log('[MIDDLEWARE] Session found:', !!session);
+    console.log('[MIDDLEWARE] Session user:', session?.user?.email);
 
     // Only redirect unauthenticated users from protected routes
     const protectedRoutes = ['/upload', '/dashboard', '/settings'];
     const isProtectedRoute = protectedRoutes.some(route =>
       request.nextUrl.pathname.startsWith(route)
     );
+    
+    console.log('[MIDDLEWARE] Is protected route:', isProtectedRoute);
     
     if (isProtectedRoute && !session) {
       console.warn('[MIDDLEWARE] No session found for protected route, redirecting to /signin');
@@ -41,6 +45,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(redirectUrl);
     }
     
+    console.log('[MIDDLEWARE] Allowing request to continue');
     return response;
   } catch (error) {
     console.error('[MIDDLEWARE] Error checking session:', error);
