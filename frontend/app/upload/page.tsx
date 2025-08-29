@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/auth-context"
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -125,10 +127,44 @@ interface GeneratedContent {
 }
 
 export default function UploadPage() {
+  const router = useRouter()
+  const { user, session, loading } = useAuth()
   const [currentStep, setCurrentStep] = useState(0)
   const [uploadedProducts, setUploadedProducts] = useState<Product[]>([])
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent[]>([])
   const [distributionSettings, setDistributionSettings] = useState({})
+  
+  // Authentication check
+  useEffect(() => {
+    if (!loading && !user) {
+      console.log('User not authenticated, redirecting to signin')
+      router.replace('/signin?redirect=/upload')
+    }
+  }, [user, loading, router])
+
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show loading if user is not authenticated
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Redirecting to sign in...</p>
+        </div>
+      </div>
+    )
+  }
   
   // New business-focused state
   const [businessGoal, setBusinessGoal] = useState("")
