@@ -47,19 +47,7 @@ export default function SignInPage() {
       if (error) {
         setError(error.message)
       } else {
-        // Call server-side API to set cookies for SSR
-        if (data?.session) {
-          await fetch('/api/auth/set-session', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              access_token: data.session.access_token,
-              refresh_token: data.session.refresh_token,
-            }),
-          })
-        }
+  // Supabase Auth Helpers will handle session and cookies automatically
   // Check for redirect parameter
   const redirectTo = searchParams.get('redirect') || "/upload"
         // Wait for cookies to be set before redirecting
