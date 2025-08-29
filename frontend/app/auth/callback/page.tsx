@@ -53,10 +53,10 @@ export default function AuthCallback() {
               setMessage('Authentication successful! Redirecting...')
               
               // Force a small delay to ensure session is persisted
-              await new Promise(resolve => setTimeout(resolve, 500))
+              await new Promise(resolve => setTimeout(resolve, 1000))
               
               // Successful authentication - check for redirect parameter
-              const redirectTo = searchParams.get('redirect') || '/upload'
+              const redirectTo = searchParams?.get('redirect') || '/upload'
               console.log('Redirecting to:', redirectTo)
               
               // Use window.location for hard redirect
@@ -84,7 +84,7 @@ export default function AuthCallback() {
           setMessage('Authentication successful! Redirecting...')
           
           // Successful authentication - check for redirect parameter
-          const redirectTo = searchParams.get('redirect') || '/upload'
+          const redirectTo = searchParams?.get('redirect') || '/upload'
           console.log('Redirecting to:', redirectTo)
           
           // Use window.location for hard redirect

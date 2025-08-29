@@ -15,9 +15,9 @@ export default function InstagramCallback() {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        const code = searchParams.get('code')
-        const state = searchParams.get('state')
-        const error = searchParams.get('error')
+        const code = searchParams?.get('code')
+        const state = searchParams?.get('state')
+        const error = searchParams?.get('error')
 
         if (error) {
           setStatus('error')
@@ -49,9 +49,9 @@ export default function InstagramCallback() {
           setStatus('success')
           setMessage(data.message || 'Instagram account connected successfully!')
           
-          // Redirect to dashboard after 2 seconds
+          // Redirect to upload page after 2 seconds
           setTimeout(() => {
-            router.push('/dashboard')
+            router.push('/upload')
           }, 2000)
         } else {
           setStatus('error')
@@ -100,10 +100,10 @@ export default function InstagramCallback() {
               <p className="text-red-600 font-medium">{message}</p>
               <div className="mt-4 space-y-2">
                 <Button 
-                  onClick={() => router.push('/dashboard')}
+                  onClick={() => router.push('/upload')}
                   className="w-full"
                 >
-                  Go to Dashboard
+                  Go to Upload
                 </Button>
                 <Button 
                   variant="outline"

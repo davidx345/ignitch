@@ -85,10 +85,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { data: null, error: { message: 'Supabase not configured' } as AuthError }
     }
     
-    // Use production URL in production, localhost in development
-    const redirectTo = process.env.NODE_ENV === 'production' 
-      ? 'https://ignitch.vercel.app/auth/callback'
-      : `${window.location.origin}/auth/callback`
+    // Use dynamic origin for redirect URL
+    const redirectTo = `${window.location.origin}/auth/callback`
     
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -104,10 +102,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { data: null, error: { message: 'Supabase not configured' } as AuthError }
     }
     
-    // Use production URL in production, localhost in development
-    const redirectTo = process.env.NODE_ENV === 'production' 
-      ? 'https://ignitch.vercel.app/auth/callback'
-      : `${window.location.origin}/auth/callback`
+    // Use dynamic origin for redirect URL
+    const redirectTo = `${window.location.origin}/auth/callback`
     
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'github',

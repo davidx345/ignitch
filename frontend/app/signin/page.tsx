@@ -28,11 +28,15 @@ export default function SignInPage() {
       if (error) {
         setError(error.message)
       } else {
+        // Wait for session to be established
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        
         // Supabase Auth Helpers will handle session and cookies automatically
-        const redirectTo = searchParams.get("redirect") || "/upload"
-        setTimeout(() => {
-          router.replace(redirectTo)
-        }, 500)
+        const redirectTo = searchParams?.get("redirect") || "/upload"
+        console.log('Sign-in successful, redirecting to:', redirectTo)
+        
+        // Use window.location for hard redirect to ensure session is loaded
+        window.location.href = redirectTo
       }
     } catch {
       setError("An unexpected error occurred")
