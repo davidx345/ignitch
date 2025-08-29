@@ -129,44 +129,12 @@ interface GeneratedContent {
 export default function UploadPage() {
   const router = useRouter()
   const { user, session, loading } = useAuth()
+  
+  // ALL useState hooks must be at the top level - before any conditional returns
   const [currentStep, setCurrentStep] = useState(0)
   const [uploadedProducts, setUploadedProducts] = useState<Product[]>([])
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent[]>([])
   const [distributionSettings, setDistributionSettings] = useState({})
-  
-  // Authentication check
-  useEffect(() => {
-    if (!loading && !user) {
-      console.log('User not authenticated, redirecting to signin')
-      router.replace('/signin?redirect=/upload')
-    }
-  }, [user, loading, router])
-
-  // Show loading while checking authentication
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    )
-  }
-
-  // Show loading if user is not authenticated
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Redirecting to sign in...</p>
-        </div>
-      </div>
-    )
-  }
-  
-  // New business-focused state
   const [businessGoal, setBusinessGoal] = useState("")
   const [userPrompt, setUserPrompt] = useState("")
   const [aiRewrittenPrompt, setAiRewrittenPrompt] = useState("")
@@ -185,7 +153,8 @@ export default function UploadPage() {
   ])
   const [visibilityScore, setVisibilityScore] = useState(45)
   const [isGeneratingPrompt, setIsGeneratingPrompt] = useState(false)
-
+  
+  // Business goals data
   const businessGoals: BusinessGoal[] = [
     {
       id: "sales",
@@ -253,7 +222,40 @@ export default function UploadPage() {
       }
     }
   ]
+  
+  // Authentication check
+  useEffect(() => {
+    if (!loading && !user) {
+      console.log('User not authenticated, redirecting to signin')
+      router.replace('/signin?redirect=/upload')
+    }
+  }, [user, loading, router])
 
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show loading if user is not authenticated
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Redirecting to sign in...</p>
+        </div>
+      </div>
+    )
+  }
+  
+  // Prompt templates data
   const promptTemplates: PromptTemplate[] = [
     { id: "sale", title: "Weekend Sale", prompt: "Special weekend discount on our bestsellers", category: "sales", goal: "sales" },
     { id: "new", title: "New Product Launch", prompt: "Introducing our latest must-have item", category: "product", goal: "awareness" },
