@@ -14,96 +14,49 @@ export default function AuthCallback() {
     const handleAuthCallback = async () => {
       try {
         console.log('Auth callback started')
-        console.log('Current URL:', window.location.href)
         
-        // Handle the hash fragment from OAuth callback
-        const hash = window.location.hash.substring(1)
-        console.log('Hash fragment:', hash)
-        
-        if (hash) {
-          const params = new URLSearchParams(hash)
-          const accessToken = params.get('access_token')
-          const refreshToken = params.get('refresh_token')
-          
-          console.log('Access token present:', !!accessToken)
-          console.log('Refresh token present:', !!refreshToken)
-          
-          // If we have tokens in the hash, set the session
-          if (accessToken && refreshToken) {
-            console.log('Setting session with tokens')
-            
-            const { data, error } = await supabase.auth.setSession({
-              access_token: accessToken,
-              refresh_token: refreshToken,
-            })
-            
-            if (error) {
-              console.error('Session set error:', error)
-              setStatus('error')
-              setMessage('Failed to set session')
-              setTimeout(() => router.push('/signin?error=session_set_failed'), 2000)
-              return
-            }
-            
-            if (data.session) {
-              console.log('Session set successfully')
-              // DEBUG: Log document cookies after session is set
-              console.log('Document cookies after setSession:', document.cookie)
-              setStatus('success')
-              setMessage('Authentication successful! Redirecting...')
-              
-              // Force a small delay to ensure session is persisted
-              await new Promise(resolve => setTimeout(resolve, 1000))
-              
-              // Successful authentication - check for redirect parameter
-              const redirectTo = searchParams?.get('redirect') || '/upload'
-              console.log('Redirecting to:', redirectTo)
-              
-              // Use window.location for hard redirect
-              window.location.href = redirectTo
-              return
-            }
-          }
-        }
-        
-        // Fallback: check existing session
-        console.log('Checking existing session')
+        // Handle the OAuth callback
         const { data, error } = await supabase.auth.getSession()
         
         if (error) {
           console.error('Auth callback error:', error)
           setStatus('error')
-          setMessage('Failed to get session')
-          setTimeout(() => router.push('/signin?error=auth_callback_failed'), 2000)
+          setMessage('Authentication failed')
+          setTimeout(() => router.push('/signin?error=auth_failed'), 2000)
           return
         }
 
         if (data.session) {
-          console.log('Existing session found')
+          console.log('Session found, user authenticated')
           setStatus('success')
           setMessage('Authentication successful! Redirecting...')
           
-          // Successful authentication - check for redirect parameter
+          // Wait a moment to ensure session is properly set
+          await new Promise(resolve => setTimeout(resolve, 500))
+          
+          // Get redirect URL or default to upload
           const redirectTo = searchParams?.get('redirect') || '/upload'
           console.log('Redirecting to:', redirectTo)
           
-          // Use window.location for hard redirect
-          window.location.href = redirectTo
+          // Use router.replace to avoid adding to history
+          router.replace(redirectTo)
         } else {
-          console.log('No session found')
+          console.log('No session found after callback')
           setStatus('error')
-          setMessage('No session found')
+          setMessage('No session established')
           setTimeout(() => router.push('/signin'), 2000)
         }
       } catch (error) {
-        console.error('Auth callback error:', error)
+        console.error('Unexpected auth callback error:', error)
         setStatus('error')
         setMessage('Unexpected error occurred')
-        setTimeout(() => router.push('/signin?error=unexpected_error'), 2000)
+        setTimeout(() => router.push('/signin'), 2000)
       }
     }
 
-    handleAuthCallback()
+    // Small delay to ensure URL parameters are ready
+    const timer = setTimeout(handleAuthCallback, 100)
+    return () => clearTimeout(timer)
   }, [router, searchParams])
 
   return (

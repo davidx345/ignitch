@@ -35,8 +35,8 @@ export default function SignInPage() {
         const redirectTo = searchParams?.get("redirect") || "/upload"
         console.log('Sign-in successful, redirecting to:', redirectTo)
         
-        // Use window.location for hard redirect to ensure session is loaded
-        window.location.href = redirectTo
+        // Use router.replace for better session handling
+        router.replace(redirectTo)
       }
     } catch {
       setError("An unexpected error occurred")
