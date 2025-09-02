@@ -110,17 +110,6 @@ class SocialAccountConnect(BaseModel):
     access_token: str
     platform_user_id: str
 
-class SocialAccountResponse(BaseModel):
-    id: str
-    platform: str
-    is_active: bool
-    followers_count: int
-    avg_engagement: float
-    created_at: datetime
-    
-    class Config:
-        from_attributes = True
-
 # Post schemas
 class PostCreate(BaseModel):
     content: str
@@ -153,6 +142,8 @@ class SocialAccountResponse(BaseModel):
     platform: str
     username: Optional[str] = None
     is_active: bool
+    followers_count: Optional[int] = 0
+    avg_engagement: Optional[float] = 0.0
     connected_at: datetime
     
     class Config:
