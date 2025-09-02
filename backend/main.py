@@ -89,11 +89,18 @@ app = FastAPI(
 )
 
 # Production-grade middleware setup (conditional)
-# 1. Security middleware
+# 1. Security middleware - Allow Heroku hosts
+heroku_hosts = [
+    "ignitch-api-8f7efad07047.herokuapp.com",
+    "*.herokuapp.com",
+    "localhost",
+    "127.0.0.1"
+]
+
 if os.getenv("ENVIRONMENT") == "production":
     app.add_middleware(
         TrustedHostMiddleware, 
-        allowed_hosts=["adflow.app", "*.adflow.app", "*.railway.app"]
+        allowed_hosts=heroku_hosts + ["adflow.app", "*.adflow.app", "*.railway.app"]
     )
 
 # 2. Error handling middleware (if available)
