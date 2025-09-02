@@ -151,8 +151,32 @@ export default function UploadPage() {
     { platform: "facebook", connected: false, followers: 0, engagement: 0, icon: Facebook },
     { platform: "tiktok", connected: false, followers: 0, engagement: 0, icon: Youtube }
   ])
-  const [visibilityScore, setVisibilityScore] = useState(45)
+  const [visibilityScore, setVisibilityScore] = useState(0)
   const [isGeneratingPrompt, setIsGeneratingPrompt] = useState(false)
+  
+  // Fetch actual visibility score from dashboard
+  useEffect(() => {
+    const fetchVisibilityScore = async () => {
+      try {
+        const response = await fetch('/api/dashboard/overview', {
+          headers: {
+            'Authorization': `Bearer ${session?.access_token}`
+          }
+        })
+        
+        if (response.ok) {
+          const data = await response.json()
+          setVisibilityScore(data.stats?.visibility_score || 0)
+        }
+      } catch (error) {
+        console.log('Could not fetch visibility score, using default')
+      }
+    }
+
+    if (session?.access_token) {
+      fetchVisibilityScore()
+    }
+  }, [session])
   
   // Business goals data
   const businessGoals: BusinessGoal[] = [

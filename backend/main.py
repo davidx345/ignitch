@@ -301,14 +301,17 @@ async def dashboard_overview():
             "visibility_score": 0
         },
         "recent_posts": [],
+        "platform_performance": [],
         "growth_metrics": {
             "reach_growth": 0,
             "engagement_growth": 0,
             "follower_growth": 0
         },
-        "platform_performance": [],
-        "message": "Real data will show once you start posting content",
-        "success": True
+        "performance_insights": [],
+        "trending_hashtags": [],
+        "best_performing_content": [],
+        "success": True,
+        "message": "Real data will show once you start posting content"
     }
 
 if __name__ == "__main__":
