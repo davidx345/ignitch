@@ -167,7 +167,14 @@ if ROUTERS_AVAILABLE:
     app.include_router(media.router, prefix="/api/media", tags=["Media Upload"])
     app.include_router(media_enhanced_router, prefix="/api/media/v2", tags=["Enhanced Media Upload"])
     
-    app.include_router(social.router, prefix="/api/social", tags=["Social Media"])
+    # Try to include social router with specific error handling
+    try:
+        app.include_router(social.router, prefix="/api/social", tags=["Social Media"])
+        print("✅ Social router included successfully")
+    except Exception as social_error:
+        print(f"❌ Social router failed to include: {social_error}")
+        import traceback
+        traceback.print_exc()
     
     # Include dashboard only if available
     if DASHBOARD_AVAILABLE:
