@@ -1,0 +1,43 @@
+{
+  "name": "Ignitch API",
+  "description": "AI-powered marketing and billboard management platform",
+  "image": "heroku/python",
+  "repository": "https://github.com/davidx345/ignitch",
+  "keywords": ["python", "fastapi", "api", "marketing", "ai"],
+  "env": {
+    "DATABASE_URL": {
+      "description": "PostgreSQL database URL",
+      "required": true
+    },
+    "SECRET_KEY": {
+      "description": "Secret key for JWT tokens",
+      "generator": "secret"
+    },
+    "ENVIRONMENT": {
+      "description": "Environment setting",
+      "value": "production"
+    },
+    "GOOGLE_CLOUD_PROJECT": {
+      "description": "Google Cloud Project ID",
+      "required": false
+    },
+    "GCS_BUCKET_NAME": {
+      "description": "Google Cloud Storage bucket name",
+      "required": false
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  },
+  "addons": [
+    "heroku-postgresql:essential-0"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}

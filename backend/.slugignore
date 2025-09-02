@@ -1,0 +1,9 @@
+# Heroku deployment configuration
+*.pyc
+__pycache__/
+.env
+.git/
+.gitignore
+*.log
+.DS_Store
+node_modules/
