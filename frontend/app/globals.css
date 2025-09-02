@@ -6,6 +6,103 @@
   .text-balance {
     text-wrap: balance;
   }
+  
+  /* Global responsive utilities */
+  .responsive-container {
+    @apply w-full max-w-6xl mx-auto px-4;
+  }
+  
+  @media (min-width: 640px) {
+    .responsive-container {
+      @apply px-6;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .responsive-container {
+      @apply px-8;
+    }
+  }
+
+  /* Mobile-first button scaling */
+  .responsive-button {
+    @apply text-sm px-3 py-2;
+  }
+
+  @media (min-width: 640px) {
+    .responsive-button {
+      @apply text-base px-4 py-2;
+    }
+  }
+
+  /* Text scaling */
+  .responsive-text {
+    @apply text-sm;
+  }
+
+  @media (min-width: 640px) {
+    .responsive-text {
+      @apply text-base;
+    }
+  }
+
+  .responsive-heading {
+    @apply text-lg font-bold;
+  }
+
+  @media (min-width: 640px) {
+    .responsive-heading {
+      @apply text-xl;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .responsive-heading {
+      @apply text-2xl;
+    }
+  }
+
+  /* Responsive spacing */
+  .responsive-padding {
+    @apply p-4;
+  }
+
+  @media (min-width: 640px) {
+    .responsive-padding {
+      @apply p-6;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .responsive-padding {
+      @apply p-8;
+    }
+  }
+
+  /* Hide/show utilities */
+  .hide-mobile {
+    @apply hidden sm:block;
+  }
+
+  .show-mobile {
+    @apply block sm:hidden;
+  }
+
+  /* Responsive icons */
+  .responsive-icon {
+    @apply w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6;
+  }
+
+  /* Prevent horizontal scroll */
+  .prevent-scroll {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* Touch targets */
+  .touch-target {
+    @apply min-h-11 min-w-11;
+  }
 }
 
 @layer base {

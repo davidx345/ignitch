@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { AuthProvider } from '@/contexts/auth-context'
 
@@ -8,6 +8,13 @@ export const metadata: Metadata = {
   generator: 'Ignitch',
 }
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -15,9 +22,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="font-sans">
-      <body className="antialiased">
+      <body className="antialiased overflow-x-hidden">
         <AuthProvider>
-          {children}
+          <div className="min-h-screen w-full max-w-full">
+            {children}
+          </div>
         </AuthProvider>
       </body>
     </html>

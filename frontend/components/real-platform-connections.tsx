@@ -44,7 +44,7 @@ export default function RealPlatformConnections({ onConnectionsUpdate }: RealPla
 
     try {
       setLoading(true)
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/social/accounts`, {
+      const response = await fetch(`https://ignitch-api-8f7efad07047.herokuapp.com/api/social/accounts`, {
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
           'Content-Type': 'application/json'
@@ -98,7 +98,7 @@ export default function RealPlatformConnections({ onConnectionsUpdate }: RealPla
       setConnecting(platform)
       setError(null)
       
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/social/auth/${platform}`, {
+      const response = await fetch(`https://ignitch-api-8f7efad07047.herokuapp.com/api/social/auth/${platform}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
@@ -129,7 +129,7 @@ export default function RealPlatformConnections({ onConnectionsUpdate }: RealPla
     if (!session) return
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/social/accounts/${platform}`, {
+      const response = await fetch(`https://ignitch-api-8f7efad07047.herokuapp.com/api/social/accounts/${platform}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${session.access_token}`,

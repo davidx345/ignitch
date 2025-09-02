@@ -21,7 +21,7 @@ OAUTH_CONFIGS = {
     "instagram": {
         "client_id": os.getenv("INSTAGRAM_CLIENT_ID", "your_instagram_client_id"),
         "client_secret": os.getenv("INSTAGRAM_CLIENT_SECRET", "your_instagram_client_secret"),
-        "redirect_uri": os.getenv("INSTAGRAM_REDIRECT_URI", "http://localhost:3000/auth/instagram/callback"),
+        "redirect_uri": os.getenv("INSTAGRAM_REDIRECT_URI", "https://ignitch.vercel.app/auth/instagram/callback"),
         "auth_url": "https://www.facebook.com/v18.0/dialog/oauth",
         "token_url": "https://graph.facebook.com/v18.0/oauth/access_token",
         "api_base": "https://graph.facebook.com/v18.0",
@@ -30,7 +30,7 @@ OAUTH_CONFIGS = {
     "facebook": {
         "client_id": os.getenv("FACEBOOK_CLIENT_ID", "your_facebook_client_id"),
         "client_secret": os.getenv("FACEBOOK_CLIENT_SECRET", "your_facebook_client_secret"),
-        "redirect_uri": os.getenv("FACEBOOK_REDIRECT_URI", "http://localhost:3000/auth/facebook/callback"),
+        "redirect_uri": os.getenv("FACEBOOK_REDIRECT_URI", "https://ignitch.vercel.app/auth/facebook/callback"),
         "auth_url": "https://www.facebook.com/v18.0/dialog/oauth",
         "token_url": "https://graph.facebook.com/v18.0/oauth/access_token",
         "api_base": "https://graph.facebook.com/v18.0",
@@ -39,7 +39,7 @@ OAUTH_CONFIGS = {
     "tiktok": {
         "client_id": os.getenv("TIKTOK_CLIENT_ID", "your_tiktok_client_id"),
         "client_secret": os.getenv("TIKTOK_CLIENT_SECRET", "your_tiktok_client_secret"),
-        "redirect_uri": os.getenv("TIKTOK_REDIRECT_URI", "http://localhost:3000/auth/tiktok/callback"),
+        "redirect_uri": os.getenv("TIKTOK_REDIRECT_URI", "https://ignitch.vercel.app/auth/tiktok/callback"),
         "auth_url": "https://www.tiktok.com/auth/authorize/",
         "token_url": "https://open-api.tiktok.com/oauth/access_token/",
         "api_base": "https://open-api.tiktok.com",
@@ -48,7 +48,7 @@ OAUTH_CONFIGS = {
     "twitter": {
         "client_id": os.getenv("TWITTER_CLIENT_ID", "your_twitter_client_id"),
         "client_secret": os.getenv("TWITTER_CLIENT_SECRET", "your_twitter_client_secret"),
-        "redirect_uri": os.getenv("TWITTER_REDIRECT_URI", "http://localhost:3000/auth/twitter/callback"),
+        "redirect_uri": os.getenv("TWITTER_REDIRECT_URI", "https://ignitch.vercel.app/auth/twitter/callback"),
         "auth_url": "https://twitter.com/i/oauth2/authorize",
         "token_url": "https://api.twitter.com/2/oauth2/token",
         "api_base": "https://api.twitter.com/2",

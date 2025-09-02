@@ -306,7 +306,7 @@ export default function Dashboard() {
 
           <TabsContent value="overview" className="space-y-6">
             {/* Stats Grid - REAL DATA */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {stats.map((stat, index) => (
                 <motion.div
                   key={index}
@@ -315,19 +315,19 @@ export default function Dashboard() {
                   transition={{ delay: index * 0.1 }}
                 >
                   <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
-                    <CardContent className="p-6">
+                    <CardContent className="p-4 sm:p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm font-medium text-gray-600">{stat.label}</p>
-                          <p className="text-3xl font-bold" style={{ color: colors.ink }}>
+                          <p className="text-xs sm:text-sm font-medium text-gray-600">{stat.label}</p>
+                          <p className="text-2xl sm:text-3xl font-bold" style={{ color: colors.ink }}>
                             {stat.value}
                           </p>
                         </div>
                         <div
-                          className="w-12 h-12 rounded-xl flex items-center justify-center"
+                          className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center"
                           style={{ backgroundColor: `${stat.color}20` }}
                         >
-                          <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
+                          <stat.icon className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: stat.color }} />
                         </div>
                       </div>
                     </CardContent>
@@ -338,19 +338,19 @@ export default function Dashboard() {
 
             {/* AI Features Highlight */}
             <Card className="shadow-lg border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-6">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 space-y-2 sm:space-y-0">
                   <div>
-                    <h3 className="text-xl font-bold flex items-center gap-2" style={{ color: colors.ink }}>
-                      <Zap className="h-6 w-6 text-purple-600" />
+                    <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2" style={{ color: colors.ink }}>
+                      <Zap className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
                       AI-Powered Features
                     </h3>
-                    <p className="text-sm text-gray-600">Experience the future of social media management</p>
+                    <p className="text-xs sm:text-sm text-gray-600">Experience the future of social media management</p>
                   </div>
-                  <Badge className="bg-purple-100 text-purple-800">New</Badge>
+                  <Badge className="bg-purple-100 text-purple-800 self-start sm:self-auto">New</Badge>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                   {aiFeatures.map((feature, index) => (
                     <Card key={index} className="bg-white border-0 shadow-md hover:shadow-lg transition-all cursor-pointer"
                           onClick={() => setActiveTab(feature.tab)}>
@@ -410,7 +410,7 @@ export default function Dashboard() {
             </Card>
 
             {/* Recent Activity - REAL DATA */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               <Card className="shadow-lg">
                 <CardContent className="p-6">
                   <h3 className="text-xl font-bold mb-4" style={{ color: colors.ink }}>

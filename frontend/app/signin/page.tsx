@@ -60,13 +60,13 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-sm sm:max-w-md">
         <Card className="border-0 shadow-xl">
-          <CardContent className="p-8">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold mb-2 text-gray-900">Welcome Back</h1>
-              <p className="text-gray-600">Sign in to continue your AI marketing journey</p>
+          <CardContent className="p-6 sm:p-8">
+            <div className="text-center mb-6 sm:mb-8">
+              <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-900">Welcome Back</h1>
+              <p className="text-sm sm:text-base text-gray-600">Sign in to continue your AI marketing journey</p>
             </div>
             {error && (
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
@@ -112,11 +112,11 @@ export default function SignInPage() {
             </form>
             <div className="mt-6">
               <Separator />
-              <div className="flex justify-center gap-3 mt-6">
+              <div className="flex flex-col sm:flex-row justify-center gap-3 mt-6">
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-12"
+                  className="h-11 sm:h-12 flex-1 sm:flex-none"
                   onClick={() => handleProviderSignIn("google")}
                   disabled={isLoading}
                 >
@@ -125,7 +125,7 @@ export default function SignInPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-12"
+                  className="h-11 sm:h-12 flex-1 sm:flex-none"
                   onClick={() => handleProviderSignIn("github")}
                   disabled={isLoading}
                 >

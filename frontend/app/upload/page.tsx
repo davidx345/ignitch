@@ -425,43 +425,44 @@ export default function UploadPage() {
     <div className="min-h-screen" style={{ backgroundColor: colors.gray }}>
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-4">
               <Link href="/dashboard">
-                <Button variant="outline" size="sm" className="bg-transparent">
+                <Button variant="outline" size="sm" className="bg-transparent text-xs sm:text-sm">
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Dashboard
+                  <span className="hidden sm:inline">Back to Dashboard</span>
+                  <span className="sm:hidden">Back</span>
                 </Button>
               </Link>
               <div className="flex items-center space-x-3">
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center"
                   style={{ backgroundColor: colors.primary }}
                 >
-                  <Sparkles className="w-6 h-6 text-white" />
+                  <Sparkles className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold" style={{ color: colors.ink }}>
+                  <h1 className="text-lg sm:text-2xl font-bold" style={{ color: colors.ink }}>
                     Create & Upload
                   </h1>
-                  <p className="text-sm text-gray-600">AI-powered content creation workflow</p>
+                  <p className="text-xs sm:text-sm text-gray-600">AI-powered content creation</p>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
               {/* Business Visibility Score Widget */}
-              <Card className="px-4 py-2 shadow-sm">
-                <div className="flex items-center space-x-3">
+              <Card className="px-3 py-2 sm:px-4 shadow-sm w-full sm:w-auto">
+                <div className="flex items-center justify-between sm:justify-start sm:space-x-3">
                   <div className="flex items-center space-x-2">
                     <Award className="w-4 h-4" style={{ color: getVisibilityScoreColor(visibilityScore) }} />
-                    <span className="text-sm font-semibold" style={{ color: colors.ink }}>
+                    <span className="text-xs sm:text-sm font-semibold" style={{ color: colors.ink }}>
                       Visibility Score
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="w-12 sm:w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
                       <motion.div
                         className="h-full rounded-full"
                         style={{ backgroundColor: getVisibilityScoreColor(visibilityScore) }}
@@ -470,7 +471,7 @@ export default function UploadPage() {
                         transition={{ duration: 1 }}
                       />
                     </div>
-                    <span className="text-sm font-bold" style={{ color: getVisibilityScoreColor(visibilityScore) }}>
+                    <span className="text-xs sm:text-sm font-bold" style={{ color: getVisibilityScoreColor(visibilityScore) }}>
                       {visibilityScore}/100
                     </span>
                   </div>
@@ -478,7 +479,7 @@ export default function UploadPage() {
               </Card>
 
               <Badge
-                className="px-3 py-1"
+                className="px-2 py-1 sm:px-3 text-xs sm:text-sm w-full sm:w-auto text-center"
                 style={{ backgroundColor: `${colors.mint}20`, color: colors.mint }}
               >
                 Pro Business Assistant
@@ -488,19 +489,21 @@ export default function UploadPage() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
         {/* Progress Steps */}
-        <div className="mb-8">
-          <div className="flex items-center justify-center space-x-8">
-            {steps.map((step, index) => (
-              <div key={step.id} className="flex items-center space-x-4">
+        <div className="mb-6 sm:mb-8">
+          {/* Mobile Progress Steps - Horizontal Scroll */}
+          <div className="block sm:hidden">
+            <div className="flex space-x-4 overflow-x-auto pb-4">
+              {steps.map((step, index) => (
                 <motion.div
-                  className={`flex flex-col items-center space-y-2 cursor-pointer`}
+                  key={step.id}
+                  className="flex-shrink-0 flex flex-col items-center space-y-2 cursor-pointer min-w-[80px]"
                   onClick={() => setCurrentStep(step.id)}
                   whileHover={{ scale: 1.05 }}
                 >
                   <div
-                    className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 ${
+                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
                       currentStep >= step.id ? "text-white shadow-lg" : "text-gray-400 border-2 border-gray-300"
                     }`}
                     style={{
@@ -508,29 +511,62 @@ export default function UploadPage() {
                     }}
                   >
                     {currentStep > step.id ? (
-                      <CheckCircle className="w-8 h-8" />
+                      <CheckCircle className="w-5 h-5" />
                     ) : (
-                      <step.icon className="w-8 h-8" />
+                      <step.icon className="w-5 h-5" />
                     )}
                   </div>
                   <div className="text-center">
-                    <div className={`font-semibold text-sm ${currentStep >= step.id ? "text-gray-900" : "text-gray-400"}`}>
+                    <div className={`font-semibold text-xs ${currentStep >= step.id ? "text-gray-900" : "text-gray-400"}`}>
+                      {step.title.split(' ')[0]}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop Progress Steps */}
+          <div className="hidden sm:flex items-center justify-center space-x-4 lg:space-x-8">
+            {steps.map((step, index) => (
+              <div key={step.id} className="flex items-center space-x-2 lg:space-x-4">
+                <motion.div
+                  className={`flex flex-col items-center space-y-2 cursor-pointer`}
+                  onClick={() => setCurrentStep(step.id)}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <div
+                    className={`w-12 h-12 lg:w-16 lg:h-16 rounded-full flex items-center justify-center transition-all duration-300 ${
+                      currentStep >= step.id ? "text-white shadow-lg" : "text-gray-400 border-2 border-gray-300"
+                    }`}
+                    style={{
+                      backgroundColor: currentStep >= step.id ? colors.primary : "transparent",
+                    }}
+                  >
+                    {currentStep > step.id ? (
+                      <CheckCircle className="w-6 h-6 lg:w-8 lg:h-8" />
+                    ) : (
+                      <step.icon className="w-6 h-6 lg:w-8 lg:h-8" />
+                    )}
+                  </div>
+                  <div className="text-center">
+                    <div className={`font-semibold text-xs lg:text-sm ${currentStep >= step.id ? "text-gray-900" : "text-gray-400"}`}>
                       {step.title}
                     </div>
-                    <div className="text-xs text-gray-500 max-w-[120px]">
+                    <div className="text-xs text-gray-500 max-w-[100px] lg:max-w-[120px] hidden lg:block">
                       {step.description}
                     </div>
                   </div>
                 </motion.div>
                 {index < steps.length - 1 && (
-                  <div className={`w-16 h-0.5 ${currentStep > step.id ? "bg-blue-500" : "bg-gray-300"}`} />
+                  <div className={`w-8 lg:w-16 h-0.5 ${currentStep > step.id ? "bg-blue-500" : "bg-gray-300"}`} />
                 )}
               </div>
             ))}
           </div>
 
           {/* Progress Bar */}
-          <div className="mt-6 max-w-2xl mx-auto">
+          <div className="mt-4 sm:mt-6 max-w-2xl mx-auto px-2">
             <Progress value={getStepProgress()} className="h-2" />
             <div className="flex justify-between text-xs text-gray-500 mt-2">
               <span>Step {currentStep + 1} of {steps.length}</span>
@@ -548,16 +584,16 @@ export default function UploadPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold mb-4" style={{ color: colors.ink }}>
+              <div className="text-center mb-6 sm:mb-8 px-4">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4" style={{ color: colors.ink }}>
                   Upload & Auto-Enhance
                 </h2>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
                   Upload your content and let AI auto-crop, enhance quality, and optimize for every platform.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                 {/* Upload Component */}
                 <div className="lg:col-span-2">
                   <ProductUpload
@@ -667,16 +703,16 @@ export default function UploadPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold mb-4" style={{ color: colors.ink }}>
+              <div className="text-center mb-6 sm:mb-8 px-4">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4" style={{ color: colors.ink }}>
                   What's Your Business Goal?
                 </h2>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
                   Choose your primary goal so AI can optimize everything - content, platforms, timing, and strategy.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 {businessGoals.map((goal) => (
                   <motion.div
                     key={goal.id}
@@ -690,20 +726,20 @@ export default function UploadPage() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <Card className="h-full">
-                      <CardContent className="p-6 text-center">
+                      <CardContent className="p-4 sm:p-6 text-center">
                         <div
-                          className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4"
+                          className="w-12 h-12 sm:w-16 sm:h-16 mx-auto rounded-full flex items-center justify-center mb-3 sm:mb-4"
                           style={{ backgroundColor: `${goal.color}20` }}
                         >
-                          <goal.icon className="w-8 h-8" style={{ color: goal.color }} />
+                          <goal.icon className="w-6 h-6 sm:w-8 sm:h-8" style={{ color: goal.color }} />
                         </div>
-                        <h3 className="font-bold text-lg mb-2" style={{ color: colors.ink }}>
+                        <h3 className="font-bold text-base sm:text-lg mb-2" style={{ color: colors.ink }}>
                           {goal.title}
                         </h3>
-                        <p className="text-gray-600 text-sm mb-4">
+                        <p className="text-gray-600 text-sm mb-3 sm:mb-4">
                           {goal.description}
                         </p>
-                        <div className="space-y-2">
+                        <div className="space-y-2 hidden sm:block">
                           <div className="flex flex-wrap gap-1 justify-center">
                             {goal.strategy.hashtags.slice(0, 3).map((tag, index) => (
                               <Badge key={index} variant="outline" className="text-xs">

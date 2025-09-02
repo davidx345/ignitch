@@ -123,7 +123,8 @@ if MIDDLEWARE_AVAILABLE:
 origins = [
     "http://localhost:3000",  # Local development
     "https://localhost:3000",  # Local development with HTTPS
-    "https://ignitch.vercel.app",  # Railway frontend URL
+    "https://ignitch.vercel.app",  # Vercel frontend URL
+    "https://ignitch-git-main-davidx345s-projects.vercel.app",  # Vercel preview URL
     "https://adflow.app",  # Production domain
     "https://www.adflow.app",  # Production domain with www
 ]
