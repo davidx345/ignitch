@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -21,7 +21,8 @@ import {
   Brain,
   Bot,
   Zap,
-  Target
+  Target,
+  Loader
 } from "lucide-react"
 
 // Ignitch Color System
@@ -37,15 +38,175 @@ const colors = {
   orange: "#F59E0B"
 }
 
+interface DashboardStats {
+  total_posts: number;
+  total_reach: number;
+  avg_engagement: number;
+  connected_platforms: number;
+  posts_this_week: number;
+  visibility_score: number;
+}
+
+interface RecentPost {
+  id: string;
+  title: string;
+  platform: string;
+  content_preview: string;
+  status: string;
+  reach: number;
+  engagement: number;
+  created_at: string;
+  has_media: boolean;
+}
+
+interface PerformanceInsight {
+  metric: string;
+  value: string;
+  trend: string;
+  period: string;
+  description: string;
+}
+
+interface DashboardData {
+  user_stats: DashboardStats;
+  recent_posts: RecentPost[];
+  performance_insights: PerformanceInsight[];
+  websocket_url: string;
+}
+
 export default function Dashboard() {
-  const [visibilityScore] = useState(73)
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState("overview")
+  const [wsConnection, setWsConnection] = useState<WebSocket | null>(null)
+
+  // Fetch dashboard data from API
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const token = localStorage.getItem('token')
+        if (!token) {
+          setError('Please sign in to view dashboard')
+          setLoading(false)
+          return
+        }
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/overview`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        const data: DashboardData = await response.json()
+        setDashboardData(data)
+        
+        // Setup WebSocket for real-time updates
+        if (data.websocket_url) {
+          const wsUrl = `${process.env.NEXT_PUBLIC_WS_URL || 'wss://ignitch-api-8f7efad07047.herokuapp.com'}${data.websocket_url}`
+          const ws = new WebSocket(wsUrl)
+          
+          ws.onmessage = (event) => {
+            const update = JSON.parse(event.data)
+            if (update.type === 'stats_update') {
+              setDashboardData(prev => prev ? { ...prev, user_stats: update.data } : null)
+            }
+          }
+          
+          ws.onerror = (error) => {
+            console.error('WebSocket error:', error)
+          }
+          
+          setWsConnection(ws)
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load dashboard')
+        console.error('Dashboard fetch error:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchDashboardData()
+
+    // Cleanup WebSocket on unmount
+    return () => {
+      if (wsConnection) {
+        wsConnection.close()
+      }
+    }
+  }, [])
+
+  // Format numbers for display
+  const formatNumber = (num: number): string => {
+    if (num >= 1000000) {
+      return `${(num / 1000000).toFixed(1)}M`
+    } else if (num >= 1000) {
+      return `${(num / 1000).toFixed(1)}K`
+    }
+    return num.toString()
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.gray }}>
+        <div className="text-center">
+          <Loader className="w-8 h-8 animate-spin mx-auto mb-4" style={{ color: colors.primary }} />
+          <p className="text-gray-600">Loading your dashboard...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.gray }}>
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+        </div>
+      </div>
+    )
+  }
+
+  if (!dashboardData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.gray }}>
+        <p className="text-gray-600">No dashboard data available</p>
+      </div>
+    )
+  }
 
   const stats = [
-    { label: "Total Posts", value: "24", icon: Upload, color: colors.primary },
-    { label: "Total Reach", value: "156K", icon: Eye, color: colors.mint },
-    { label: "Avg Engagement", value: "8.4%", icon: Heart, color: colors.coral },
-    { label: "Platforms", value: "4", icon: Users, color: colors.purple },
+    { 
+      label: "Total Posts", 
+      value: dashboardData.user_stats.total_posts.toString(), 
+      icon: Upload, 
+      color: colors.primary 
+    },
+    { 
+      label: "Total Reach", 
+      value: formatNumber(dashboardData.user_stats.total_reach), 
+      icon: Eye, 
+      color: colors.mint 
+    },
+    { 
+      label: "Avg Engagement", 
+      value: `${dashboardData.user_stats.avg_engagement}%`, 
+      icon: Heart, 
+      color: colors.coral 
+    },
+    { 
+      label: "Platforms", 
+      value: dashboardData.user_stats.connected_platforms.toString(), 
+      icon: Users, 
+      color: colors.purple 
+    },
   ]
 
   const aiFeatures = [
@@ -84,7 +245,9 @@ export default function Dashboard() {
               <Card className="px-3 py-2 sm:px-4">
                 <div className="flex items-center space-x-2 sm:space-x-3">
                   <Award className="w-4 h-4" style={{ color: colors.mint }} />
-                  <span className="text-xs sm:text-sm font-semibold">Visibility Score: {visibilityScore}/100</span>
+                  <span className="text-xs sm:text-sm font-semibold">
+                    Visibility Score: {dashboardData.user_stats.visibility_score}/100
+                  </span>
                 </div>
               </Card>
               <div className="flex space-x-2 w-full sm:w-auto">
@@ -130,7 +293,7 @@ export default function Dashboard() {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            {/* Stats Grid */}
+            {/* Stats Grid - REAL DATA */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {stats.map((stat, index) => (
                 <motion.div
@@ -234,7 +397,7 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            {/* Recent Activity */}
+            {/* Recent Activity - REAL DATA */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card className="shadow-lg">
                 <CardContent className="p-6">
@@ -242,16 +405,47 @@ export default function Dashboard() {
                     Recent Posts
                   </h3>
                   <div className="space-y-4">
-                    {[1, 2, 3].map((_, index) => (
-                      <div key={index} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
-                        <div className="w-12 h-12 bg-gray-200 rounded-lg"></div>
-                        <div className="flex-1">
-                          <p className="font-medium text-sm">Instagram Post #{index + 1}</p>
-                          <p className="text-xs text-gray-600">2 hours ago • 1.2K reach</p>
+                    {dashboardData.recent_posts.length > 0 ? (
+                      dashboardData.recent_posts.slice(0, 3).map((post, index) => (
+                        <div key={post.id} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
+                          <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                            {post.has_media ? (
+                              <Eye className="w-6 h-6 text-gray-500" />
+                            ) : (
+                              <div className="text-xs font-bold text-gray-500">TXT</div>
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-medium text-sm">{post.title || `${post.platform} Post`}</p>
+                            <p className="text-xs text-gray-600">
+                              {new Date(post.created_at).toLocaleDateString()} • {formatNumber(post.reach)} reach
+                            </p>
+                          </div>
+                          <Badge 
+                            style={{ 
+                              backgroundColor: post.status === 'published' ? `${colors.mint}20` : `${colors.orange}20`, 
+                              color: post.status === 'published' ? colors.mint : colors.orange 
+                            }}
+                          >
+                            {post.status === 'published' ? 'Published' : 'Draft'}
+                          </Badge>
                         </div>
-                        <Badge style={{ backgroundColor: `${colors.mint}20`, color: colors.mint }}>Published</Badge>
+                      ))
+                    ) : (
+                      <div className="text-center py-8">
+                        <Upload className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                        <p className="text-gray-500 mb-2">No posts yet</p>
+                        <p className="text-xs text-gray-400">Create your first post to see it here</p>
+                        <Button 
+                          className="mt-4" 
+                          size="sm"
+                          style={{ backgroundColor: colors.primary }}
+                          onClick={() => (window.location.href = "/upload")}
+                        >
+                          Create Post
+                        </Button>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -262,27 +456,26 @@ export default function Dashboard() {
                     Performance Insights
                   </h3>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <TrendingUp className="w-5 h-5" style={{ color: colors.mint }} />
-                        <span className="text-sm font-medium">Engagement up 23%</span>
+                    {dashboardData.performance_insights.length > 0 ? (
+                      dashboardData.performance_insights.slice(0, 3).map((insight, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div className="flex items-center space-x-3">
+                            <TrendingUp 
+                              className="w-5 h-5" 
+                              style={{ color: insight.trend === 'up' ? colors.mint : colors.coral }} 
+                            />
+                            <span className="text-sm font-medium">{insight.metric}: {insight.value}</span>
+                          </div>
+                          <span className="text-xs text-gray-600">{insight.period}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-8">
+                        <BarChart3 className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                        <p className="text-gray-500 mb-2">No insights yet</p>
+                        <p className="text-xs text-gray-400">Post more content to get performance insights</p>
                       </div>
-                      <span className="text-xs text-gray-600">vs last week</span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <Eye className="w-5 h-5" style={{ color: colors.primary }} />
-                        <span className="text-sm font-medium">Reach increased 18%</span>
-                      </div>
-                      <span className="text-xs text-gray-600">this month</span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <Users className="w-5 h-5 text-purple-600" />
-                        <span className="text-sm font-medium">340 new followers</span>
-                      </div>
-                      <span className="text-xs text-gray-600">this week</span>
-                    </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
