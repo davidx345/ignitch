@@ -223,6 +223,7 @@ async def root():
             "health": "/health",
             "auth": "/auth/*",
             "docs": "/api/docs" if os.getenv("ENVIRONMENT") != "production" else "disabled",
+            "social": "/api/social/*",
             "media_v2": "/api/media/v2",
             "ai_coach_v2": "/api/ai-coach/v2", 
             "autopilot_v2": "/api/autopilot/v2"
