@@ -158,7 +158,7 @@ export default function UploadPage() {
   useEffect(() => {
     const fetchVisibilityScore = async () => {
       try {
-        const response = await fetch('/api/dashboard/overview', {
+        const response = await fetch('https://ignitch-api-8f7efad07047.herokuapp.com/api/dashboard/overview', {
           headers: {
             'Authorization': `Bearer ${session?.access_token}`
           }

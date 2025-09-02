@@ -74,6 +74,9 @@ interface DashboardData {
   platform_performance: any[];
   recent_posts: RecentPost[];
   visibility_tips: string[];
+  performance_insights?: PerformanceInsight[];
+  trending_hashtags?: string[];
+  best_performing_content?: any[];
 }
 
 export default function Dashboard() {
@@ -99,7 +102,7 @@ export default function Dashboard() {
 
     const fetchDashboardData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/overview`, {
+        const response = await fetch('https://ignitch-api-8f7efad07047.herokuapp.com/api/dashboard/overview', {
           headers: {
             'Authorization': `Bearer ${session.access_token}`,
             'Content-Type': 'application/json'
@@ -194,25 +197,25 @@ export default function Dashboard() {
   const stats = [
     { 
       label: "Total Posts", 
-      value: dashboardData.stats.total_posts.toString(), 
+      value: dashboardData?.stats?.total_posts?.toString() || "0", 
       icon: Upload, 
       color: colors.primary 
     },
     { 
       label: "Total Reach", 
-      value: formatNumber(dashboardData.stats.total_reach), 
+      value: formatNumber(dashboardData?.stats?.total_reach || 0), 
       icon: Eye, 
       color: colors.mint 
     },
     { 
       label: "Avg Engagement", 
-      value: `${dashboardData.stats.avg_engagement}%`, 
+      value: `${dashboardData?.stats?.avg_engagement || 0}%`, 
       icon: Heart, 
       color: colors.coral 
     },
     { 
       label: "Platforms", 
-      value: dashboardData.stats.connected_platforms.toString(), 
+      value: dashboardData?.stats?.connected_platforms?.toString() || "0", 
       icon: Users, 
       color: colors.purple 
     },
@@ -255,7 +258,7 @@ export default function Dashboard() {
                 <div className="flex items-center space-x-2 sm:space-x-3">
                   <Award className="w-4 h-4" style={{ color: colors.mint }} />
                   <span className="text-xs sm:text-sm font-semibold">
-                    Visibility Score: {dashboardData.stats.visibility_score}/100
+                    Visibility Score: {dashboardData?.stats?.visibility_score || 0}/100
                   </span>
                 </div>
               </Card>
@@ -414,7 +417,7 @@ export default function Dashboard() {
                     Recent Posts
                   </h3>
                   <div className="space-y-4">
-                    {dashboardData.recent_posts.length > 0 ? (
+                    {dashboardData.recent_posts && dashboardData.recent_posts.length > 0 ? (
                       dashboardData.recent_posts.slice(0, 3).map((post, index) => (
                         <div key={post.id} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
                           <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
@@ -465,7 +468,7 @@ export default function Dashboard() {
                     Performance Insights
                   </h3>
                   <div className="space-y-4">
-                    {dashboardData.visibility_tips.length > 0 ? (
+                    {dashboardData.visibility_tips && dashboardData.visibility_tips.length > 0 ? (
                       dashboardData.visibility_tips.slice(0, 3).map((tip: string, index: number) => (
                         <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                           <div className="flex items-center space-x-3">
