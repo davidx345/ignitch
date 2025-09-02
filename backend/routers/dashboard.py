@@ -221,16 +221,19 @@ async def get_dashboard_overview(
         })
     
     return {
-        "user_stats": {
+        "stats": {
             "total_posts": stats["total_posts"],
             "total_reach": stats["total_reach"], 
             "avg_engagement": stats["avg_engagement"],
             "connected_platforms": stats["connected_platforms"],
             "posts_this_week": stats["posts_this_week"],
+            "visibility_score": current_user.visibility_score or 0,
             "media_files": media_files
         },
         "recent_posts": formatted_recent_posts,
         "performance_insights": performance_insights,
+        "platform_performance": [],  # Add empty array for compatibility
+        "visibility_tips": [insight["description"] for insight in performance_insights],
         "quick_actions": [
             {
                 "title": "Upload & Create",

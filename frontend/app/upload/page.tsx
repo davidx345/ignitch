@@ -891,22 +891,22 @@ export default function UploadPage() {
                             <p className="text-gray-800 leading-relaxed">{aiRewrittenPrompt}</p>
                           </div>
                           
-                          {/* Performance Preview */}
+                          {/* AI Analysis Preview */}
                           <div className="grid grid-cols-3 gap-4 text-center">
                             <div className="p-3 bg-blue-50 rounded-lg">
                               <Eye className="w-5 h-5 mx-auto mb-1" style={{ color: colors.primary }} />
-                              <div className="text-sm font-bold">+28%</div>
-                              <div className="text-xs text-gray-600">Expected Reach</div>
+                              <div className="text-sm font-bold">AI</div>
+                              <div className="text-xs text-gray-600">Optimized</div>
                             </div>
                             <div className="p-3 bg-green-50 rounded-lg">
                               <Heart className="w-5 h-5 mx-auto mb-1" style={{ color: colors.mint }} />
-                              <div className="text-sm font-bold">+15%</div>
-                              <div className="text-xs text-gray-600">Engagement</div>
+                              <div className="text-sm font-bold">Multi</div>
+                              <div className="text-xs text-gray-600">Platform</div>
                             </div>
                             <div className="p-3 bg-purple-50 rounded-lg">
                               <Target className="w-5 h-5 mx-auto mb-1 text-purple-600" />
-                              <div className="text-sm font-bold">95%</div>
-                              <div className="text-xs text-gray-600">Goal Match</div>
+                              <div className="text-sm font-bold">Goal</div>
+                              <div className="text-xs text-gray-600">Aligned</div>
                             </div>
                           </div>
                         </motion.div>
