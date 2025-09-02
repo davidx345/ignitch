@@ -16,12 +16,22 @@ load_dotenv()
 
 # Import essential routers only (avoiding problematic imports)
 try:
-    from routers import auth, media, social, data_deletion, dashboard
+    from routers import auth, media, social, data_deletion
     from routers.media_enhanced import router as media_enhanced_router
+    
+    # Try to import dashboard separately to catch SQLAlchemy issues
+    try:
+        from routers import dashboard
+        DASHBOARD_AVAILABLE = True
+    except Exception as dashboard_error:
+        print(f"Dashboard import warning: {dashboard_error}")
+        DASHBOARD_AVAILABLE = False
+        
     ROUTERS_AVAILABLE = True
 except ImportError as e:
     print(f"Router import warning: {e}")
     ROUTERS_AVAILABLE = False
+    DASHBOARD_AVAILABLE = False
 
 from database import engine, Base
 # Import models and middleware with error handling
@@ -157,7 +167,27 @@ if ROUTERS_AVAILABLE:
     app.include_router(media_enhanced_router, prefix="/api/media/v2", tags=["Enhanced Media Upload"])
     
     app.include_router(social.router, prefix="/api/social", tags=["Social Media"])
-    app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Analytics Dashboard"])
+    
+    # Include dashboard only if available
+    if DASHBOARD_AVAILABLE:
+        app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Analytics Dashboard"])
+    else:
+        # Create a fallback dashboard endpoint
+        @app.get("/api/dashboard/overview")
+        async def dashboard_fallback():
+            return {
+                "error": "Dashboard temporarily unavailable",
+                "stats": {
+                    "total_posts": 0,
+                    "total_reach": 0,
+                    "avg_engagement": 0,
+                    "connected_platforms": 0,
+                    "posts_this_week": 0,
+                    "visibility_score": 0
+                },
+                "message": "Dashboard service is being updated. Please try again later."
+            }
+    
     app.include_router(data_deletion.router, prefix="/api/data-deletion", tags=["Data Deletion"])
     
     # TODO: Add other routers once import issues are resolved

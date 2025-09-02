@@ -1180,20 +1180,20 @@ export default function UploadPage() {
                   <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4">
                     <h4 className="font-semibold mb-3 flex items-center" style={{ color: colors.ink }}>
                       <TrendingUp className="w-4 h-4 mr-2" style={{ color: colors.primary }} />
-                      Expected Business Impact
+                      Business Impact Analysis
                     </h4>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-700">Goal Alignment:</span>
-                        <span className="font-bold text-green-600">95%</span>
+                        <span className="font-bold text-gray-600">Analyzing...</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-700">Reach Boost:</span>
-                        <span className="font-bold text-blue-600">+28%</span>
+                        <span className="text-sm text-gray-700">Reach Potential:</span>
+                        <span className="font-bold text-gray-600">Calculating...</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-700">Engagement:</span>
-                        <span className="font-bold text-purple-600">+15%</span>
+                        <span className="font-bold text-gray-600">Estimating...</span>
                       </div>
                     </div>
                   </div>

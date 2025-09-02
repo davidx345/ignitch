@@ -69,7 +69,7 @@ export const simulateOAuthConnection = async (platform: string) => {
   
   return {
     connected: true,
-    followers: Math.floor(Math.random() * 5000) + 500,
-    engagement: Math.random() * 5 + 2
+    followers: 0, // Start with 0 until real data is fetched
+    engagement: 0 // Start with 0 until real data is fetched
   }
 }
