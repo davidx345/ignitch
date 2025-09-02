@@ -99,7 +99,7 @@ export default function Dashboard() {
 
     const fetchDashboardData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/overview`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/overview`, {
           headers: {
             'Authorization': `Bearer ${session.access_token}`,
             'Content-Type': 'application/json'

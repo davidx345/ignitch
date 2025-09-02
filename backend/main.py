@@ -16,8 +16,7 @@ load_dotenv()
 
 # Import essential routers only (avoiding problematic imports)
 try:
-    from routers import auth, media, social, data_deletion
-    from routers.dashboard_real import router as dashboard_router
+    from routers import auth, media, social, data_deletion, dashboard
     from routers.media_enhanced import router as media_enhanced_router
     ROUTERS_AVAILABLE = True
 except ImportError as e:
@@ -158,7 +157,7 @@ if ROUTERS_AVAILABLE:
     app.include_router(media_enhanced_router, prefix="/api/media/v2", tags=["Enhanced Media Upload"])
     
     app.include_router(social.router, prefix="/api/social", tags=["Social Media"])
-    app.include_router(dashboard_router, prefix="/api/dashboard", tags=["Analytics Dashboard"])
+    app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Analytics Dashboard"])
     app.include_router(data_deletion.router, prefix="/api/data-deletion", tags=["Data Deletion"])
     
     # TODO: Add other routers once import issues are resolved
