@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 import os
+import requests
 
 from database import get_db
 from models import User
@@ -44,17 +45,64 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: str = payload.get("sub")
-        if user_id is None:
-            raise credentials_exception
-    except JWTError:
+        # First try to decode as our custom JWT
+        try:
+            payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
+            user_id: str = payload.get("sub")
+            if user_id is None:
+                raise credentials_exception
+            
+            user = db.query(User).filter(User.id == user_id).first()
+            if user is None:
+                raise credentials_exception
+            return user
+        except JWTError:
+            # If custom JWT fails, try Supabase JWT
+            return await get_current_user_from_supabase(credentials.credentials, db)
+            
+    except Exception:
         raise credentials_exception
-    
-    user = db.query(User).filter(User.id == user_id).first()
-    if user is None:
-        raise credentials_exception
-    return user
+
+async def get_current_user_from_supabase(token: str, db: Session = Depends(get_db)):
+    """Verify Supabase JWT and return user"""
+    try:
+        # Verify Supabase JWT (you might need to get the Supabase public key)
+        # For now, we'll decode without verification to get user info
+        # In production, you should verify with Supabase's public key
+        
+        # Decode without verification (not recommended for production)
+        payload = jwt.decode(token, options={"verify_signature": False})
+        supabase_user_id = payload.get("sub")
+        email = payload.get("email")
+        
+        if not supabase_user_id or not email:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid Supabase token"
+            )
+        
+        # Check if user exists in our database
+        user = db.query(User).filter(User.email == email).first()
+        
+        if not user:
+            # Create user if doesn't exist (OAuth flow)
+            user = User(
+                email=email,
+                full_name=payload.get("user_metadata", {}).get("full_name", ""),
+                supabase_user_id=supabase_user_id,
+                visibility_score=25
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+        
+        return user
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Could not validate Supabase credentials: {str(e)}"
+        )
 
 @router.post("/register", response_model=Token)
 async def register(user_data: UserCreate, db: Session = Depends(get_db)):

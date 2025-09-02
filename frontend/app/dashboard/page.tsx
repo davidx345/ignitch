@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AIBusinessCoach } from "@/components/ai-business-coach"
 import { AutoPilotMode } from "@/components/auto-pilot-mode"
+import { useAuth } from "@/contexts/auth-context"
+import { useRouter } from "next/navigation"
 import { 
   Sparkles, 
   Upload, 
@@ -68,33 +70,38 @@ interface PerformanceInsight {
 }
 
 interface DashboardData {
-  user_stats: DashboardStats;
+  stats: DashboardStats;
+  platform_performance: any[];
   recent_posts: RecentPost[];
-  performance_insights: PerformanceInsight[];
-  websocket_url: string;
+  visibility_tips: string[];
 }
 
 export default function Dashboard() {
+  const { user, session, loading: authLoading } = useAuth()
+  const router = useRouter()
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState("overview")
   const [wsConnection, setWsConnection] = useState<WebSocket | null>(null)
 
+  // Redirect to signin if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/signin')
+      return
+    }
+  }, [user, authLoading, router])
+
   // Fetch dashboard data from API
   useEffect(() => {
+    if (!session || !user) return
+
     const fetchDashboardData = async () => {
       try {
-        const token = localStorage.getItem('token')
-        if (!token) {
-          setError('Please sign in to view dashboard')
-          setLoading(false)
-          return
-        }
-
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/overview`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/overview`, {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${session.access_token}`,
             'Content-Type': 'application/json'
           }
         })
@@ -106,24 +113,9 @@ export default function Dashboard() {
         const data: DashboardData = await response.json()
         setDashboardData(data)
         
-        // Setup WebSocket for real-time updates
-        if (data.websocket_url) {
-          const wsUrl = `${process.env.NEXT_PUBLIC_WS_URL || 'wss://ignitch-api-8f7efad07047.herokuapp.com'}${data.websocket_url}`
-          const ws = new WebSocket(wsUrl)
-          
-          ws.onmessage = (event) => {
-            const update = JSON.parse(event.data)
-            if (update.type === 'stats_update') {
-              setDashboardData(prev => prev ? { ...prev, user_stats: update.data } : null)
-            }
-          }
-          
-          ws.onerror = (error) => {
-            console.error('WebSocket error:', error)
-          }
-          
-          setWsConnection(ws)
-        }
+        // TODO: Setup WebSocket for real-time updates when available
+        // Remove WebSocket code for now since backend doesn't provide websocket_url
+        
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load dashboard')
         console.error('Dashboard fetch error:', err)
@@ -140,7 +132,24 @@ export default function Dashboard() {
         wsConnection.close()
       }
     }
-  }, [])
+  }, [session, user])
+
+  // Show loading while auth is being checked
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.gray }}>
+        <div className="text-center">
+          <Loader className="w-8 h-8 animate-spin mx-auto mb-4" style={{ color: colors.primary }} />
+          <p className="text-gray-600">Checking authentication...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Don't render anything if not authenticated (will redirect)
+  if (!user) {
+    return null
+  }
 
   // Format numbers for display
   const formatNumber = (num: number): string => {
@@ -185,25 +194,25 @@ export default function Dashboard() {
   const stats = [
     { 
       label: "Total Posts", 
-      value: dashboardData.user_stats.total_posts.toString(), 
+      value: dashboardData.stats.total_posts.toString(), 
       icon: Upload, 
       color: colors.primary 
     },
     { 
       label: "Total Reach", 
-      value: formatNumber(dashboardData.user_stats.total_reach), 
+      value: formatNumber(dashboardData.stats.total_reach), 
       icon: Eye, 
       color: colors.mint 
     },
     { 
       label: "Avg Engagement", 
-      value: `${dashboardData.user_stats.avg_engagement}%`, 
+      value: `${dashboardData.stats.avg_engagement}%`, 
       icon: Heart, 
       color: colors.coral 
     },
     { 
       label: "Platforms", 
-      value: dashboardData.user_stats.connected_platforms.toString(), 
+      value: dashboardData.stats.connected_platforms.toString(), 
       icon: Users, 
       color: colors.purple 
     },
@@ -246,7 +255,7 @@ export default function Dashboard() {
                 <div className="flex items-center space-x-2 sm:space-x-3">
                   <Award className="w-4 h-4" style={{ color: colors.mint }} />
                   <span className="text-xs sm:text-sm font-semibold">
-                    Visibility Score: {dashboardData.user_stats.visibility_score}/100
+                    Visibility Score: {dashboardData.stats.visibility_score}/100
                   </span>
                 </div>
               </Card>
@@ -456,24 +465,23 @@ export default function Dashboard() {
                     Performance Insights
                   </h3>
                   <div className="space-y-4">
-                    {dashboardData.performance_insights.length > 0 ? (
-                      dashboardData.performance_insights.slice(0, 3).map((insight, index) => (
+                    {dashboardData.visibility_tips.length > 0 ? (
+                      dashboardData.visibility_tips.slice(0, 3).map((tip: string, index: number) => (
                         <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                           <div className="flex items-center space-x-3">
-                            <TrendingUp 
+                            <Target 
                               className="w-5 h-5" 
-                              style={{ color: insight.trend === 'up' ? colors.mint : colors.coral }} 
+                              style={{ color: colors.mint }} 
                             />
-                            <span className="text-sm font-medium">{insight.metric}: {insight.value}</span>
+                            <span className="text-sm font-medium">{tip}</span>
                           </div>
-                          <span className="text-xs text-gray-600">{insight.period}</span>
                         </div>
                       ))
                     ) : (
                       <div className="text-center py-8">
                         <BarChart3 className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                        <p className="text-gray-500 mb-2">No insights yet</p>
-                        <p className="text-xs text-gray-400">Post more content to get performance insights</p>
+                        <p className="text-gray-500 mb-2">No tips yet</p>
+                        <p className="text-xs text-gray-400">Start posting content to get visibility tips</p>
                       </div>
                     )}
                   </div>
