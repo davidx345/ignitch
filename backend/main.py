@@ -56,11 +56,11 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("Starting Ignitch API v2.0.0 - Production Mode")
     
-    # Create database tables
+    # Ensure database tables exist
     try:
-        logger.info("🔄 Creating database tables...")
+        logger.info("🔄 Initializing database schema...")
         Base.metadata.create_all(bind=engine)
-        logger.info("✅ Database tables created successfully!")
+        logger.info("✅ Database schema ready!")
     except Exception as e:
         logger.error(f"❌ Database initialization failed: {str(e)}")
         # Don't raise - allow app to start even if DB fails
