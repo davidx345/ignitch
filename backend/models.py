@@ -113,6 +113,8 @@ class Post(Base):
     # Performance metrics (populated after publishing)
     reach = Column(Integer, default=0)
     engagement = Column(Float, default=0.0)
+    actual_reach = Column(Integer, default=0)  # Real reach from platform APIs
+    actual_engagement = Column(Integer, default=0)  # Real engagement from platform APIs
     likes = Column(Integer, default=0)
     comments = Column(Integer, default=0)
     shares = Column(Integer, default=0)
