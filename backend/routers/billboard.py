@@ -19,7 +19,7 @@ from billboard_schemas.billboard_schemas import (
 from services.billboard_service import BillboardService
 from routers.auth import get_current_user
 
-router = APIRouter(prefix="/api/billboards", tags=["billboards"])
+router = APIRouter(tags=["billboards"])
 security = HTTPBearer()
 
 # Billboard Owner Endpoints

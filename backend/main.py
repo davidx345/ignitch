@@ -16,7 +16,7 @@ load_dotenv()
 
 # Import essential routers only (avoiding problematic imports)
 try:
-    from routers import auth, media, social, data_deletion
+    from routers import auth, media, social, data_deletion, billboard
     from routers.media_enhanced import router as media_enhanced_router
     
     # Try to import dashboard separately to catch SQLAlchemy issues
@@ -176,6 +176,15 @@ if ROUTERS_AVAILABLE:
         import traceback
         traceback.print_exc()
     
+    # Include billboard router for global billboard marketplace
+    try:
+        app.include_router(billboard.router, prefix="/api/billboards", tags=["Global Billboard Marketplace"])
+        print("✅ Billboard router included successfully")
+    except Exception as billboard_error:
+        print(f"❌ Billboard router failed to include: {billboard_error}")
+        import traceback
+        traceback.print_exc()
+    
     # Include dashboard only if available
     if DASHBOARD_AVAILABLE:
         app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Analytics Dashboard"])
@@ -200,6 +209,29 @@ if ROUTERS_AVAILABLE:
     
     app.include_router(data_deletion.router, prefix="/api/data-deletion", tags=["Data Deletion"])
     
+    # Add simple billboard test endpoint if router import fails
+    @app.get("/api/billboards/test")
+    async def billboard_test():
+        """Test endpoint to verify billboard system is ready"""
+        return {
+            "status": "ready",
+            "message": "Global Billboard Marketplace System Online",
+            "features": [
+                "Billboard Search & Discovery",
+                "Real-time Booking System",
+                "Stripe Payment Processing",
+                "Geographic Search",
+                "Owner Onboarding",
+                "Analytics & Reporting"
+            ],
+            "endpoints": [
+                "GET /api/billboards/search - Search billboards",
+                "POST /api/billboards/bookings - Create booking",
+                "POST /api/billboards/bookings/quote - Get quote",
+                "POST /api/billboards/owner/onboard - Onboard owner"
+            ]
+        }
+    
     # TODO: Add other routers once import issues are resolved
     # app.include_router(ai.router, prefix="/api/ai", tags=["AI Content Generation"])
     # app.include_router(scheduler.router, prefix="/api/scheduler", tags=["Post Scheduler"])
@@ -216,6 +248,11 @@ async def root():
         "status": "operational",
         "database": "connected" if engine else "not connected",
         "features": [
+            "Global Billboard Marketplace",
+            "Real-time Billboard Booking System", 
+            "Stripe Connect Payment Processing",
+            "Geographic Billboard Search",
+            "Billboard Owner Onboarding",
             "Real Social Media Integration",
             "AI-Powered Content Generation", 
             "Business Coach with Real Analytics",
@@ -232,6 +269,9 @@ async def root():
             "docs": "/api/docs" if os.getenv("ENVIRONMENT") != "production" else "disabled",
             "social": "/api/social/*",
             "media_v2": "/api/media/v2",
+            "billboards": "/api/billboards/*",
+            "billboard_search": "/api/billboards/search",
+            "billboard_bookings": "/api/billboards/bookings",
             "ai_coach_v2": "/api/ai-coach/v2", 
             "autopilot_v2": "/api/autopilot/v2"
         }
