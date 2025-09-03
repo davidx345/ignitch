@@ -8,7 +8,7 @@ import uuid
 
 from database import get_db
 from models import User, BillboardOwner, Billboard, BillboardBooking, BillboardReview
-from schemas.billboard_schemas import (
+from billboard_schemas.billboard_schemas import (
     BillboardOwnerOnboarding, BillboardOwnerProfile, OnboardingProgress,
     BillboardCreate, BillboardUpdate, BillboardResponse, BillboardSearchFilters, BillboardSearchResponse,
     BillboardBookingCreate, BillboardBookingResponse, BookingQuote,

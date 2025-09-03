@@ -9,7 +9,7 @@ import requests
 
 from database import get_db
 from models import User
-from schemas import UserCreate, UserResponse, LoginRequest, Token
+import schemas
 
 router = APIRouter()
 security = HTTPBearer()
@@ -104,8 +104,8 @@ async def get_current_user_from_supabase(token: str, db: Session = Depends(get_d
             detail=f"Could not validate Supabase credentials: {str(e)}"
         )
 
-@router.post("/register", response_model=Token)
-async def register(user_data: UserCreate, db: Session = Depends(get_db)):
+@router.post("/register", response_model=schemas.Token)
+async def register(user_data: schemas.UserCreate, db: Session = Depends(get_db)):
     # Check if user already exists
     db_user = db.query(User).filter(User.email == user_data.email).first()
     if db_user:
@@ -138,11 +138,11 @@ async def register(user_data: UserCreate, db: Session = Depends(get_db)):
     return {
         "access_token": access_token,
         "token_type": "bearer",
-        "user": UserResponse.from_orm(db_user)
+        "user": schemas.UserResponse.from_orm(db_user)
     }
 
-@router.post("/login", response_model=Token)
-async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
+@router.post("/login", response_model=schemas.Token)
+async def login(login_data: schemas.LoginRequest, db: Session = Depends(get_db)):
     # Authenticate user
     user = db.query(User).filter(User.email == login_data.email).first()
     if not user or not verify_password(login_data.password, user.hashed_password):
@@ -161,12 +161,12 @@ async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     return {
         "access_token": access_token,
         "token_type": "bearer",
-        "user": UserResponse.from_orm(user)
+        "user": schemas.UserResponse.from_orm(user)
     }
 
-@router.get("/me", response_model=UserResponse)
+@router.get("/me", response_model=schemas.UserResponse)
 async def get_current_user_info(current_user: User = Depends(get_current_user)):
-    return UserResponse.from_orm(current_user)
+    return schemas.UserResponse.from_orm(current_user)
 
 @router.post("/google")
 async def google_oauth(token: str, db: Session = Depends(get_db)):

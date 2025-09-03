@@ -12,7 +12,7 @@ from models import (
     Billboard, BillboardOwner, BillboardBooking, 
     BillboardReview, BillboardAnalytics, User
 )
-from schemas.billboard_schemas import (
+from billboard_schemas.billboard_schemas import (
     BillboardCreate, BillboardUpdate, BillboardSearchFilters,
     BillboardBookingCreate, BookingQuote, BillboardOwnerOnboarding
 )
