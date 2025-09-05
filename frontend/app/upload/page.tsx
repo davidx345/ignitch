@@ -421,6 +421,43 @@ export default function UploadPage() {
     return 0
   }
 
+  // Check if a specific step is completed
+  const isStepCompleted = (stepId: number) => {
+    if (stepId === 0) return uploadedProducts.length > 0
+    if (stepId === 1) return businessGoal !== ""
+    if (stepId === 2) return aiRewrittenPrompt !== ""
+    if (stepId === 3) return connectedPlatforms.some(p => p.connected)
+    if (stepId === 4) return generatedContent.length > 0
+    if (stepId === 5) return true // Final step is always considered complete once reached
+    return false
+  }
+
+  // Get the maximum step the user can access
+  const getMaxAccessibleStep = () => {
+    for (let i = 0; i < steps.length; i++) {
+      if (!isStepCompleted(i)) {
+        return i // Return the first incomplete step
+      }
+    }
+    return steps.length - 1 // All steps completed, can access final step
+  }
+
+  // Handle step navigation with progressive restrictions
+  const handleStepClick = (stepId: number) => {
+    const maxAccessible = getMaxAccessibleStep()
+    
+    // Allow navigation to current step, completed steps, or next available step
+    if (stepId <= maxAccessible) {
+      setCurrentStep(stepId)
+    }
+    // Optional: Show a message or visual feedback for inaccessible steps
+  }
+
+  // Check if a step is accessible/clickable
+  const isStepAccessible = (stepId: number) => {
+    return stepId <= getMaxAccessibleStep()
+  }
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: colors.gray }}>
       {/* Header */}
@@ -498,26 +535,31 @@ export default function UploadPage() {
               {steps.map((step, index) => (
                 <motion.div
                   key={step.id}
-                  className="flex-shrink-0 flex flex-col items-center space-y-2 cursor-pointer min-w-[80px]"
-                  onClick={() => setCurrentStep(step.id)}
-                  whileHover={{ scale: 1.05 }}
+                  className={`flex-shrink-0 flex flex-col items-center space-y-2 min-w-[80px] ${
+                    isStepAccessible(step.id) ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
+                  }`}
+                  onClick={() => handleStepClick(step.id)}
+                  whileHover={isStepAccessible(step.id) ? { scale: 1.05 } : {}}
                 >
                   <div
                     className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
                       currentStep >= step.id ? "text-white shadow-lg" : "text-gray-400 border-2 border-gray-300"
-                    }`}
+                    } ${!isStepAccessible(step.id) ? 'bg-gray-200 border-gray-200' : ''}`}
                     style={{
-                      backgroundColor: currentStep >= step.id ? colors.primary : "transparent",
+                      backgroundColor: currentStep >= step.id && isStepAccessible(step.id) ? colors.primary : 
+                                     !isStepAccessible(step.id) ? "#e5e7eb" : "transparent",
                     }}
                   >
-                    {currentStep > step.id ? (
+                    {currentStep > step.id && isStepCompleted(step.id) ? (
                       <CheckCircle className="w-5 h-5" />
                     ) : (
                       <step.icon className="w-5 h-5" />
                     )}
                   </div>
                   <div className="text-center">
-                    <div className={`font-semibold text-xs ${currentStep >= step.id ? "text-gray-900" : "text-gray-400"}`}>
+                    <div className={`font-semibold text-xs ${
+                      currentStep >= step.id && isStepAccessible(step.id) ? "text-gray-900" : "text-gray-400"
+                    }`}>
                       {step.title.split(' ')[0]}
                     </div>
                   </div>
@@ -531,35 +573,44 @@ export default function UploadPage() {
             {steps.map((step, index) => (
               <div key={step.id} className="flex items-center space-x-2 lg:space-x-4">
                 <motion.div
-                  className={`flex flex-col items-center space-y-2 cursor-pointer`}
-                  onClick={() => setCurrentStep(step.id)}
-                  whileHover={{ scale: 1.05 }}
+                  className={`flex flex-col items-center space-y-2 ${
+                    isStepAccessible(step.id) ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
+                  }`}
+                  onClick={() => handleStepClick(step.id)}
+                  whileHover={isStepAccessible(step.id) ? { scale: 1.05 } : {}}
                 >
                   <div
                     className={`w-12 h-12 lg:w-16 lg:h-16 rounded-full flex items-center justify-center transition-all duration-300 ${
                       currentStep >= step.id ? "text-white shadow-lg" : "text-gray-400 border-2 border-gray-300"
-                    }`}
+                    } ${!isStepAccessible(step.id) ? 'bg-gray-200 border-gray-200' : ''}`}
                     style={{
-                      backgroundColor: currentStep >= step.id ? colors.primary : "transparent",
+                      backgroundColor: currentStep >= step.id && isStepAccessible(step.id) ? colors.primary : 
+                                     !isStepAccessible(step.id) ? "#e5e7eb" : "transparent",
                     }}
                   >
-                    {currentStep > step.id ? (
+                    {currentStep > step.id && isStepCompleted(step.id) ? (
                       <CheckCircle className="w-6 h-6 lg:w-8 lg:h-8" />
                     ) : (
                       <step.icon className="w-6 h-6 lg:w-8 lg:h-8" />
                     )}
                   </div>
                   <div className="text-center">
-                    <div className={`font-semibold text-xs lg:text-sm ${currentStep >= step.id ? "text-gray-900" : "text-gray-400"}`}>
+                    <div className={`font-semibold text-xs lg:text-sm ${
+                      currentStep >= step.id && isStepAccessible(step.id) ? "text-gray-900" : "text-gray-400"
+                    }`}>
                       {step.title}
                     </div>
-                    <div className="text-xs text-gray-500 max-w-[100px] lg:max-w-[120px] hidden lg:block">
+                    <div className={`text-xs max-w-[100px] lg:max-w-[120px] hidden lg:block ${
+                      isStepAccessible(step.id) ? "text-gray-500" : "text-gray-400"
+                    }`}>
                       {step.description}
                     </div>
                   </div>
                 </motion.div>
                 {index < steps.length - 1 && (
-                  <div className={`w-8 lg:w-16 h-0.5 ${currentStep > step.id ? "bg-blue-500" : "bg-gray-300"}`} />
+                  <div className={`w-8 lg:w-16 h-0.5 ${
+                    currentStep > step.id && isStepCompleted(step.id) ? "bg-blue-500" : "bg-gray-300"
+                  }`} />
                 )}
               </div>
             ))}
