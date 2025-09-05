@@ -108,6 +108,13 @@ interface Product {
     style: string
     targetAudience: string
     keyFeatures: string[]
+    priceRange: string
+    material: string
+    useCase: string
+    marketingAngle: string
+    confidenceScore: number
+    tokensUsed: number
+    costEstimate: number
   }
 }
 
