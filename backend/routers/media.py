@@ -13,7 +13,6 @@ from database import get_db
 from models import User, MediaFile
 from schemas import MediaFileResponse
 from routers.auth import get_current_user
-from services.openai_vision_service import openai_vision_service
 
 router = APIRouter()
 
@@ -507,6 +506,15 @@ async def analyze_product_image(
     Analyze product image using OpenAI GPT-4 Vision
     Returns detailed product categorization and features
     """
+    # Import OpenAI Vision service here to avoid module-level import issues
+    try:
+        from services.openai_vision_service import openai_vision_service
+    except ImportError as e:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"AI Vision service not available: {str(e)}"
+        )
+    
     # Validate file type
     if not file.content_type.startswith("image/"):
         raise HTTPException(
