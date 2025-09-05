@@ -13,6 +13,7 @@ from database import get_db
 from models import User, MediaFile
 from schemas import MediaFileResponse
 from routers.auth import get_current_user
+from services.openai_vision_service import openai_vision_service
 
 router = APIRouter()
 
@@ -495,3 +496,178 @@ async def analyze_media_file(
             "message": "Video analysis not yet available",
             "ai_suggestions": ["Video files are supported for upload and posting"]
         }
+
+@router.post("/analyze-product")
+async def analyze_product_image(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Analyze product image using OpenAI GPT-4 Vision
+    Returns detailed product categorization and features
+    """
+    # Validate file type
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Only image files are supported for product analysis"
+        )
+    
+    # Check file size (limit to 10MB for vision analysis)
+    content = await file.read()
+    if len(content) > 10 * 1024 * 1024:  # 10MB
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="File too large for analysis. Maximum size is 10MB."
+        )
+    
+    # Reset file pointer
+    await file.seek(0)
+    
+    # Create temporary file for analysis
+    temp_id = str(uuid.uuid4())
+    file_extension = os.path.splitext(file.filename)[1].lower() or ".jpg"
+    temp_filename = f"temp_analysis_{temp_id}{file_extension}"
+    temp_path = os.path.join(UPLOAD_DIR, temp_filename)
+    
+    try:
+        # Save temporary file
+        with open(temp_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        
+        # Analyze with OpenAI Vision
+        result = await openai_vision_service.analyze_product(temp_path, file.filename)
+        
+        if result["success"]:
+            # Also extract traditional color analysis for comparison
+            brand_colors = extract_brand_colors(temp_path)
+            result["analysis"]["extracted_colors"] = brand_colors
+            
+            # Log successful analysis for monitoring
+            print(f"✅ Product analysis completed for {file.filename}")
+            print(f"💰 Estimated cost: ${result['analysis'].get('cost_estimate', 0):.4f}")
+            print(f"🔤 Tokens used: {result['analysis'].get('tokens_used', 0)}")
+            
+            return {
+                "success": True,
+                "product_analysis": result["analysis"],
+                "filename": file.filename,
+                "file_size": len(content)
+            }
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Product analysis failed: {result.get('error', 'Unknown error')}"
+            )
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Analysis error: {str(e)}"
+        )
+    
+    finally:
+        # Clean up temporary file
+        try:
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+        except Exception as e:
+            print(f"Warning: Failed to clean up temp file {temp_path}: {e}")
+
+@router.post("/analyze-multiple-products")
+async def analyze_multiple_products(
+    files: List[UploadFile] = File(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Analyze multiple product images efficiently
+    Maximum 10 files per request to manage costs
+    """
+    if len(files) > 10:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Maximum 10 files per batch analysis request"
+        )
+    
+    results = []
+    temp_files = []
+    
+    try:
+        # Prepare all files
+        for file in files:
+            if not file.content_type.startswith("image/"):
+                results.append({
+                    "filename": file.filename,
+                    "success": False,
+                    "error": "Not an image file"
+                })
+                continue
+            
+            # Create temp file
+            temp_id = str(uuid.uuid4())
+            file_extension = os.path.splitext(file.filename)[1].lower() or ".jpg"
+            temp_filename = f"temp_batch_{temp_id}{file_extension}"
+            temp_path = os.path.join(UPLOAD_DIR, temp_filename)
+            
+            # Save file
+            with open(temp_path, "wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
+            
+            temp_files.append((temp_path, file.filename))
+        
+        # Analyze all valid files
+        if temp_files:
+            analysis_results = await openai_vision_service.analyze_multiple_products(
+                [path for path, _ in temp_files]
+            )
+            
+            for (temp_path, filename), result in zip(temp_files, analysis_results):
+                if result["success"]:
+                    # Add traditional color analysis
+                    brand_colors = extract_brand_colors(temp_path)
+                    result["analysis"]["extracted_colors"] = brand_colors
+                    
+                    results.append({
+                        "filename": filename,
+                        "success": True,
+                        "product_analysis": result["analysis"]
+                    })
+                else:
+                    results.append({
+                        "filename": filename,
+                        "success": False,
+                        "error": result.get("error", "Analysis failed")
+                    })
+        
+        # Calculate total costs
+        total_tokens = sum(
+            r.get("product_analysis", {}).get("tokens_used", 0) 
+            for r in results if r.get("success")
+        )
+        total_cost = sum(
+            r.get("product_analysis", {}).get("cost_estimate", 0) 
+            for r in results if r.get("success")
+        )
+        
+        return {
+            "results": results,
+            "batch_summary": {
+                "total_files": len(files),
+                "successful_analyses": len([r for r in results if r.get("success")]),
+                "total_tokens_used": total_tokens,
+                "total_cost_estimate": total_cost
+            }
+        }
+    
+    finally:
+        # Clean up all temporary files
+        for temp_path, _ in temp_files:
+            try:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+            except Exception as e:
+                print(f"Warning: Failed to clean up {temp_path}: {e}")

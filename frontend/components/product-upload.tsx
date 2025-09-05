@@ -36,26 +36,84 @@ export default function ProductUpload({ onProductsUploaded, uploadedProducts }: 
   const [dragActive, setDragActive] = useState(false)
 
   const analyzeProduct = async (file: File): Promise<Product> => {
-    // Simulate AI analysis
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    try {
+      // Create FormData for file upload
+      const formData = new FormData()
+      formData.append('file', file)
+      
+      // Call real AI analysis API
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/media/analyze-product`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}` // Add auth if needed
+        }
+      })
+      
+      if (!response.ok) {
+        throw new Error(`Analysis failed: ${response.statusText}`)
+      }
+      
+      const result = await response.json()
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Analysis failed')
+      }
+      
+      const analysis = result.product_analysis
+      
+      return {
+        id: Math.random().toString(36).substr(2, 9),
+        name: file.name.split(".")[0],
+        type: file.type.startsWith("video/") ? "video" : "image",
+        url: URL.createObjectURL(file),
+        category: analysis.category || "General",
+        brand: analysis.brand_detected || "Auto-detected",
+        aesthetic: analysis.style || "Modern",
+        aiAnalysis: {
+          productType: analysis.product_type || "Unknown Product",
+          colors: analysis.colors || ["Unknown"],
+          style: analysis.style || "Modern",
+          targetAudience: analysis.target_audience || "General Audience",
+          keyFeatures: analysis.key_features || ["Quality Product"],
+          priceRange: analysis.price_range || "Mid-range",
+          material: analysis.material || "Unknown",
+          useCase: analysis.use_case || "Daily Use",
+          marketingAngle: analysis.marketing_angle || "Quality and Style",
+          confidenceScore: analysis.confidence_score || 0.8,
+          tokensUsed: analysis.tokens_used || 0,
+          costEstimate: analysis.cost_estimate || 0
+        },
+      }
+    } catch (error) {
+      console.error('AI Analysis failed:', error)
+      
+      // Fallback to mock analysis if API fails
+      const mockAnalysis = {
+        productType: "Product (Analysis Failed)",
+        colors: ["Blue", "White", "Silver"],
+        style: "Modern Minimalist",
+        targetAudience: "Young Professionals",
+        keyFeatures: ["Quality Product", "Durable", "Stylish"],
+        priceRange: "Mid-range",
+        material: "Unknown",
+        useCase: "Daily Use",
+        marketingAngle: "Quality and Style",
+        confidenceScore: 0.1,
+        tokensUsed: 0,
+        costEstimate: 0
+      }
 
-    const mockAnalysis = {
-      productType: "Fashion Accessory",
-      colors: ["Blue", "White", "Silver"],
-      style: "Modern Minimalist",
-      targetAudience: "Young Professionals",
-      keyFeatures: ["Durable", "Stylish", "Affordable", "Versatile"],
-    }
-
-    return {
-      id: Math.random().toString(36).substr(2, 9),
-      name: file.name.split(".")[0],
-      type: file.type.startsWith("video/") ? "video" : "image",
-      url: URL.createObjectURL(file),
-      category: "Fashion",
-      brand: "Auto-detected",
-      aesthetic: "Modern",
-      aiAnalysis: mockAnalysis,
+      return {
+        id: Math.random().toString(36).substr(2, 9),
+        name: file.name.split(".")[0],
+        type: file.type.startsWith("video/") ? "video" : "image",
+        url: URL.createObjectURL(file),
+        category: "General",
+        brand: "Auto-detected",
+        aesthetic: "Modern",
+        aiAnalysis: mockAnalysis,
+      }
     }
   }
 
@@ -236,6 +294,23 @@ export default function ProductUpload({ onProductsUploaded, uploadedProducts }: 
                             ))}
                           </div>
                         </div>
+                        {product.aiAnalysis.confidenceScore && (
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-gray-600">AI Confidence:</span>
+                            <Badge 
+                              variant={product.aiAnalysis.confidenceScore > 0.8 ? "default" : "secondary"}
+                              className="text-xs"
+                            >
+                              {Math.round(product.aiAnalysis.confidenceScore * 100)}%
+                            </Badge>
+                          </div>
+                        )}
+                        {product.aiAnalysis.costEstimate && product.aiAnalysis.costEstimate > 0 && (
+                          <div className="flex items-center justify-between text-xs text-gray-500">
+                            <span>Analysis Cost:</span>
+                            <span>${product.aiAnalysis.costEstimate.toFixed(4)}</span>
+                          </div>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
