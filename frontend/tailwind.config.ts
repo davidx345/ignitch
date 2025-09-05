@@ -62,6 +62,33 @@ const config: Config = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
+  			},
+  			brand: {
+  				primary: '#4F46E5',
+  				secondary: '#10B981',
+  				accent: '#F59E0B',
+  				neutral: '#6B7280',
+  				surface: '#F8FAFC'
+  			},
+  			success: {
+  				50: '#ECFDF5',
+  				500: '#10B981',
+  				600: '#059669'
+  			},
+  			warning: {
+  				50: '#FFFBEB',
+  				500: '#F59E0B',
+  				600: '#D97706'
+  			},
+  			error: {
+  				50: '#FEF2F2',
+  				500: '#EF4444',
+  				600: '#DC2626'
+  			},
+  			info: {
+  				50: '#EFF6FF',
+  				500: '#3B82F6',
+  				600: '#2563EB'
   			}
   		},
   		borderRadius: {

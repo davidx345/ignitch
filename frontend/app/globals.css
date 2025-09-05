@@ -389,7 +389,7 @@
 
 /* Additional Professional Dashboard Enhancements */
 .dashboard-header {
-  @apply sticky top-0 z-50 backdrop-blur-sm bg-white/95 border-b border-neutral-200;
+  @apply sticky top-0 z-50 backdrop-blur-sm bg-white bg-opacity-95 border-b border-neutral-200;
 }
 
 .dashboard-nav {
@@ -397,7 +397,7 @@
 }
 
 .dashboard-nav.active {
-  @apply bg-brand-primary/10 text-brand-primary;
+  @apply bg-indigo-50 text-brand-primary;
 }
 
 .dashboard-nav.inactive {
@@ -490,7 +490,7 @@
 }
 
 .status-online {
-  @apply status-indicator bg-semantic-success/10 text-semantic-success;
+  @apply status-indicator bg-green-100 text-green-600;
 }
 
 .status-offline {
@@ -498,11 +498,11 @@
 }
 
 .status-pending {
-  @apply status-indicator bg-semantic-warning/10 text-semantic-warning;
+  @apply status-indicator bg-yellow-100 text-yellow-600;
 }
 
 .status-error {
-  @apply status-indicator bg-semantic-error/10 text-semantic-error;
+  @apply status-indicator bg-red-100 text-red-600;
 }
 
 /* Professional Interactive Elements */
@@ -515,7 +515,7 @@
 }
 
 .focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:ring-offset-2;
+  @apply focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2;
 }
 
 /* Professional Metric Cards */
@@ -536,11 +536,11 @@
 }
 
 .metric-change.positive {
-  @apply text-semantic-success;
+  @apply text-green-600;
 }
 
 .metric-change.negative {
-  @apply text-semantic-error;
+  @apply text-red-600;
 }
 
 .metric-change.neutral {
@@ -562,19 +562,19 @@
 }
 
 .notification.success {
-  @apply border-semantic-success/20 bg-semantic-success/5;
+  @apply border-green-200 bg-green-50;
 }
 
 .notification.error {
-  @apply border-semantic-error/20 bg-semantic-error/5;
+  @apply border-red-200 bg-red-50;
 }
 
 .notification.warning {
-  @apply border-semantic-warning/20 bg-semantic-warning/5;
+  @apply border-yellow-200 bg-yellow-50;
 }
 
 .notification.info {
-  @apply border-brand-primary/20 bg-brand-primary/5;
+  @apply border-indigo-200 bg-indigo-50;
 }
 
 /* Professional Form Elements */
@@ -587,11 +587,11 @@
 }
 
 .form-input {
-  @apply w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-colors;
+  @apply w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-brand-primary transition-colors;
 }
 
 .form-error {
-  @apply text-sm text-semantic-error;
+  @apply text-sm text-red-600;
 }
 
 .form-help {
