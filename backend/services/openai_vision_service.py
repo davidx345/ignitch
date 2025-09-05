@@ -15,9 +15,22 @@ logger = logging.getLogger(__name__)
 
 class OpenAIVisionService:
     def __init__(self):
-        self.client = AsyncOpenAI(
-            api_key=os.getenv("OPENAI_API_KEY")
-        )
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            # Don't fail initialization, just mark as unavailable
+            self.client = None
+            self.available = False
+            print("⚠️ OpenAI Vision service not available: OPENAI_API_KEY not set")
+        else:
+            try:
+                self.client = AsyncOpenAI(api_key=api_key)
+                self.available = True
+                print("✅ OpenAI Vision service initialized successfully")
+            except Exception as e:
+                self.client = None
+                self.available = False
+                print(f"❌ OpenAI Vision service initialization failed: {e}")
+        
         self.model = "gpt-4-vision-preview"
         
     def _encode_image(self, image_path: str) -> str:
@@ -49,6 +62,14 @@ class OpenAIVisionService:
         Analyze product image using GPT-4 Vision
         Returns structured product analysis
         """
+        # Check if service is available
+        if not self.available or not self.client:
+            return {
+                "success": False,
+                "error": "OpenAI Vision service not available. Please set OPENAI_API_KEY environment variable.",
+                "fallback_available": True
+            }
+        
         try:
             # Encode image
             base64_image = self._encode_image(image_path)
@@ -179,6 +200,17 @@ class OpenAIVisionService:
 
     async def analyze_multiple_products(self, image_paths: List[str]) -> List[Dict[str, Any]]:
         """Analyze multiple products efficiently"""
+        # Check if service is available
+        if not self.available or not self.client:
+            return [
+                {
+                    "success": False,
+                    "error": "OpenAI Vision service not available. Please set OPENAI_API_KEY environment variable.",
+                    "fallback_available": True
+                }
+                for _ in image_paths
+            ]
+        
         results = []
         
         # Process in batches to avoid rate limits
