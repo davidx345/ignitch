@@ -220,11 +220,15 @@
   
   /* Stat Card Styles */
   .stat-card {
-    @apply card-professional p-6 hover:border-blue-200 group cursor-pointer;
+    @apply card-professional p-6 hover:border-blue-200 cursor-pointer;
   }
   
   .stat-value {
-    @apply text-3xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-200;
+    @apply text-3xl font-bold text-gray-900 transition-colors duration-200;
+  }
+  
+  .stat-card:hover .stat-value {
+    @apply text-blue-600;
   }
   
   .stat-label {
