@@ -401,22 +401,6 @@ export default function Dashboard() {
                   <p className="text-xs text-neutral-500 leading-none">AI-Powered Growth</p>
                 </div>
               </div>
-
-              {/* Quick nav tabs */}
-              <nav className="hidden md:flex space-x-1">
-                {['Dashboard', 'Analytics', 'Content', 'Billboards'].map((item) => (
-                  <button
-                    key={item}
-                    className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      item === 'Dashboard' 
-                        ? 'bg-brand-primary/10 text-brand-primary' 
-                        : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100'
-                    }`}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </nav>
             </div>
 
             {/* Right side - Actions and user */}
