@@ -17,9 +17,7 @@ load_dotenv()
 
 # Import essential routers only (avoiding problematic imports)
 try:
-    from routers import auth, media, social, data_deletion
-    # TODO: Re-enable billboard import once dependencies are fixed
-    # from routers import billboard
+    from routers import auth, media, social, data_deletion, billboard
     from routers.media_enhanced import router as media_enhanced_router
     
     # Try to import dashboard separately to catch SQLAlchemy issues
@@ -180,14 +178,13 @@ if ROUTERS_AVAILABLE:
         traceback.print_exc()
     
     # Include billboard router for global billboard marketplace
-    # TODO: Re-enable once dependencies are fixed
-    # try:
-    #     app.include_router(billboard.router, prefix="/api/billboards", tags=["Global Billboard Marketplace"])
-    #     print("✅ Billboard router included successfully")
-    # except Exception as billboard_error:
-    #     print(f"❌ Billboard router failed to include: {billboard_error}")
-    #     import traceback
-    #     traceback.print_exc()
+    try:
+        app.include_router(billboard.router, prefix="/api/billboards", tags=["Global Billboard Marketplace"])
+        print("✅ Billboard router included successfully")
+    except Exception as billboard_error:
+        print(f"❌ Billboard router failed to include: {billboard_error}")
+        import traceback
+        traceback.print_exc()
     
     # Include dashboard only if available
     if DASHBOARD_AVAILABLE:
