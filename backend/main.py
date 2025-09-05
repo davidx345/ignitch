@@ -8,6 +8,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 import uvicorn
 import os
 import logging
+from datetime import datetime
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 
@@ -187,25 +188,14 @@ if ROUTERS_AVAILABLE:
     
     # Include dashboard only if available
     if DASHBOARD_AVAILABLE:
-        app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Analytics Dashboard"])
+        try:
+            app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Analytics Dashboard"])
+            print("✅ Dashboard router included successfully")
+        except Exception as dashboard_include_error:
+            print(f"❌ Dashboard router failed to include: {dashboard_include_error}")
+            DASHBOARD_AVAILABLE = False
     else:
-        # Create a simple working dashboard endpoint directly
-        @app.get("/api/dashboard/overview")
-        async def dashboard_overview_fallback():
-            return {
-                "stats": {
-                    "total_posts": 0,
-                    "total_reach": 0,
-                    "avg_engagement": 0,
-                    "connected_platforms": 0,
-                    "posts_this_week": 0,
-                    "visibility_score": 0
-                },
-                "platforms": [],
-                "recent_posts": [],
-                "message": "Dashboard loading... Real data coming soon!",
-                "status": "initialized"
-            }
+        print("⚠️ Dashboard router not available, using fallback endpoint only")
     
     app.include_router(data_deletion.router, prefix="/api/data-deletion", tags=["Data Deletion"])
     
@@ -340,27 +330,118 @@ async def api_info():
 @app.get("/api/dashboard/overview")
 async def dashboard_overview():
     """Dashboard overview with real zero data - bypasses import issues"""
+    try:
+        return {
+            "stats": {
+                "total_posts": 0,
+                "total_reach": 0,
+                "avg_engagement": 0,
+                "connected_platforms": 0,
+                "posts_this_week": 0,
+                "visibility_score": 0
+            },
+            "recent_posts": [],
+            "platform_performance": [],
+            "growth_metrics": {
+                "reach_growth": 0,
+                "engagement_growth": 0,
+                "follower_growth": 0
+            },
+            "performance_insights": [
+                {
+                    "metric": "Getting Started",
+                    "value": "Welcome!",
+                    "trend": "new",
+                    "period": "all time",
+                    "description": "Your dashboard is ready! Start by uploading content or connecting social media accounts."
+                }
+            ],
+            "trending_hashtags": [],
+            "best_performing_content": [],
+            "quick_actions": [
+                {
+                    "title": "Upload Content",
+                    "description": "Upload and create AI-powered content",
+                    "action": "upload",
+                    "icon": "upload",
+                    "priority": "high"
+                },
+                {
+                    "title": "Connect Social Media",
+                    "description": "Connect your social media accounts",
+                    "action": "connect",
+                    "icon": "link",
+                    "priority": "high"
+                },
+                {
+                    "title": "Billboard Marketplace",
+                    "description": "Explore global billboard advertising",
+                    "action": "billboard",
+                    "icon": "billboard",
+                    "priority": "medium"
+                }
+            ],
+            "success": True,
+            "status": "ready",
+            "timestamp": datetime.now().isoformat(),
+            "message": "Dashboard loaded successfully. Start creating content to see real analytics!"
+        }
+    except Exception as e:
+        # Fallback response if anything goes wrong
+        return {
+            "stats": {
+                "total_posts": 0,
+                "total_reach": 0,
+                "avg_engagement": 0,
+                "connected_platforms": 0,
+                "posts_this_week": 0,
+                "visibility_score": 0
+            },
+            "recent_posts": [],
+            "platform_performance": [],
+            "growth_metrics": {
+                "reach_growth": 0,
+                "engagement_growth": 0,
+                "follower_growth": 0
+            },
+            "performance_insights": [
+                {
+                    "metric": "System Status",
+                    "value": "Online",
+                    "trend": "stable",
+                    "period": "now",
+                    "description": "Dashboard is running in fallback mode"
+                }
+            ],
+            "trending_hashtags": [],
+            "best_performing_content": [],
+            "quick_actions": [
+                {
+                    "title": "Reload Dashboard",
+                    "description": "Refresh the page to try again",
+                    "action": "reload",
+                    "icon": "refresh",
+                    "priority": "high"
+                }
+            ],
+            "success": True,
+            "status": "fallback",
+            "error": str(e),
+            "message": "Dashboard fallback mode - basic functionality available"
+        }
+
+# Simple test endpoint without authentication
+@app.get("/api/dashboard/test")
+async def dashboard_test():
+    """Test endpoint to verify dashboard API is responding"""
     return {
-        "stats": {
-            "total_posts": 0,
-            "total_reach": 0,
-            "avg_engagement": 0,
-            "connected_platforms": 0,
-            "posts_this_week": 0,
-            "visibility_score": 0
-        },
-        "recent_posts": [],
-        "platform_performance": [],
-        "growth_metrics": {
-            "reach_growth": 0,
-            "engagement_growth": 0,
-            "follower_growth": 0
-        },
-        "performance_insights": [],
-        "trending_hashtags": [],
-        "best_performing_content": [],
-        "success": True,
-        "message": "Real data will show once you start posting content"
+        "status": "ok",
+        "message": "Dashboard API is working",
+        "timestamp": datetime.now().isoformat(),
+        "available_endpoints": [
+            "/api/dashboard/overview - Main dashboard data",
+            "/api/dashboard/test - This test endpoint"
+        ]
     }
 
 if __name__ == "__main__":

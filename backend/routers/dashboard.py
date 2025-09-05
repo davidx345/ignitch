@@ -9,7 +9,7 @@ from collections import defaultdict
 
 from database import get_db
 from models import User, Post, SocialAccount, MediaFile, BusinessGoal
-from schemas import DashboardResponse, AnalyticsResponse
+import schemas
 from routers.auth import get_current_user
 
 router = APIRouter()
