@@ -305,6 +305,71 @@ async def activate_autopilot(
         "next_optimization": (datetime.utcnow() + timedelta(days=7)).isoformat()
     }
 
+@router.get("/config")
+async def get_autopilot_config(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Get current autopilot configuration"""
+    
+    # Check if user has autopilot configured
+    goals = db.query(BusinessGoal).filter(BusinessGoal.user_id == current_user.id).first()
+    accounts = db.query(SocialAccount).filter(
+        SocialAccount.user_id == current_user.id,
+        SocialAccount.is_active == True
+    ).all()
+    
+    # Return default or existing config
+    is_enabled = getattr(current_user, 'autopilot_active', False)
+    
+    return {
+        "id": str(current_user.id),
+        "is_enabled": is_enabled,
+        "primary_goal": goals.goal_type if goals else "awareness",
+        "target_value": goals.target_value if goals else 1000,
+        "deadline": goals.deadline.isoformat() if goals and goals.deadline else (datetime.utcnow() + timedelta(days=30)).isoformat(),
+        "content_style": "balanced",
+        "posting_frequency": "medium",
+        "platforms": [acc.platform for acc in accounts],
+        "ai_creativity_level": 7,
+        "brand_voice": "professional",
+        "content_themes": ["business", "growth", "tips"],
+        "exclude_topics": [],
+        "min_engagement_rate": 2.5,
+        "content_rotation_days": 7
+    }
+
+@router.put("/config")
+async def update_autopilot_config(
+    config_data: dict,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Update autopilot configuration"""
+    
+    # Update user's autopilot status
+    if "is_enabled" in config_data:
+        current_user.autopilot_active = config_data["is_enabled"]
+        db.commit()
+    
+    # Update or create business goal if needed
+    if "primary_goal" in config_data:
+        goal = db.query(BusinessGoal).filter(BusinessGoal.user_id == current_user.id).first()
+        if not goal:
+            goal = BusinessGoal(
+                user_id=current_user.id,
+                goal_type=config_data["primary_goal"],
+                target_value=config_data.get("target_value", 1000),
+                deadline=datetime.utcnow() + timedelta(days=30)
+            )
+            db.add(goal)
+        else:
+            goal.goal_type = config_data["primary_goal"]
+            goal.target_value = config_data.get("target_value", goal.target_value)
+        db.commit()
+    
+    return {"success": True, "message": "Configuration updated"}
+
 @router.get("/status")
 async def get_autopilot_status(
     current_user: User = Depends(get_current_user),

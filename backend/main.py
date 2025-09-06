@@ -17,7 +17,7 @@ load_dotenv()
 
 # Import essential routers only (avoiding problematic imports)
 try:
-    from routers import auth, media, social, data_deletion, billboard
+    from routers import auth, media, social, data_deletion, billboard, autopilot
     from routers.media_enhanced import router as media_enhanced_router
     
     # Try to import dashboard separately to catch SQLAlchemy issues
@@ -226,7 +226,7 @@ if ROUTERS_AVAILABLE:
     # app.include_router(ai.router, prefix="/api/ai", tags=["AI Content Generation"])
     # app.include_router(scheduler.router, prefix="/api/scheduler", tags=["Post Scheduler"])
     # app.include_router(ai_coach.router, prefix="/api/ai-coach", tags=["AI Business Coach"])
-    # app.include_router(autopilot.router, prefix="/api/autopilot", tags=["Auto-Pilot Mode"])
+    app.include_router(autopilot.router, prefix="/api/autopilot", tags=["Auto-Pilot Mode"])
 
 # Enhanced root and health endpoints
 @app.get("/")

@@ -394,7 +394,7 @@ export default function Dashboard() {
             <div className="flex items-center space-x-8">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-white" />
+                  <Zap className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <h1 className="text-xl font-bold text-neutral-900">Ignitch</h1>
