@@ -88,7 +88,7 @@ export default function BillboardMarketplace() {
     state: '',
     min_daily_rate: '',
     max_daily_rate: '',
-    billboard_type: '',
+    billboard_type: 'all',
     min_impressions: '',
     illuminated: null,
     available_from: null,
@@ -118,7 +118,7 @@ export default function BillboardMarketplace() {
       const queryParams = new URLSearchParams()
       
       Object.entries(filters).forEach(([key, value]) => {
-        if (value !== null && value !== '') {
+        if (value !== null && value !== '' && value !== 'all') {
           if (value instanceof Date) {
             queryParams.append(key, value.toISOString().split('T')[0])
           } else {
@@ -127,7 +127,7 @@ export default function BillboardMarketplace() {
         }
       })
 
-      const response = await fetch(`/api/billboards/search?${queryParams}`)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/billboards/search?${queryParams}`)
       const data = await response.json()
       
       if (response.ok) {
@@ -158,7 +158,7 @@ export default function BillboardMarketplace() {
 
     setLoadingQuote(true)
     try {
-      const response = await fetch('/api/billboards/bookings/quote', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/billboards/bookings/quote`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -198,7 +198,7 @@ export default function BillboardMarketplace() {
     }
 
     try {
-      const response = await fetch('/api/billboards/bookings', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/billboards/bookings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -266,7 +266,7 @@ export default function BillboardMarketplace() {
                 <SelectValue placeholder="All Types" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Types</SelectItem>
+                <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="digital">Digital</SelectItem>
                 <SelectItem value="static">Static</SelectItem>
                 <SelectItem value="led">LED</SelectItem>
@@ -368,7 +368,7 @@ export default function BillboardMarketplace() {
               state: '',
               min_daily_rate: '',
               max_daily_rate: '',
-              billboard_type: '',
+              billboard_type: 'all',
               min_impressions: '',
               illuminated: null,
               available_from: null,
