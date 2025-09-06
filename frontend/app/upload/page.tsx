@@ -102,20 +102,6 @@ interface Product {
   category: string
   brand: string
   aesthetic: string
-  aiAnalysis: {
-    productType: string
-    colors: string[]
-    style: string
-    targetAudience: string
-    keyFeatures: string[]
-    priceRange: string
-    material: string
-    useCase: string
-    marketingAngle: string
-    confidenceScore: number
-    tokensUsed: number
-    costEstimate: number
-  }
 }
 
 interface GeneratedContent {
@@ -303,7 +289,7 @@ export default function UploadPage() {
       id: 0, 
       title: "Upload & Enhance", 
       icon: Package,
-      description: "Upload content + AI enhancement"
+      description: "Upload content + enhancement"
     },
     { 
       id: 1, 
@@ -313,7 +299,7 @@ export default function UploadPage() {
     },
     { 
       id: 2, 
-      title: "AI Prompt Builder", 
+      title: "Content Builder", 
       icon: Brain,
       description: "Smart content generation"
     },
@@ -325,7 +311,7 @@ export default function UploadPage() {
     },
     { 
       id: 4, 
-      title: "Generate Ad Set", 
+      title: "Generate Content", 
       icon: Wand2,
       description: "Create full campaign"
     },
@@ -644,10 +630,10 @@ export default function UploadPage() {
             >
               <div className="text-center mb-6 sm:mb-8 px-4">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4" style={{ color: colors.ink }}>
-                  Upload & Auto-Enhance
+                  Upload & Enhance
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
-                  Upload your content and let AI auto-crop, enhance quality, and optimize for every platform.
+                  Upload your content and enhance quality for every platform.
                 </p>
               </div>
 
@@ -666,7 +652,7 @@ export default function UploadPage() {
                     <CardContent className="p-6">
                       <h3 className="font-semibold mb-4 flex items-center" style={{ color: colors.ink }}>
                         <Sparkles className="w-5 h-5 mr-2" style={{ color: colors.primary }} />
-                        AI Enhancements
+                        Content Enhancements
                       </h3>
                       <div className="space-y-4">
                         <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
@@ -698,7 +684,7 @@ export default function UploadPage() {
                             <Palette className="w-5 h-5 text-purple-600" />
                             <div>
                               <p className="font-medium text-sm">Brand colors</p>
-                              <p className="text-xs text-gray-600">Auto-detect your brand palette</p>
+                              <p className="text-xs text-gray-600">Detect your brand palette</p>
                             </div>
                           </div>
                           <Badge style={{ backgroundColor: `${colors.mint}20`, color: colors.mint }}>
@@ -874,7 +860,7 @@ export default function UploadPage() {
                     style={{ backgroundColor: colors.primary }}
                   >
                     <Brain className="w-5 h-5 mr-2" />
-                    Continue to AI Prompt Builder
+                    Continue to Content Builder
                   </Button>
                 )}
               </div>
@@ -890,10 +876,10 @@ export default function UploadPage() {
             >
               <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold mb-4" style={{ color: colors.ink }}>
-                  AI Prompt Builder
+                  Content Prompt Builder
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  Tell us your simple goal like "Sell more cakes this weekend" and watch AI transform it into viral content.
+                  Tell us your simple goal like "Sell more cakes this weekend" and get optimized content.
                 </p>
               </div>
 
@@ -973,12 +959,12 @@ export default function UploadPage() {
                             >
                               <Sparkles className="w-4 h-4" />
                             </motion.div>
-                            AI is rewriting...
+                            Optimizing content...
                           </>
                         ) : (
                           <>
                             <Sparkles className="w-4 h-4 mr-2" />
-                            Transform with AI
+                            Optimize Content
                           </>
                         )}
                       </Button>
@@ -993,7 +979,7 @@ export default function UploadPage() {
                           <div className="border-2 border-green-200 bg-green-50 rounded-lg p-4">
                             <div className="flex items-center justify-between mb-2">
                               <span className="text-sm font-medium text-green-800">
-                                ✨ AI-Optimized Content
+                                ✨ Optimized Content
                               </span>
                               <div className="flex space-x-2">
                                 <Button size="sm" variant="outline" className="h-8 px-3">
@@ -1013,7 +999,7 @@ export default function UploadPage() {
                           <div className="grid grid-cols-3 gap-4 text-center">
                             <div className="p-3 bg-blue-50 rounded-lg">
                               <Eye className="w-5 h-5 mx-auto mb-1" style={{ color: colors.primary }} />
-                              <div className="text-sm font-bold">AI</div>
+                              <div className="text-sm font-bold">Content</div>
                               <div className="text-xs text-gray-600">Optimized</div>
                             </div>
                             <div className="p-3 bg-green-50 rounded-lg">
@@ -1123,7 +1109,7 @@ export default function UploadPage() {
                     style={{ backgroundColor: colors.primary }}
                   >
                     <Wand2 className="w-5 h-5 mr-2" />
-                    Generate Full Ad Set
+                    Generate Full Content Set
                   </Button>
                 )}
               </div>
@@ -1139,10 +1125,10 @@ export default function UploadPage() {
             >
               <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold mb-4" style={{ color: colors.ink }}>
-                  Generate Full Ad Set
+                  Generate Full Content Set
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  AI creates platform-optimized content with captions, hashtags, and performance predictions.
+                  Create platform-optimized content with captions, hashtags, and performance predictions.
                 </p>
               </div>
 
@@ -1189,7 +1175,7 @@ export default function UploadPage() {
                   Smart Schedule & Launch
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  AI schedules your content at optimal times for maximum engagement and business results.
+                  Schedule your content at optimal times for maximum engagement and business results.
                 </p>
               </div>
 
@@ -1204,7 +1190,7 @@ export default function UploadPage() {
                   className="bg-transparent"
                 >
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Ad Set
+                  Back to Content Set
                 </Button>
 
                 <Button
