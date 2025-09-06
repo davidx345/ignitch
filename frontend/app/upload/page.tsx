@@ -679,44 +679,12 @@ export default function UploadPage() {
                             ✓ ON
                           </Badge>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                          <div className="flex items-center space-x-3">
-                            <Palette className="w-5 h-5 text-purple-600" />
-                            <div>
-                              <p className="font-medium text-sm">Brand colors</p>
-                              <p className="text-xs text-gray-600">Detect your brand palette</p>
-                            </div>
-                          </div>
-                          <Badge style={{ backgroundColor: `${colors.mint}20`, color: colors.mint }}>
-                            ✓ ON
-                          </Badge>
-                        </div>
+
                       </div>
                     </CardContent>
                   </Card>
 
-                  {/* Brand Colors Detected */}
-                  {brandProfile.colors.length > 0 && (
-                    <Card className="shadow-lg">
-                      <CardContent className="p-6">
-                        <h3 className="font-semibold mb-4" style={{ color: colors.ink }}>
-                          🎨 Detected Brand Colors
-                        </h3>
-                        <div className="flex space-x-2 mb-3">
-                          {brandProfile.colors.map((color, index) => (
-                            <div
-                              key={index}
-                              className="w-8 h-8 rounded-full border-2 border-white shadow-sm"
-                              style={{ backgroundColor: color }}
-                            />
-                          ))}
-                        </div>
-                        <p className="text-sm text-gray-600">
-                          Style: <span className="font-medium">{brandProfile.style}</span>
-                        </p>
-                      </CardContent>
-                    </Card>
-                  )}
+
                 </div>
               </div>
 
