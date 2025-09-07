@@ -38,8 +38,8 @@ class OwnerStatus(str, Enum):
 class BillboardOwnerOnboarding(BaseModel):
     company_name: str = Field(..., min_length=2, max_length=100)
     contact_person: str = Field(..., min_length=2, max_length=100)
-    phone: str = Field(..., regex=r'^\+?1?\d{9,15}$')
-    email: str = Field(..., regex=r'^[^@]+@[^@]+\.[^@]+$')
+    phone: str = Field(..., pattern=r'^\+?1?\d{9,15}$')
+    email: str = Field(..., pattern=r'^[^@]+@[^@]+\.[^@]+$')
     address: str = Field(..., min_length=10, max_length=200)
     business_license: Optional[str] = None
     tax_id: Optional[str] = None
@@ -68,7 +68,7 @@ class BankAccountDetails(BaseModel):
     account_holder_name: str
     routing_number: str
     account_number: str
-    account_type: str = Field(..., regex=r'^(checking|savings)$')
+    account_type: str = Field(..., pattern=r'^(checking|savings)$')
 
 # Billboard Schemas
 class BillboardCreate(BaseModel):
@@ -77,7 +77,7 @@ class BillboardCreate(BaseModel):
     address: str = Field(..., min_length=10, max_length=200)
     city: str = Field(..., min_length=2, max_length=50)
     state: str = Field(..., min_length=2, max_length=50)
-    zip_code: str = Field(..., regex=r'^\d{5}(-\d{4})?$')
+    zip_code: str = Field(..., pattern=r'^\d{5}(-\d{4})?$')
     country: str = Field(default="US", max_length=2)
     latitude: float = Field(..., ge=-90, le=90)
     longitude: float = Field(..., ge=-180, le=180)
