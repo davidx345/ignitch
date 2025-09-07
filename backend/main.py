@@ -18,7 +18,6 @@ load_dotenv()
 # Import essential routers only (avoiding problematic imports)
 try:
     from routers import auth, media, data_deletion, billboard, autopilot
-    from routers.media_enhanced import router as media_enhanced_router
     
     # Import social router separately to catch specific errors
     try:
@@ -176,9 +175,8 @@ if MIDDLEWARE_AVAILABLE:
 if ROUTERS_AVAILABLE:
     app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
     
-    # Media endpoints - both original and enhanced
+    # Media endpoints
     app.include_router(media.router, prefix="/api/media", tags=["Media Upload"])
-    app.include_router(media_enhanced_router, prefix="/api/media/v2", tags=["Enhanced Media Upload"])
     
     # Include social router only if available
     if SOCIAL_AVAILABLE:

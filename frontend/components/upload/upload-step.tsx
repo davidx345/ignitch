@@ -6,14 +6,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { 
-  Sparkles, 
+  Zap, 
   Target,
   Crop,
   Wand2,
   Palette
 } from "lucide-react"
 import ProductUpload from "@/components/product-upload"
-import { Product, BrandProfile } from "@/types/upload"
+import type { Product, BrandProfile } from "@/types/upload"
 import { colors } from "@/constants/upload"
 
 interface UploadStepProps {
@@ -58,7 +58,7 @@ export default function UploadStep({
           <Card className="shadow-lg">
             <CardContent className="p-6">
               <h3 className="font-semibold mb-4 flex items-center" style={{ color: colors.ink }}>
-                <Sparkles className="w-5 h-5 mr-2" style={{ color: colors.primary }} />
+                <Zap className="w-5 h-5 mr-2" style={{ color: colors.primary }} />
                 AI Enhancements
               </h3>
               <div className="space-y-4">

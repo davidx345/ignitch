@@ -9,7 +9,7 @@ import {
   ArrowLeft,
   Share2,
   Brain,
-  Sparkles,
+  Zap,
   RefreshCw,
   Settings,
   Eye,
@@ -134,13 +134,13 @@ export default function AIPromptStep({
                       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                       className="w-4 h-4 mr-2"
                     >
-                      <Sparkles className="w-4 h-4" />
+                      <Zap className="w-4 h-4" />
                     </motion.div>
                     AI is rewriting...
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4 mr-2" />
+                    <Zap className="w-4 h-4 mr-2" />
                     Transform with AI
                   </>
                 )}

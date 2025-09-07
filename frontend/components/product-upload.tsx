@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Upload, ImageIcon, Video, Folder, X, Sparkles, Package } from "lucide-react"
+import { Upload, ImageIcon, Video, Folder, X, Zap, Package } from "lucide-react"
 import { useDropzone } from "react-dropzone"
 
 interface Product {
@@ -140,7 +140,7 @@ export default function ProductUpload({ onProductsUploaded, uploadedProducts }: 
           {isAnalyzing && (
             <div className="mt-6 space-y-3">
               <div className="flex items-center space-x-2">
-                <Sparkles className="w-4 h-4 text-purple-600 animate-spin" />
+                <Zap className="w-4 h-4 text-purple-600 animate-spin" />
                 <span className="text-sm font-medium">Processing uploads...</span>
               </div>
               <Progress value={analysisProgress} className="w-full" />
