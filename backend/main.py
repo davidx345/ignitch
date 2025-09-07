@@ -17,8 +17,19 @@ load_dotenv()
 
 # Import essential routers only (avoiding problematic imports)
 try:
-    from routers import auth, media, social, data_deletion, billboard, autopilot
+    from routers import auth, media, data_deletion, billboard, autopilot
     from routers.media_enhanced import router as media_enhanced_router
+    
+    # Import social router separately to catch specific errors
+    try:
+        from routers import social
+        SOCIAL_AVAILABLE = True
+        print("✅ Social router imported successfully")
+    except Exception as social_import_error:
+        print(f"❌ Social router import failed: {social_import_error}")
+        import traceback
+        traceback.print_exc()
+        SOCIAL_AVAILABLE = False
     
     # Try to import dashboard separately to catch SQLAlchemy issues
     try:
@@ -33,6 +44,7 @@ except ImportError as e:
     print(f"Router import warning: {e}")
     ROUTERS_AVAILABLE = False
     DASHBOARD_AVAILABLE = False
+    SOCIAL_AVAILABLE = False
 
 from database import engine, Base
 # Import models and middleware with error handling
@@ -168,14 +180,17 @@ if ROUTERS_AVAILABLE:
     app.include_router(media.router, prefix="/api/media", tags=["Media Upload"])
     app.include_router(media_enhanced_router, prefix="/api/media/v2", tags=["Enhanced Media Upload"])
     
-    # Try to include social router with specific error handling
-    try:
-        app.include_router(social.router, prefix="/api/social", tags=["Social Media"])
-        print("✅ Social router included successfully")
-    except Exception as social_error:
-        print(f"❌ Social router failed to include: {social_error}")
-        import traceback
-        traceback.print_exc()
+    # Include social router only if available
+    if SOCIAL_AVAILABLE:
+        try:
+            app.include_router(social.router, prefix="/api/social", tags=["Social Media"])
+            print("✅ Social router included successfully")
+        except Exception as social_error:
+            print(f"❌ Social router failed to include: {social_error}")
+            import traceback
+            traceback.print_exc()
+    else:
+        print("⚠️ Social router not available - skipped inclusion")
     
     # Include billboard router for global billboard marketplace
     try:
@@ -324,6 +339,42 @@ async def api_info():
             "max_bulk_files": 50,
             "supported_formats": ["JPEG", "PNG", "WebP", "GIF", "MP4", "MOV"]
         }
+    }
+
+# Temporary fallback endpoints for social media (while debugging router issues)
+@app.get("/api/social/accounts")
+async def get_social_accounts_fallback():
+    """Temporary fallback for social accounts endpoint"""
+    return {
+        "accounts": [],
+        "message": "No social media accounts connected yet",
+        "available_platforms": ["Instagram", "Facebook", "Twitter", "TikTok"],
+        "status": "ready",
+        "note": "This is a temporary endpoint while debugging router issues"
+    }
+
+@app.post("/api/social/auth/instagram")
+async def connect_instagram_fallback():
+    """Temporary fallback for Instagram connection"""
+    return {
+        "auth_url": "https://www.facebook.com/v18.0/dialog/oauth?client_id=your_instagram_client_id&redirect_uri=https://ignitch.vercel.app/auth/instagram/callback&scope=instagram_basic,instagram_content_publish,pages_show_list,pages_read_engagement&response_type=code&state=temp_state_token",
+        "state": "temp_state_token",
+        "platform": "instagram",
+        "status": "ready",
+        "message": "Visit the auth_url to connect your Instagram account",
+        "note": "This is a temporary endpoint while debugging router issues"
+    }
+
+@app.post("/api/social/auth/facebook")
+async def connect_facebook_fallback():
+    """Temporary fallback for Facebook connection"""
+    return {
+        "auth_url": "https://www.facebook.com/v18.0/dialog/oauth?client_id=your_facebook_client_id&redirect_uri=https://ignitch.vercel.app/auth/facebook/callback&scope=pages_manage_posts,pages_read_engagement,business_management&response_type=code&state=temp_state_token",
+        "state": "temp_state_token", 
+        "platform": "facebook",
+        "status": "ready",
+        "message": "Visit the auth_url to connect your Facebook account",
+        "note": "This is a temporary endpoint while debugging router issues"
     }
 
 # Direct dashboard endpoint to bypass import issues
