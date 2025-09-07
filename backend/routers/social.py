@@ -264,6 +264,69 @@ PLATFORM_POSTERS = {
     "twitter": post_to_twitter
 }
 
+# Direct connection endpoints for frontend
+@router.post("/auth/instagram")
+async def connect_instagram(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Start Instagram OAuth connection flow"""
+    platform = "instagram"
+    config = OAUTH_CONFIGS[platform]
+    
+    # Generate state for CSRF protection
+    state = secrets.token_urlsafe(32)
+    
+    # Build OAuth URL
+    params = {
+        "client_id": config["client_id"],
+        "redirect_uri": config["redirect_uri"],
+        "scope": ",".join(config["scopes"]),
+        "response_type": "code",
+        "state": state
+    }
+    
+    auth_url = f"{config['auth_url']}?{urlencode(params)}"
+    
+    return {
+        "auth_url": auth_url,
+        "state": state,
+        "platform": platform,
+        "status": "ready",
+        "message": "Visit the auth_url to connect your Instagram account"
+    }
+
+@router.post("/auth/facebook")
+async def connect_facebook(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Start Facebook OAuth connection flow"""
+    platform = "facebook"
+    config = OAUTH_CONFIGS[platform]
+    
+    # Generate state for CSRF protection
+    state = secrets.token_urlsafe(32)
+    
+    # Build OAuth URL
+    params = {
+        "client_id": config["client_id"],
+        "redirect_uri": config["redirect_uri"],
+        "scope": ",".join(config["scopes"]),
+        "response_type": "code",
+        "state": state
+    }
+    
+    auth_url = f"{config['auth_url']}?{urlencode(params)}"
+    
+    return {
+        "auth_url": auth_url,
+        "state": state,
+        "platform": platform,
+        "status": "ready",
+        "message": "Visit the auth_url to connect your Facebook account"
+    }
+
 @router.get("/auth/{platform}")
 async def get_oauth_url(
     platform: str,
