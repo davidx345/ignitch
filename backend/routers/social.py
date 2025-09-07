@@ -11,7 +11,7 @@ from urllib.parse import urlencode, parse_qs
 
 from database import get_db
 from models import User, SocialAccount, Post
-from schemas import SocialAccountResponse, SocialAccountCreate, PostCreate
+import schemas
 from routers.auth import get_current_user
 
 router = APIRouter()
@@ -401,7 +401,7 @@ async def oauth_callback(
             detail=f"OAuth callback failed: {str(e)}"
         )
 
-@router.get("/accounts", response_model=List[SocialAccountResponse])
+@router.get("/accounts", response_model=List[schemas.SocialAccountResponse])
 async def get_social_accounts(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -454,7 +454,7 @@ async def test_account_connection(
 
 @router.post("/post")
 async def create_cross_platform_post(
-    post_data: PostCreate,
+    post_data: schemas.PostCreate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):

@@ -11,7 +11,7 @@ from typing import List, Optional
 
 from database import get_db
 from models import User, MediaFile
-from schemas import MediaFileResponse
+import schemas
 from routers.auth import get_current_user
 
 router = APIRouter()
@@ -208,7 +208,7 @@ async def analyze_image_content(image_path: str) -> dict:
         print(f"Error analyzing image: {e}")
         return {"error": "Analysis failed", "ai_suggestions": ["Unable to analyze image"]}
 
-@router.post("/upload", response_model=MediaFileResponse)
+@router.post("/upload", response_model=schemas.MediaFileResponse)
 async def upload_media(
     file: UploadFile = File(...),
     enhance_quality: bool = True,
@@ -320,7 +320,7 @@ async def upload_media(
         current_user.visibility_score = (current_user.visibility_score or 0) + 10
         db.commit()
         
-        return MediaFileResponse(
+        return schemas.MediaFileResponse(
             id=media_file.id,
             filename=media_file.filename,
             file_type=media_file.file_type,
@@ -358,7 +358,7 @@ async def get_user_media_files(
     ).order_by(MediaFile.created_at.desc()).all()
     
     return [
-        MediaFileResponse(
+        schemas.MediaFileResponse(
             id=file.id,
             filename=file.filename,
             file_type=file.file_type,
