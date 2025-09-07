@@ -6,7 +6,7 @@ import os
 import secrets
 import hashlib
 from datetime import datetime, timedelta
-import jwt
+from jose import jwt
 from urllib.parse import urlencode, parse_qs
 
 from database import get_db
