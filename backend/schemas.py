@@ -2,15 +2,8 @@ from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 
-# Try to import EmailStr from different locations for compatibility
-try:
-    from pydantic import EmailStr
-except ImportError:
-    try:
-        from pydantic.v1 import EmailStr
-    except ImportError:
-        # Fallback to regular str if EmailStr is not available
-        EmailStr = str
+# Use regular str instead of EmailStr for now to avoid import issues
+EmailStr = str
 
 # User schemas
 class UserBase(BaseModel):
