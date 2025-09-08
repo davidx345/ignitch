@@ -20,6 +20,16 @@ try:
     from routers import auth, media, data_deletion, billboard, autopilot
     from routers.media_enhanced import router as media_enhanced_router
     
+    # Import AdFlow Platform routers
+    try:
+        from routers import campaign, booking, admin_dashboard
+        from routers.billboard_websocket import router as billboard_ws_router
+        ADFLOW_ROUTERS_AVAILABLE = True
+        print("✅ AdFlow platform routers imported successfully")
+    except Exception as adflow_error:
+        print(f"❌ AdFlow platform routers import failed: {adflow_error}")
+        ADFLOW_ROUTERS_AVAILABLE = False
+    
     # Import billboard registration router
     try:
         from routers import billboard_registration
@@ -55,6 +65,7 @@ except ImportError as e:
     DASHBOARD_AVAILABLE = False
     SOCIAL_AVAILABLE = False
     BILLBOARD_REGISTRATION_AVAILABLE = False
+    ADFLOW_ROUTERS_AVAILABLE = False
 
 from database import engine, Base
 # Import models and middleware with error handling
@@ -98,6 +109,15 @@ async def lifespan(app: FastAPI):
         logger.error(f"❌ Database initialization failed: {str(e)}")
         # Don't raise - allow app to start even if DB fails
     
+    # Initialize AdFlow platform services
+    try:
+        logger.info("🔄 Starting AdFlow platform services...")
+        from production_startup import startup_event
+        await startup_event()
+        logger.info("✅ AdFlow platform services started!")
+    except Exception as e:
+        logger.warning(f"AdFlow services failed to start: {str(e)}")
+    
     # Initialize services
     try:
         # TODO: Initialize external service connections
@@ -109,6 +129,16 @@ async def lifespan(app: FastAPI):
     
     # Shutdown
     logger.info("Shutting down Ignitch API")
+    
+    # Shutdown AdFlow platform services
+    try:
+        logger.info("🔄 Stopping AdFlow platform services...")
+        from production_startup import shutdown_event
+        await shutdown_event()
+        logger.info("✅ AdFlow platform services stopped!")
+    except Exception as e:
+        logger.warning(f"AdFlow services shutdown error: {str(e)}")
+        
     # TODO: Cleanup resources
 
 # Initialize FastAPI app with production configuration
@@ -264,6 +294,21 @@ if ROUTERS_AVAILABLE:
     # app.include_router(scheduler.router, prefix="/api/scheduler", tags=["Post Scheduler"])
     # app.include_router(ai_coach.router, prefix="/api/ai-coach", tags=["AI Business Coach"])
     app.include_router(autopilot.router, prefix="/api/autopilot", tags=["Auto-Pilot Mode"])
+    
+    # Include AdFlow platform routers
+    if ADFLOW_ROUTERS_AVAILABLE:
+        try:
+            app.include_router(campaign.router, prefix="/api/campaigns", tags=["Campaign Management"])
+            app.include_router(booking.router, prefix="/api/bookings", tags=["Booking Management"]) 
+            app.include_router(admin_dashboard.router, prefix="/api/admin", tags=["Admin Dashboard"])
+            app.include_router(billboard_ws_router, prefix="/api/ws", tags=["WebSocket Communication"])
+            print("✅ All AdFlow platform routers included successfully")
+        except Exception as adflow_include_error:
+            print(f"❌ AdFlow platform routers failed to include: {adflow_include_error}")
+            import traceback
+            traceback.print_exc()
+    else:
+        print("⚠️ AdFlow platform routers not available")
 
 # Enhanced root and health endpoints
 @app.get("/")
@@ -288,7 +333,13 @@ async def root():
             "Rate Limiting",
             "Production Error Handling",
             "Comprehensive Monitoring",
-            "Authentication System"
+            "Authentication System",
+            "AdFlow Billboard Platform",
+            "Campaign Management System",
+            "Booking & Payment Processing",
+            "Billboard Agent Software",
+            "Real-time WebSocket Communication",
+            "Admin Dashboard & Monitoring"
         ],
         "endpoints": {
             "health": "/health",
@@ -300,7 +351,11 @@ async def root():
             "billboard_search": "/api/billboards/search",
             "billboard_bookings": "/api/billboards/bookings",
             "ai_coach_v2": "/api/ai-coach/v2", 
-            "autopilot_v2": "/api/autopilot/v2"
+            "autopilot_v2": "/api/autopilot/v2",
+            "adflow_campaigns": "/api/campaigns/*",
+            "adflow_bookings": "/api/bookings/*",
+            "adflow_admin": "/api/admin/*",
+            "adflow_websockets": "/api/ws/*"
         }
     }
 
