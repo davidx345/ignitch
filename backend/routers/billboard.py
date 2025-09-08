@@ -34,6 +34,74 @@ async def onboard_billboard_owner(
     owner = await service.create_billboard_owner(current_user.id, owner_data)
     return owner
 
+@router.post("/owner/onboard/nigeria", response_model=BillboardOwnerProfile)
+async def onboard_nigeria_billboard_owner(
+    owner_data: BillboardOwnerOnboarding,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Onboard a new billboard owner specifically for Nigeria with local requirements"""
+    # Add Nigeria-specific validation and requirements
+    nigeria_cities = [
+        "Lagos", "Abuja", "Kano", "Ibadan", "Port Harcourt", "Benin City", 
+        "Kaduna", "Jos", "Ilorin", "Onitsha", "Enugu", "Warri", "Calabar",
+        "Uyo", "Akure", "Bauchi", "Gombe", "Yola", "Minna", "Lokoja"
+    ]
+    
+    # Validate Nigerian requirements
+    if not any(city.lower() in owner_data.business_address.lower() for city in nigeria_cities):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Please specify a Nigerian city. Supported cities: {', '.join(nigeria_cities)}"
+        )
+    
+    # Nigeria-specific business requirements
+    if not owner_data.business_license:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Business license is required for Nigerian billboard owners"
+        )
+    
+    service = BillboardService(db)
+    
+    # Add Nigeria country code
+    owner_data_dict = owner_data.dict()
+    owner_data_dict['country'] = 'Nigeria'
+    owner_data_dict['currency'] = 'NGN'
+    owner_data_dict['tax_rate'] = 0.075  # 7.5% VAT in Nigeria
+    
+    # Create owner with Nigeria-specific data
+    owner = await service.create_billboard_owner(current_user.id, owner_data)
+    return owner
+
+@router.get("/nigeria/cities")
+async def get_nigeria_cities():
+    """Get list of supported Nigerian cities for billboard placement"""
+    return {
+        "cities": [
+            {"name": "Lagos", "state": "Lagos", "population": "15M+", "tier": "Tier 1"},
+            {"name": "Abuja", "state": "FCT", "population": "3M+", "tier": "Tier 1"},
+            {"name": "Kano", "state": "Kano", "population": "4M+", "tier": "Tier 1"},
+            {"name": "Ibadan", "state": "Oyo", "population": "3M+", "tier": "Tier 1"},
+            {"name": "Port Harcourt", "state": "Rivers", "population": "2M+", "tier": "Tier 2"},
+            {"name": "Benin City", "state": "Edo", "population": "1.5M+", "tier": "Tier 2"},
+            {"name": "Kaduna", "state": "Kaduna", "population": "1.5M+", "tier": "Tier 2"},
+            {"name": "Jos", "state": "Plateau", "population": "1M+", "tier": "Tier 2"},
+            {"name": "Ilorin", "state": "Kwara", "population": "1M+", "tier": "Tier 2"},
+            {"name": "Onitsha", "state": "Anambra", "population": "1M+", "tier": "Tier 2"},
+            {"name": "Enugu", "state": "Enugu", "population": "800K+", "tier": "Tier 3"},
+            {"name": "Calabar", "state": "Cross River", "population": "500K+", "tier": "Tier 3"},
+        ],
+        "requirements": {
+            "business_license": "Required - CAC registration",
+            "advertising_permit": "Required from state advertising board",
+            "tax_clearance": "Required - Valid tax clearance certificate",
+            "insurance": "Required - Public liability insurance",
+            "currency": "NGN (Nigerian Naira)",
+            "vat_rate": "7.5%"
+        }
+    }
+
 @router.get("/owner/profile", response_model=BillboardOwnerProfile)
 async def get_owner_profile(
     current_user: User = Depends(get_current_user),

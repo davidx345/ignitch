@@ -20,6 +20,15 @@ try:
     from routers import auth, media, data_deletion, billboard, autopilot
     from routers.media_enhanced import router as media_enhanced_router
     
+    # Import billboard registration router
+    try:
+        from routers import billboard_registration
+        BILLBOARD_REGISTRATION_AVAILABLE = True
+        print("✅ Billboard registration router imported successfully")
+    except Exception as billboard_reg_error:
+        print(f"❌ Billboard registration router import failed: {billboard_reg_error}")
+        BILLBOARD_REGISTRATION_AVAILABLE = False
+    
     # Import social router separately to catch specific errors
     try:
         from routers import social
@@ -45,6 +54,7 @@ except ImportError as e:
     ROUTERS_AVAILABLE = False
     DASHBOARD_AVAILABLE = False
     SOCIAL_AVAILABLE = False
+    BILLBOARD_REGISTRATION_AVAILABLE = False
 
 from database import engine, Base
 # Import models and middleware with error handling
@@ -200,6 +210,18 @@ if ROUTERS_AVAILABLE:
         print(f"❌ Billboard router failed to include: {billboard_error}")
         import traceback
         traceback.print_exc()
+    
+    # Include billboard registration router for Nigeria onboarding
+    if BILLBOARD_REGISTRATION_AVAILABLE:
+        try:
+            app.include_router(billboard_registration.router, prefix="/api", tags=["Billboard Registration"])
+            print("✅ Billboard registration router included successfully")
+        except Exception as billboard_reg_error:
+            print(f"❌ Billboard registration router failed to include: {billboard_reg_error}")
+            import traceback
+            traceback.print_exc()
+    else:
+        print("⚠️ Billboard registration router not available")
     
     # Include dashboard only if available
     if DASHBOARD_AVAILABLE:

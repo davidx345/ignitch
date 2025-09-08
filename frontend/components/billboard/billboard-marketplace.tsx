@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
 import { format } from "date-fns"
@@ -26,7 +28,14 @@ import {
   MessageSquare,
   Lightbulb,
   Monitor,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Phone,
+  Mail,
+  Building,
+  User,
+  FileText,
+  Upload,
+  CreditCard
 } from "lucide-react"
 
 interface Billboard {
@@ -80,6 +89,7 @@ export default function BillboardMarketplace() {
   const [loading, setLoading] = useState(false)
   const [selectedBillboard, setSelectedBillboard] = useState<Billboard | null>(null)
   const [showBookingModal, setShowBookingModal] = useState(false)
+  const [showOnboarding, setShowOnboarding] = useState(false)
   const [showFilters, setShowFilters] = useState(false)
   const [favorites, setFavorites] = useState<string[]>([])
 
@@ -107,6 +117,113 @@ export default function BillboardMarketplace() {
 
   const [quote, setQuote] = useState<any>(null)
   const [loadingQuote, setLoadingQuote] = useState(false)
+
+  // Onboarding form state
+  const [onboardingForm, setOnboardingForm] = useState({
+    company_name: '',
+    contact_person: '',
+    phone: '',
+    email: '',
+    billboard_name: '',
+    description: '',
+    address: '',
+    city: '',
+    state: '',
+    zip_code: '',
+    latitude: '',
+    longitude: '',
+    width_feet: '',
+    height_feet: '',
+    billboard_type: 'digital',
+    orientation: 'landscape',
+    illuminated: true,
+    daily_rate: '',
+    weekly_rate: '',
+    monthly_rate: '',
+    daily_impressions: '',
+    photos: [] as string[],
+    account_holder_name: '',
+    routing_number: '',
+    account_number: '',
+    account_type: 'checking'
+  })
+  const [submitingOnboarding, setSubmitingOnboarding] = useState(false)
+
+  // Onboarding form handlers
+  const handleOnboardingInputChange = (field: string, value: string | boolean | number) => {
+    setOnboardingForm(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  const handleOnboardingSubmit = async () => {
+    try {
+      setSubmitingOnboarding(true)
+      
+      const payload = {
+        ...onboardingForm,
+        daily_rate: parseFloat(onboardingForm.daily_rate) || 0,
+        weekly_rate: parseFloat(onboardingForm.weekly_rate) || 0,
+        monthly_rate: parseFloat(onboardingForm.monthly_rate) || 0,
+        daily_impressions: parseInt(onboardingForm.daily_impressions) || 0,
+        width_feet: parseFloat(onboardingForm.width_feet) || 0,
+        height_feet: parseFloat(onboardingForm.height_feet) || 0,
+        latitude: parseFloat(onboardingForm.latitude) || 0,
+        longitude: parseFloat(onboardingForm.longitude) || 0
+      }
+
+      const response = await fetch('/api/billboards/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      })
+
+      if (response.ok) {
+        alert('Billboard registration submitted successfully! We will review and contact you soon.')
+        setShowOnboarding(false)
+        // Reset form
+        setOnboardingForm({
+          company_name: '',
+          contact_person: '',
+          phone: '',
+          email: '',
+          billboard_name: '',
+          description: '',
+          address: '',
+          city: '',
+          state: '',
+          zip_code: '',
+          latitude: '',
+          longitude: '',
+          width_feet: '',
+          height_feet: '',
+          billboard_type: 'digital',
+          orientation: 'landscape',
+          illuminated: true,
+          daily_rate: '',
+          weekly_rate: '',
+          monthly_rate: '',
+          daily_impressions: '',
+          photos: [],
+          account_holder_name: '',
+          routing_number: '',
+          account_number: '',
+          account_type: 'checking'
+        })
+      } else {
+        const error = await response.json()
+        alert(`Error: ${error.detail || 'Failed to submit registration'}`)
+      }
+    } catch (error) {
+      console.error('Error submitting billboard registration:', error)
+      alert('Failed to submit registration. Please try again.')
+    } finally {
+      setSubmitingOnboarding(false)
+    }
+  }
 
   useEffect(() => {
     searchBillboards()
@@ -660,10 +777,19 @@ export default function BillboardMarketplace() {
           <p className="text-sm sm:text-base text-gray-600">Find the perfect billboard for your advertising campaign</p>
         </div>
         
-        <Button variant="outline" onClick={() => setShowFilters(!showFilters)} className="w-full sm:w-auto">
-          <Filter className="w-4 h-4 mr-2" />
-          {showFilters ? 'Hide Filters' : 'Show Filters'}
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button 
+            onClick={() => setShowOnboarding(true)}
+            className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white"
+          >
+            <Lightbulb className="w-4 h-4 mr-2" />
+            Register Your Billboard
+          </Button>
+          <Button variant="outline" onClick={() => setShowFilters(!showFilters)} className="w-full sm:w-auto">
+            <Filter className="w-4 h-4 mr-2" />
+            {showFilters ? 'Hide Filters' : 'Show Filters'}
+          </Button>
+        </div>
       </div>
 
       {renderFilters()}
@@ -701,6 +827,372 @@ export default function BillboardMarketplace() {
       </div>
 
       {renderBookingModal()}
+
+      {/* Billboard Onboarding Modal */}
+      <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Building className="h-6 w-6" />
+              Register Your Billboard
+            </DialogTitle>
+            <p className="text-sm text-gray-600">
+              Join our Nigeria billboard network and start earning from your advertising space
+            </p>
+          </DialogHeader>
+
+          <div className="space-y-6">
+            {/* Company Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <Building className="h-5 w-5" />
+                Company Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="company_name">Company Name *</Label>
+                  <Input
+                    id="company_name"
+                    value={onboardingForm.company_name}
+                    onChange={(e) => handleOnboardingInputChange('company_name', e.target.value)}
+                    placeholder="Your company name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contact_person">Contact Person *</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Input
+                      id="contact_person"
+                      value={onboardingForm.contact_person}
+                      onChange={(e) => handleOnboardingInputChange('contact_person', e.target.value)}
+                      className="pl-10"
+                      placeholder="Full name of contact person"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number *</Label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Input
+                      id="phone"
+                      value={onboardingForm.phone}
+                      onChange={(e) => handleOnboardingInputChange('phone', e.target.value)}
+                      className="pl-10"
+                      placeholder="+234 (e.g., +234 80 1234 5678)"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address *</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Input
+                      id="email"
+                      type="email"
+                      value={onboardingForm.email}
+                      onChange={(e) => handleOnboardingInputChange('email', e.target.value)}
+                      className="pl-10"
+                      placeholder="your.email@company.com"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Billboard Details */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Billboard Details
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="billboard_name">Billboard Name *</Label>
+                  <Input
+                    id="billboard_name"
+                    value={onboardingForm.billboard_name}
+                    onChange={(e) => handleOnboardingInputChange('billboard_name', e.target.value)}
+                    placeholder="e.g., Lagos Main Street Digital Board"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="billboard_type">Billboard Type *</Label>
+                  <Select value={onboardingForm.billboard_type} onValueChange={(value) => handleOnboardingInputChange('billboard_type', value)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="digital">Digital/LED</SelectItem>
+                      <SelectItem value="static">Static/Print</SelectItem>
+                      <SelectItem value="vinyl">Vinyl Banner</SelectItem>
+                      <SelectItem value="backlit">Backlit</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="width_feet">Width (feet) *</Label>
+                  <Input
+                    id="width_feet"
+                    type="number"
+                    value={onboardingForm.width_feet}
+                    onChange={(e) => handleOnboardingInputChange('width_feet', e.target.value)}
+                    placeholder="e.g., 12"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="height_feet">Height (feet) *</Label>
+                  <Input
+                    id="height_feet"
+                    type="number"
+                    value={onboardingForm.height_feet}
+                    onChange={(e) => handleOnboardingInputChange('height_feet', e.target.value)}
+                    placeholder="e.g., 8"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="orientation">Orientation</Label>
+                  <Select value={onboardingForm.orientation} onValueChange={(value) => handleOnboardingInputChange('orientation', value)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="landscape">Landscape</SelectItem>
+                      <SelectItem value="portrait">Portrait</SelectItem>
+                      <SelectItem value="square">Square</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="illuminated">Illuminated</Label>
+                  <Select value={onboardingForm.illuminated.toString()} onValueChange={(value) => handleOnboardingInputChange('illuminated', value === 'true')}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="true">Yes</SelectItem>
+                      <SelectItem value="false">No</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={onboardingForm.description}
+                  onChange={(e) => handleOnboardingInputChange('description', e.target.value)}
+                  placeholder="Describe your billboard location, visibility, traffic, and any special features..."
+                  rows={3}
+                />
+              </div>
+            </div>
+
+            {/* Location Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <MapPin className="h-5 w-5" />
+                Location Details
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="address">Full Address *</Label>
+                  <Input
+                    id="address"
+                    value={onboardingForm.address}
+                    onChange={(e) => handleOnboardingInputChange('address', e.target.value)}
+                    placeholder="Street address, landmarks, nearest bus stop"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="city">City *</Label>
+                  <Input
+                    id="city"
+                    value={onboardingForm.city}
+                    onChange={(e) => handleOnboardingInputChange('city', e.target.value)}
+                    placeholder="e.g., Lagos, Abuja, Port Harcourt"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="state">State *</Label>
+                  <Input
+                    id="state"
+                    value={onboardingForm.state}
+                    onChange={(e) => handleOnboardingInputChange('state', e.target.value)}
+                    placeholder="e.g., Lagos State, FCT, Rivers"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="zip_code">Postal Code</Label>
+                  <Input
+                    id="zip_code"
+                    value={onboardingForm.zip_code}
+                    onChange={(e) => handleOnboardingInputChange('zip_code', e.target.value)}
+                    placeholder="e.g., 101001"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="latitude">Latitude (Optional)</Label>
+                  <Input
+                    id="latitude"
+                    type="number"
+                    step="any"
+                    value={onboardingForm.latitude}
+                    onChange={(e) => handleOnboardingInputChange('latitude', e.target.value)}
+                    placeholder="e.g., 6.5244"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="longitude">Longitude (Optional)</Label>
+                  <Input
+                    id="longitude"
+                    type="number"
+                    step="any"
+                    value={onboardingForm.longitude}
+                    onChange={(e) => handleOnboardingInputChange('longitude', e.target.value)}
+                    placeholder="e.g., 3.3792"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Pricing Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <DollarSign className="h-5 w-5" />
+                Pricing & Performance
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="daily_rate">Daily Rate (₦) *</Label>
+                  <Input
+                    id="daily_rate"
+                    type="number"
+                    value={onboardingForm.daily_rate}
+                    onChange={(e) => handleOnboardingInputChange('daily_rate', e.target.value)}
+                    placeholder="e.g., 50000"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="weekly_rate">Weekly Rate (₦)</Label>
+                  <Input
+                    id="weekly_rate"
+                    type="number"
+                    value={onboardingForm.weekly_rate}
+                    onChange={(e) => handleOnboardingInputChange('weekly_rate', e.target.value)}
+                    placeholder="e.g., 300000"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="monthly_rate">Monthly Rate (₦)</Label>
+                  <Input
+                    id="monthly_rate"
+                    type="number"
+                    value={onboardingForm.monthly_rate}
+                    onChange={(e) => handleOnboardingInputChange('monthly_rate', e.target.value)}
+                    placeholder="e.g., 1200000"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="daily_impressions">Estimated Daily Impressions</Label>
+                  <Input
+                    id="daily_impressions"
+                    type="number"
+                    value={onboardingForm.daily_impressions}
+                    onChange={(e) => handleOnboardingInputChange('daily_impressions', e.target.value)}
+                    placeholder="e.g., 10000"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <CreditCard className="h-5 w-5" />
+                Payment Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="account_holder_name">Account Holder Name *</Label>
+                  <Input
+                    id="account_holder_name"
+                    value={onboardingForm.account_holder_name}
+                    onChange={(e) => handleOnboardingInputChange('account_holder_name', e.target.value)}
+                    placeholder="As it appears on bank account"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="account_type">Account Type</Label>
+                  <Select value={onboardingForm.account_type} onValueChange={(value) => handleOnboardingInputChange('account_type', value)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="checking">Current Account</SelectItem>
+                      <SelectItem value="savings">Savings Account</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="routing_number">Bank Code *</Label>
+                  <Input
+                    id="routing_number"
+                    value={onboardingForm.routing_number}
+                    onChange={(e) => handleOnboardingInputChange('routing_number', e.target.value)}
+                    placeholder="e.g., 011 (GTBank), 058 (Zenith)"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="account_number">Account Number *</Label>
+                  <Input
+                    id="account_number"
+                    value={onboardingForm.account_number}
+                    onChange={(e) => handleOnboardingInputChange('account_number', e.target.value)}
+                    placeholder="10-digit account number"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Photo Upload Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <Upload className="h-5 w-5" />
+                Billboard Photos
+              </h3>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                <p className="mt-2 text-sm text-gray-600">
+                  Upload photos of your billboard (front view, location, traffic visibility)
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Support: JPG, PNG up to 5MB each. Max 5 photos.
+                </p>
+                <Button variant="outline" className="mt-4">
+                  <Upload className="h-4 w-4 mr-2" />
+                  Choose Photos
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="flex justify-between items-center pt-6 border-t">
+            <div className="text-xs text-gray-500">
+              * Required fields. All information will be verified before approval.
+            </div>
+            <div className="flex gap-3">
+              <Button variant="outline" onClick={() => setShowOnboarding(false)} disabled={submitingOnboarding}>
+                Cancel
+              </Button>
+              <Button onClick={handleOnboardingSubmit} disabled={submitingOnboarding}>
+                {submitingOnboarding ? 'Submitting...' : 'Submit Registration'}
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

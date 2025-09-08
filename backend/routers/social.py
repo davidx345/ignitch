@@ -16,6 +16,32 @@ from routers.auth import get_current_user
 
 router = APIRouter()
 
+@router.get("/config/check")
+async def check_social_config():
+    """Check social media configuration status"""
+    config_status = {}
+    
+    for platform, config in OAUTH_CONFIGS.items():
+        is_configured = (
+            config["client_id"] != f"your_{platform}_client_id" and 
+            config["client_secret"] != f"your_{platform}_client_secret" and
+            config["client_id"] != "" and 
+            config["client_secret"] != ""
+        )
+        
+        config_status[platform] = {
+            "configured": is_configured,
+            "client_id_set": config["client_id"] != f"your_{platform}_client_id",
+            "client_secret_set": config["client_secret"] != f"your_{platform}_client_secret",
+            "redirect_uri": config["redirect_uri"],
+            "scopes": config["scopes"]
+        }
+    
+    return {
+        "platforms": config_status,
+        "note": "Instagram uses Facebook App credentials. Set FACEBOOK_CLIENT_ID and FACEBOOK_CLIENT_SECRET for both platforms."
+    }
+
 # OAuth Configuration
 OAUTH_CONFIGS = {
     "instagram": {
