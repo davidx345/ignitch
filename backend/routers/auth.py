@@ -64,7 +64,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     except Exception:
         raise credentials_exception
 
-async def get_current_user_from_supabase(token: str, db: Session = Depends(get_db)):
+async def get_current_user_from_supabase(token: str, db: Session):
     """Verify Supabase JWT and return user"""
     try:
         # Verify Supabase JWT (you might need to get the Supabase public key)
