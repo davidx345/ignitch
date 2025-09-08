@@ -51,7 +51,7 @@ OAUTH_CONFIGS = {
         "auth_url": "https://www.facebook.com/v18.0/dialog/oauth",
         "token_url": "https://graph.facebook.com/v18.0/oauth/access_token",
         "api_base": "https://graph.facebook.com/v18.0",
-        "scopes": ["instagram_basic", "instagram_content_publish", "pages_show_list", "pages_read_engagement"]
+        "scopes": ["user_profile", "user_media"]  # Basic Display scopes
     },
     "facebook": {
         "client_id": os.getenv("FACEBOOK_CLIENT_ID", "747326327930933"),
@@ -60,7 +60,7 @@ OAUTH_CONFIGS = {
         "auth_url": "https://www.facebook.com/v18.0/dialog/oauth",
         "token_url": "https://graph.facebook.com/v18.0/oauth/access_token",
         "api_base": "https://graph.facebook.com/v18.0",
-        "scopes": ["pages_manage_posts", "pages_read_engagement", "business_management"]
+        "scopes": ["public_profile", "email"]  # Basic scopes to start
     },
     "tiktok": {
         "client_id": os.getenv("TIKTOK_CLIENT_ID", "your_tiktok_client_id"),
