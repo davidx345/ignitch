@@ -125,9 +125,12 @@ export default function Dashboard() {
     const fetchDashboardData = async () => {
       setIsRefreshing(true)
       try {
+        console.log('Session object:', session)
+        console.log('Access token:', session?.access_token)
+        
         const response = await fetch('https://ignitch-api-8f7efad07047.herokuapp.com/api/dashboard/overview', {
           headers: {
-            'Authorization': `Bearer ${session.access_token}`,
+            'Authorization': `Bearer ${session?.access_token}`,
             'Content-Type': 'application/json'
           }
         })
