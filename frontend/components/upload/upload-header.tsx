@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { 
   ArrowLeft,
-  Zap,
+  Sparkles,
   Award
 } from "lucide-react"
 import Link from "next/link"
@@ -35,7 +35,7 @@ export default function UploadHeader({ visibilityScore }: UploadHeaderProps) {
                 className="w-10 h-10 rounded-xl flex items-center justify-center"
                 style={{ backgroundColor: colors.primary }}
               >
-                <Zap className="w-6 h-6 text-white" />
+                <Sparkles className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold" style={{ color: colors.ink }}>

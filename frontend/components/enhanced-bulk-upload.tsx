@@ -15,6 +15,7 @@ import {
   Video, 
   Folder, 
   X, 
+  Sparkles, 
   Package, 
   CheckCircle, 
   AlertCircle,

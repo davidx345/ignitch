@@ -13,6 +13,7 @@ import { AutoPilotMode } from "@/components/auto-pilot-mode"
 import { useAuth } from "@/contexts/auth-context"
 import { useRouter } from "next/navigation"
 import { 
+  Sparkles, 
   Upload, 
   BarChart3, 
   Calendar, 
@@ -127,7 +128,7 @@ export default function Dashboard() {
       try {
         const response = await fetch('https://ignitch-api-8f7efad07047.herokuapp.com/api/dashboard/overview', {
           headers: {
-            'Authorization': `Bearer ${session?.access_token}`,
+            'Authorization': `Bearer ${session.access_token}`,
             'Content-Type': 'application/json'
           }
         })
@@ -753,7 +754,7 @@ export default function Dashboard() {
                           >
                             <div className="flex items-start space-x-3">
                               <div className="w-6 h-6 bg-accent-orange/10 rounded-full flex items-center justify-center mt-0.5">
-                                <Brain className="w-3 h-3 text-accent-orange" />
+                                <Sparkles className="w-3 h-3 text-accent-orange" />
                               </div>
                               <p className="body-small text-neutral-700 leading-relaxed flex-1">{tip}</p>
                             </div>

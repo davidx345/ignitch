@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
-import { MessageSquare, Brain, Zap, TrendingUp, Users, Heart, RefreshCw } from "lucide-react"
+import { MessageSquare, Brain, Sparkles, TrendingUp, Users, Heart, RefreshCw } from "lucide-react"
 
 interface ToneProfile {
   id: string
@@ -170,7 +170,7 @@ export default function ToneLearning() {
             >
               {isTraining ? (
                 <>
-                  <Zap className="w-4 h-4 mr-2 animate-spin" />
+                  <Sparkles className="w-4 h-4 mr-2 animate-spin" />
                   Training AI...
                 </>
               ) : (
@@ -257,7 +257,7 @@ export default function ToneLearning() {
               <Button onClick={analyzeTone} disabled={!customText.trim() || isAnalyzing} className="mt-3 w-full">
                 {isAnalyzing ? (
                   <>
-                    <Zap className="w-4 h-4 mr-2 animate-spin" />
+                    <Sparkles className="w-4 h-4 mr-2 animate-spin" />
                     Analyzing...
                   </>
                 ) : (

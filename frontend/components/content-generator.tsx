@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Zap, Copy, RefreshCw, Heart, MessageCircle, Share, Instagram, Facebook, Youtube, Hash } from "lucide-react"
+import { Sparkles } from "lucide-react" // Import Sparkles component
 
 interface GeneratedContent {
   id: string
@@ -260,7 +261,7 @@ export default function ContentGenerator({
           >
             {isGenerating ? (
               <>
-                <Zap className="w-4 h-4 mr-2 animate-spin" />
+                <Sparkles className="w-4 h-4 mr-2 animate-spin" />
                 Generating Content...
               </>
             ) : (

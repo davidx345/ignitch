@@ -2,6 +2,7 @@
 
 import {
   Upload,
+  Sparkles,
   TrendingUp,
   CheckCircle,
   ArrowRight,
@@ -33,7 +34,7 @@ export const features = [
     gradient: "from-blue-500 to-purple-600"
   },
   {
-    icon: Brain,
+    icon: Sparkles,
     title: "Business-Goal AI Content",
     description: "Tell us your goal (sales, visits, awareness) and AI creates viral captions, hashtags, and CTAs that convert.",
     gradient: "from-purple-500 to-pink-600"

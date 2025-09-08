@@ -11,6 +11,7 @@ import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { 
+  Sparkles, 
   Upload, 
   Zap, 
   Calendar, 
@@ -469,7 +470,7 @@ export default function UploadPage() {
                   className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center"
                   style={{ backgroundColor: colors.primary }}
                 >
-                  <Zap className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
+                  <Sparkles className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div>
                   <h1 className="text-lg sm:text-2xl font-bold" style={{ color: colors.ink }}>
@@ -650,7 +651,7 @@ export default function UploadPage() {
                   <Card className="shadow-lg">
                     <CardContent className="p-6">
                       <h3 className="font-semibold mb-4 flex items-center" style={{ color: colors.ink }}>
-                        <Zap className="w-5 h-5 mr-2" style={{ color: colors.primary }} />
+                        <Sparkles className="w-5 h-5 mr-2" style={{ color: colors.primary }} />
                         Content Enhancements
                       </h3>
                       <div className="space-y-4">
@@ -924,13 +925,13 @@ export default function UploadPage() {
                               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                               className="w-4 h-4 mr-2"
                             >
-                              <Zap className="w-4 h-4" />
+                              <Sparkles className="w-4 h-4" />
                             </motion.div>
                             Optimizing content...
                           </>
                         ) : (
                           <>
-                            <Zap className="w-4 h-4 mr-2" />
+                            <Sparkles className="w-4 h-4 mr-2" />
                             Optimize Content
                           </>
                         )}
@@ -1038,7 +1039,7 @@ export default function UploadPage() {
               <Card className="mb-8 shadow-lg bg-gradient-to-r from-blue-50 to-purple-50">
                 <CardContent className="p-6">
                   <h3 className="font-semibold mb-4 flex items-center" style={{ color: colors.ink }}>
-                    <Zap className="w-5 h-5 mr-2" style={{ color: colors.primary }} />
+                    <Sparkles className="w-5 h-5 mr-2" style={{ color: colors.primary }} />
                     Why Connect Your Platforms?
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

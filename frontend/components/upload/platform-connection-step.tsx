@@ -10,7 +10,7 @@ import {
   Wand2,
   Share2,
   Settings,
-  Zap,
+  Sparkles,
   Eye,
   Calendar,
   BarChart3
@@ -101,7 +101,7 @@ export default function PlatformConnectionStep({
       <Card className="mb-8 shadow-lg bg-gradient-to-r from-blue-50 to-purple-50">
         <CardContent className="p-6">
           <h3 className="font-semibold mb-4 flex items-center" style={{ color: colors.ink }}>
-            <Zap className="w-5 h-5 mr-2" style={{ color: colors.primary }} />
+            <Sparkles className="w-5 h-5 mr-2" style={{ color: colors.primary }} />
             Why Connect Your Platforms?
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
