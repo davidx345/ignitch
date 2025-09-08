@@ -378,8 +378,9 @@ async def get_social_accounts_fallback():
 @app.post("/api/social/auth/instagram")
 async def connect_instagram_fallback():
     """Temporary fallback for Instagram connection"""
+    instagram_client_id = os.getenv("INSTAGRAM_CLIENT_ID", "747326327930933")
     return {
-        "auth_url": "https://www.facebook.com/v18.0/dialog/oauth?client_id=your_instagram_client_id&redirect_uri=https://ignitch.vercel.app/auth/instagram/callback&scope=instagram_basic,instagram_content_publish,pages_show_list,pages_read_engagement&response_type=code&state=temp_state_token",
+        "auth_url": f"https://www.facebook.com/v18.0/dialog/oauth?client_id={instagram_client_id}&redirect_uri=https://ignitch.vercel.app/auth/instagram/callback&scope=instagram_basic,instagram_content_publish,pages_show_list,pages_read_engagement&response_type=code&state=temp_state_token",
         "state": "temp_state_token",
         "platform": "instagram",
         "status": "ready",
@@ -390,8 +391,9 @@ async def connect_instagram_fallback():
 @app.post("/api/social/auth/facebook")
 async def connect_facebook_fallback():
     """Temporary fallback for Facebook connection"""
+    facebook_client_id = os.getenv("FACEBOOK_CLIENT_ID", "747326327930933")
     return {
-        "auth_url": "https://www.facebook.com/v18.0/dialog/oauth?client_id=your_facebook_client_id&redirect_uri=https://ignitch.vercel.app/auth/facebook/callback&scope=pages_manage_posts,pages_read_engagement,business_management&response_type=code&state=temp_state_token",
+        "auth_url": f"https://www.facebook.com/v18.0/dialog/oauth?client_id={facebook_client_id}&redirect_uri=https://ignitch.vercel.app/auth/facebook/callback&scope=pages_manage_posts,pages_read_engagement,business_management&response_type=code&state=temp_state_token",
         "state": "temp_state_token", 
         "platform": "facebook",
         "status": "ready",

@@ -45,8 +45,8 @@ async def check_social_config():
 # OAuth Configuration
 OAUTH_CONFIGS = {
     "instagram": {
-        "client_id": os.getenv("INSTAGRAM_CLIENT_ID", "your_instagram_client_id"),
-        "client_secret": os.getenv("INSTAGRAM_CLIENT_SECRET", "your_instagram_client_secret"),
+        "client_id": os.getenv("INSTAGRAM_CLIENT_ID", "747326327930933"),
+        "client_secret": os.getenv("INSTAGRAM_CLIENT_SECRET", "fc17162fc8c0b6a6be00e6466a24fce8"),
         "redirect_uri": os.getenv("INSTAGRAM_REDIRECT_URI", "https://ignitch.vercel.app/auth/instagram/callback"),
         "auth_url": "https://www.facebook.com/v18.0/dialog/oauth",
         "token_url": "https://graph.facebook.com/v18.0/oauth/access_token",
@@ -54,8 +54,8 @@ OAUTH_CONFIGS = {
         "scopes": ["instagram_basic", "instagram_content_publish", "pages_show_list", "pages_read_engagement"]
     },
     "facebook": {
-        "client_id": os.getenv("FACEBOOK_CLIENT_ID", "your_facebook_client_id"),
-        "client_secret": os.getenv("FACEBOOK_CLIENT_SECRET", "your_facebook_client_secret"),
+        "client_id": os.getenv("FACEBOOK_CLIENT_ID", "747326327930933"),
+        "client_secret": os.getenv("FACEBOOK_CLIENT_SECRET", "fc17162fc8c0b6a6be00e6466a24fce8"),
         "redirect_uri": os.getenv("FACEBOOK_REDIRECT_URI", "https://ignitch.vercel.app/auth/facebook/callback"),
         "auth_url": "https://www.facebook.com/v18.0/dialog/oauth",
         "token_url": "https://graph.facebook.com/v18.0/oauth/access_token",
