@@ -67,25 +67,29 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 def get_current_user_from_supabase(token: str, db: Session):
     """Verify Supabase JWT and return user"""
     try:
-        # Verify Supabase JWT (you might need to get the Supabase public key)
-        # For now, we'll decode without verification to get user info
-        # In production, you should verify with Supabase's public key
+        print(f"🔍 Validating Supabase token...")
         
         # Decode without verification (not recommended for production)
         payload = jwt.decode(token, options={"verify_signature": False})
         supabase_user_id = payload.get("sub")
         email = payload.get("email")
         
+        print(f"📧 Token email: {email}")
+        print(f"🆔 Token user_id: {supabase_user_id}")
+        
         if not supabase_user_id or not email:
+            print("❌ Missing supabase_user_id or email in token")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid Supabase token"
             )
         
         # Check if user exists in our database
+        print(f"🔍 Looking for user with email: {email}")
         user = db.query(User).filter(User.email == email).first()
         
         if not user:
+            print(f"👤 Creating new user for {email}")
             # Create user if doesn't exist (OAuth flow)
             user = User(
                 email=email,
@@ -96,13 +100,24 @@ def get_current_user_from_supabase(token: str, db: Session):
             db.add(user)
             db.commit()
             db.refresh(user)
+            print(f"✅ Created new user with ID: {user.id}")
+        else:
+            print(f"✅ Found existing user with ID: {user.id}")
         
         return user
         
-    except Exception as e:
+    except jwt.InvalidTokenError as e:
+        print(f"❌ JWT Invalid Token Error: {e}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Could not validate Supabase credentials: {str(e)}"
+            detail=f"Invalid token: {str(e)}"
+        )
+    except Exception as e:
+        print(f"❌ Authentication error: {e}")
+        print(f"❌ Error type: {type(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Authentication failed: {str(e)}"
         )
 
 @router.post("/register", response_model=schemas.Token)
