@@ -120,29 +120,27 @@ const SocialMediaManager: React.FC<SocialMediaManagerProps> = ({ className = '' 
       const statsResponse = await api.getDashboardStats()
       
       if (statsResponse.success && statsResponse.data) {
-        const dashboardData = statsResponse.data
+        const dashboardData = statsResponse.data as any
         setStats({
-          totalPosts: dashboardData.stats?.total_posts || 0,
-          scheduledPosts: dashboardData.stats?.scheduled_posts || 0,
-          connectedPlatforms: dashboardData.stats?.connected_platforms || 0,
-          avgEngagement: dashboardData.stats?.avg_engagement || 0
+          totalPosts: dashboardData?.stats?.total_posts || dashboardData?.total_posts || 0,
+          scheduledPosts: dashboardData?.stats?.scheduled_posts || dashboardData?.scheduled_posts || 0,
+          connectedPlatforms: dashboardData?.stats?.connected_platforms || dashboardData?.connected_platforms || 0,
+          avgEngagement: dashboardData?.stats?.avg_engagement || dashboardData?.avg_engagement || 0
         })
-      } else {
-        // Get social accounts to count connected platforms
-        const accountsResponse = await api.getSocialAccounts()
-        if (accountsResponse.success && accountsResponse.data) {
-          const connectedPlatforms = accountsResponse.data.filter((account: any) => account.is_active).length
-          setStats(prev => ({
-            ...prev,
-            connectedPlatforms
-          }))
-        } else {
-          throw new Error(accountsResponse.error || 'Failed to load dashboard data')
-        }
+      }
+
+      // Get social accounts to count connected platforms as fallback
+      const accountsResponse = await api.getSocialAccounts()
+      if (accountsResponse.success && accountsResponse.data && Array.isArray(accountsResponse.data)) {
+        const connectedPlatforms = accountsResponse.data.filter((account: any) => account.is_active).length
+        setStats(prev => ({
+          ...prev,
+          connectedPlatforms: Math.max(prev.connectedPlatforms, connectedPlatforms)
+        }))
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to load dashboard data')
       console.error('Dashboard stats error:', err)
+      setError('Unable to load dashboard data')
       
       // Fallback to default values
       setStats({

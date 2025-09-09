@@ -341,7 +341,7 @@ export default function Dashboard() {
       color: "brand-primary",
       href: "#",
       featured: true,
-      onClick: () => setActiveTab("social")
+      onClick: () => setActiveTab("social-media")
     },
     {
       title: "Billboard Marketplace",
@@ -467,7 +467,7 @@ export default function Dashboard() {
                 </Button>
                 <Button 
                   size="sm"
-                  onClick={() => setActiveTab("social")}
+                  onClick={() => setActiveTab("social-media")}
                   className="bg-brand-primary hover:bg-brand-primary/90"
                 >
                   <Upload className="w-4 h-4 mr-2" />
@@ -717,7 +717,7 @@ export default function Dashboard() {
                           <h4 className="heading-sm text-neutral-900 mb-2">No content yet</h4>
                           <p className="body-small text-neutral-600 mb-6">Start creating amazing content to see your analytics here</p>
                           <Button 
-                            onClick={() => setActiveTab("social")}
+                            onClick={() => setActiveTab("social-media")}
                             className="bg-brand-primary hover:bg-brand-primary/90"
                           >
                             <Upload className="w-4 h-4 mr-2" />
