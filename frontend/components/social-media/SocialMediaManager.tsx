@@ -46,6 +46,7 @@ const ComponentLoader = () => (
 // Types for the main component
 interface SocialMediaManagerProps {
   className?: string
+  initialTab?: string
 }
 
 interface TabConfig {
@@ -56,10 +57,10 @@ interface TabConfig {
   badge?: string
 }
 
-const SocialMediaManager: React.FC<SocialMediaManagerProps> = ({ className = '' }) => {
+const SocialMediaManager: React.FC<SocialMediaManagerProps> = ({ className = '', initialTab = 'content-hub' }) => {
   const { user, session } = useAuth()
   const api = useApiService()
-  const [activeTab, setActiveTab] = useState('content-hub')
+  const [activeTab, setActiveTab] = useState(initialTab)
   const [stats, setStats] = useState({
     totalPosts: 0,
     scheduledPosts: 0,

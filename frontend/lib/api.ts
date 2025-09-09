@@ -315,5 +315,47 @@ export function useApiService() {
     getDashboardStats: () => authenticatedRequest('/api/dashboard/stats'),
     getPlatformAnalytics: (platform: string, days: number = 30) => 
       authenticatedRequest(`/api/social/analytics/${platform}?days=${days}`),
+    uploadMedia: async (file: File) => {
+      const formData = new FormData()
+      formData.append('file', file)
+      
+      const token = session?.access_token
+      if (!token) {
+        return {
+          success: false,
+          error: 'Not authenticated'
+        }
+      }
+
+      try {
+        const url = `${API_BASE_URL}/api/media/upload`
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+          body: formData
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+          return {
+            success: false,
+            error: data.detail || data.message || 'Upload failed'
+          }
+        }
+
+        return {
+          success: true,
+          data: data
+        }
+      } catch (error) {
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : 'Upload failed'
+        }
+      }
+    }
   }
 }

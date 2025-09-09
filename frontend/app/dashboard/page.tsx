@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { AIBusinessCoach } from "@/components/ai-business-coach"
 import { AutoPilotMode } from "@/components/auto-pilot-mode"
 import SocialMediaManager from "@/components/social-media/SocialMediaManager"
+import OnboardingTrigger from "@/components/onboarding/OnboardingTrigger"
 import { useAuth } from "@/contexts/auth-context"
 import { useRouter } from "next/navigation"
 import { 
@@ -96,6 +97,8 @@ export default function Dashboard() {
   const [wsConnection, setWsConnection] = useState<WebSocket | null>(null)
   const [notifications, setNotifications] = useState(3)
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [showOnboarding, setShowOnboarding] = useState(false)
+  const [socialMediaTab, setSocialMediaTab] = useState('content-hub')
 
   // Animation variants
   const containerVariants = {
@@ -141,6 +144,12 @@ export default function Dashboard() {
 
         const data: DashboardData = await response.json()
         setDashboardData(data)
+        
+        // Check if this is a new user and show onboarding
+        const hasSeenOnboarding = localStorage.getItem('adflow-onboarding-seen')
+        if (!hasSeenOnboarding && (!data.recent_posts || data.recent_posts.length === 0)) {
+          setShowOnboarding(true)
+        }
         
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load dashboard')
@@ -341,7 +350,10 @@ export default function Dashboard() {
       color: "brand-primary",
       href: "#",
       featured: true,
-      onClick: () => setActiveTab("social-media")
+      onClick: () => {
+        setSocialMediaTab('create')
+        setActiveTab("social-media")
+      }
     },
     {
       title: "Billboard Marketplace",
@@ -355,14 +367,20 @@ export default function Dashboard() {
       description: "Plan your content calendar",
       icon: Calendar,
       color: "semantic-warning",
-      href: "/schedule"
+      onClick: () => {
+        setSocialMediaTab('scheduler')
+        setActiveTab("social-media")
+      }
     },
     {
       title: "Analytics Deep Dive",
       description: "Detailed performance insights",
       icon: BarChart3,
       color: "semantic-success",
-      href: "/analytics"
+      onClick: () => {
+        setSocialMediaTab('analytics')
+        setActiveTab("social-media")
+      }
     }
   ]
 
@@ -467,7 +485,10 @@ export default function Dashboard() {
                 </Button>
                 <Button 
                   size="sm"
-                  onClick={() => setActiveTab("social-media")}
+                  onClick={() => {
+                    setSocialMediaTab('create')
+                    setActiveTab("social-media")
+                  }}
                   className="bg-brand-primary hover:bg-brand-primary/90"
                 >
                   <Upload className="w-4 h-4 mr-2" />
@@ -717,7 +738,10 @@ export default function Dashboard() {
                           <h4 className="heading-sm text-neutral-900 mb-2">No content yet</h4>
                           <p className="body-small text-neutral-600 mb-6">Start creating amazing content to see your analytics here</p>
                           <Button 
-                            onClick={() => setActiveTab("social-media")}
+                            onClick={() => {
+                              setSocialMediaTab('create')
+                              setActiveTab("social-media")
+                            }}
                             className="bg-brand-primary hover:bg-brand-primary/90"
                           >
                             <Upload className="w-4 h-4 mr-2" />
@@ -812,7 +836,7 @@ export default function Dashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <SocialMediaManager />
+              <SocialMediaManager initialTab={socialMediaTab} />
             </motion.div>
           </TabsContent>
 
@@ -837,6 +861,12 @@ export default function Dashboard() {
           </TabsContent>
         </Tabs>
       </main>
+
+      {/* Onboarding System */}
+      <OnboardingTrigger
+        onNavigate={setActiveTab}
+        showInitialGuide={showOnboarding}
+      />
     </div>
   )
 }

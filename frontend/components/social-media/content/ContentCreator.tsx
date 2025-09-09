@@ -191,32 +191,32 @@ const ContentCreator: React.FC<ContentCreatorProps> = ({
       })
 
       if (response.success && response.data) {
-        const contentData = response.data
+        const contentData = response.data as any // Type assertion for API response
         
         // Transform the response to match our interface
         const transformedContent: GeneratedContent[] = selectedPlatforms.map((platform, index) => ({
           id: `content-${Date.now()}-${index}`,
           platform,
-          content: contentData.content || contentData[platform]?.content || prompt,
-          hashtags: contentData.hashtags || contentData[platform]?.hashtags || [],
-          engagement_prediction: contentData.engagement_prediction || Math.random() * 100,
-          variations: contentData.variations?.map((v: any, vIndex: number) => ({
+          content: contentData?.content || contentData?.[platform]?.content || prompt,
+          hashtags: contentData?.hashtags || contentData?.[platform]?.hashtags || [],
+          engagement_prediction: contentData?.engagement_prediction || Math.random() * 100,
+          variations: contentData?.variations?.map((v: any, vIndex: number) => ({
             id: `variation-${Date.now()}-${vIndex}`,
             variant_type: v.variant_type || 'casual',
             content: v.content || v.text || '',
             predicted_engagement: v.predicted_engagement || Math.random() * 100,
             audience_match: v.audience_match || Math.random() * 100
           })) || [],
-          performance_prediction: contentData.performance_prediction || {
+          performance_prediction: contentData?.performance_prediction || {
             estimated_reach: Math.floor(Math.random() * 5000) + 1000,
             estimated_engagement: Math.floor(Math.random() * 500) + 100,
-            optimal_posting_time: contentData.optimal_posting_time || '2:00 PM',
+            optimal_posting_time: contentData?.optimal_posting_time || '2:00 PM',
             confidence_score: Math.random() * 100,
-            factors: contentData.factors || ['High engagement potential', 'Trending hashtags']
+            factors: contentData?.factors || ['High engagement potential', 'Trending hashtags']
           },
-          trend_integration: contentData.trend_integration || [],
-          optimization_score: contentData.optimization_score || Math.floor(Math.random() * 40) + 60,
-          optimization_suggestions: contentData.optimization_suggestions || []
+          trend_integration: contentData?.trend_integration || [],
+          optimization_score: contentData?.optimization_score || Math.floor(Math.random() * 40) + 60,
+          optimization_suggestions: contentData?.optimization_suggestions || []
         }))
 
         setGeneratedContent(transformedContent)
