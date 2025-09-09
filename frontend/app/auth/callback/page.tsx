@@ -34,8 +34,8 @@ export default function AuthCallback() {
           // Wait a moment to ensure session is properly set
           await new Promise(resolve => setTimeout(resolve, 500))
           
-          // Get redirect URL or default to upload
-          const redirectTo = searchParams?.get('redirect') || '/upload'
+          // Get redirect URL or default to dashboard
+          const redirectTo = searchParams?.get('redirect') || '/dashboard'
           console.log('Redirecting to:', redirectTo)
           
           // Use window.location for hard redirect to ensure it works

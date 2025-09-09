@@ -336,11 +336,12 @@ export default function Dashboard() {
   const quickActions = [
     {
       title: "Create Content",
-      description: "Upload and generate AI-powered ads",
+      description: "Generate AI-powered social media content",
       icon: Upload,
       color: "brand-primary",
-      href: "/upload",
-      featured: true
+      href: "#",
+      featured: true,
+      onClick: () => setActiveTab("social")
     },
     {
       title: "Billboard Marketplace",
@@ -466,7 +467,7 @@ export default function Dashboard() {
                 </Button>
                 <Button 
                   size="sm"
-                  onClick={() => (window.location.href = "/upload")}
+                  onClick={() => setActiveTab("social")}
                   className="bg-brand-primary hover:bg-brand-primary/90"
                 >
                   <Upload className="w-4 h-4 mr-2" />
@@ -602,7 +603,7 @@ export default function Dashboard() {
                             ? 'border-2 border-brand-primary/20 bg-brand-primary/5' 
                             : 'hover:border-neutral-300'
                         }`}
-                        onClick={() => (window.location.href = action.href)}
+                        onClick={() => action.onClick ? action.onClick() : (window.location.href = action.href)}
                       >
                         <CardContent className="p-6 text-center">
                           <div className={`icon-container mx-auto mb-4 bg-${action.color}/10 group-hover:bg-${action.color}/20`}>
@@ -716,7 +717,7 @@ export default function Dashboard() {
                           <h4 className="heading-sm text-neutral-900 mb-2">No content yet</h4>
                           <p className="body-small text-neutral-600 mb-6">Start creating amazing content to see your analytics here</p>
                           <Button 
-                            onClick={() => (window.location.href = "/upload")}
+                            onClick={() => setActiveTab("social")}
                             className="bg-brand-primary hover:bg-brand-primary/90"
                           >
                             <Upload className="w-4 h-4 mr-2" />

@@ -19,9 +19,12 @@ import {
   Zap,
   Users,
   Clock,
-  Target
+  Target,
+  RefreshCw
 } from 'lucide-react'
 import { colors, spacing, typography } from '@/lib/design-system'
+import { useApiService } from '@/lib/api'
+import { useAuth } from '@/contexts/auth-context'
 
 // Import our modular components with lazy loading for performance
 const ContentHub = lazy(() => import('./core/ContentHub'))
@@ -54,6 +57,8 @@ interface TabConfig {
 }
 
 const SocialMediaManager: React.FC<SocialMediaManagerProps> = ({ className = '' }) => {
+  const { user, session } = useAuth()
+  const api = useApiService()
   const [activeTab, setActiveTab] = useState('content-hub')
   const [stats, setStats] = useState({
     totalPosts: 0,
@@ -63,6 +68,7 @@ const SocialMediaManager: React.FC<SocialMediaManagerProps> = ({ className = '' 
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [refreshing, setRefreshing] = useState(false)
 
   // Tab configuration
   const tabs: TabConfig[] = [
@@ -100,25 +106,60 @@ const SocialMediaManager: React.FC<SocialMediaManagerProps> = ({ className = '' 
   ]
 
   useEffect(() => {
-    loadDashboardStats()
-  }, [])
+    if (user && session) {
+      loadDashboardStats()
+    }
+  }, [user, session])
 
   const loadDashboardStats = async () => {
     try {
       setLoading(true)
-      // This would call the API to get dashboard stats
-      // For now, using placeholder data
-      setStats({
-        totalPosts: 145,
-        scheduledPosts: 12,
-        connectedPlatforms: 3,
-        avgEngagement: 4.2
-      })
+      setError(null)
+      
+      // Get dashboard stats from backend
+      const statsResponse = await api.getDashboardStats()
+      
+      if (statsResponse.success && statsResponse.data) {
+        const dashboardData = statsResponse.data
+        setStats({
+          totalPosts: dashboardData.stats?.total_posts || 0,
+          scheduledPosts: dashboardData.stats?.scheduled_posts || 0,
+          connectedPlatforms: dashboardData.stats?.connected_platforms || 0,
+          avgEngagement: dashboardData.stats?.avg_engagement || 0
+        })
+      } else {
+        // Get social accounts to count connected platforms
+        const accountsResponse = await api.getSocialAccounts()
+        if (accountsResponse.success && accountsResponse.data) {
+          const connectedPlatforms = accountsResponse.data.filter((account: any) => account.is_active).length
+          setStats(prev => ({
+            ...prev,
+            connectedPlatforms
+          }))
+        } else {
+          throw new Error(accountsResponse.error || 'Failed to load dashboard data')
+        }
+      }
     } catch (err: any) {
-      setError('Failed to load dashboard data')
+      setError(err.message || 'Failed to load dashboard data')
+      console.error('Dashboard stats error:', err)
+      
+      // Fallback to default values
+      setStats({
+        totalPosts: 0,
+        scheduledPosts: 0,
+        connectedPlatforms: 0,
+        avgEngagement: 0
+      })
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    await loadDashboardStats()
+    setRefreshing(false)
   }
 
   return (
@@ -141,6 +182,16 @@ const SocialMediaManager: React.FC<SocialMediaManagerProps> = ({ className = '' 
             </div>
             
             <div className="flex space-x-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="text-gray-600 border-gray-300 hover:bg-gray-50"
+              >
+                <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+                {refreshing ? 'Refreshing...' : 'Refresh'}
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
@@ -255,7 +306,11 @@ const SocialMediaManager: React.FC<SocialMediaManagerProps> = ({ className = '' 
             >
               <div className="min-h-[500px]">
                 <Suspense fallback={<ComponentLoader />}>
-                  <tab.component onStatsUpdate={setStats} />
+                  <tab.component 
+                    onStatsUpdate={setStats} 
+                    apiService={api}
+                    refreshStats={loadDashboardStats}
+                  />
                 </Suspense>
               </div>
             </TabsContent>

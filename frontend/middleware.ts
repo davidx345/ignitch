@@ -31,7 +31,7 @@ export async function middleware(request: NextRequest) {
     console.log('[MIDDLEWARE] Session user:', session?.user?.email);
 
     // Only redirect unauthenticated users from protected routes
-    const protectedRoutes = ['/upload', '/dashboard', '/settings'];
+    const protectedRoutes = ['/dashboard', '/settings'];
     const isProtectedRoute = protectedRoutes.some(route =>
       request.nextUrl.pathname.startsWith(route)
     );

@@ -49,9 +49,9 @@ export default function FacebookCallback() {
           setStatus('success')
           setMessage(data.message || 'Facebook account connected successfully!')
           
-          // Redirect to upload page after 2 seconds
+          // Redirect to dashboard after 2 seconds
           setTimeout(() => {
-            router.push('/upload')
+            router.push('/dashboard')
           }, 2000)
         } else {
           setStatus('error')
@@ -100,14 +100,14 @@ export default function FacebookCallback() {
               <p className="text-red-600 font-medium">{message}</p>
               <div className="mt-4 space-y-2">
                 <Button 
-                  onClick={() => router.push('/upload')}
+                  onClick={() => router.push('/dashboard')}
                   className="w-full"
                 >
-                  Go to Upload
+                  Go to Dashboard
                 </Button>
                 <Button 
                   variant="outline"
-                  onClick={() => router.push('/upload')}
+                  onClick={() => router.push('/dashboard')}
                   className="w-full"
                 >
                   Try Again

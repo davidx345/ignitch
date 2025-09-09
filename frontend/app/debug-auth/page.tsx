@@ -25,7 +25,7 @@ export default function DebugAuth() {
   }, [])
 
   const testRedirect = () => {
-    window.location.href = '/upload'
+    window.location.href = '/dashboard'
   }
 
   return (
@@ -76,7 +76,7 @@ export default function DebugAuth() {
           <CardContent>
             <div className="space-y-2">
               <Button onClick={testRedirect}>
-                Test Redirect to /upload
+                Test Redirect to /dashboard
               </Button>
               <Button 
                 variant="outline" 
