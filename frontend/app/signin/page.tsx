@@ -32,7 +32,7 @@ export default function SignInPage() {
         await new Promise(resolve => setTimeout(resolve, 1000))
         
         // Supabase Auth Helpers will handle session and cookies automatically
-        const redirectTo = searchParams?.get("redirect") || "/upload"
+        const redirectTo = searchParams?.get("redirect") || "/dashboard"
         console.log('Sign-in successful, redirecting to:', redirectTo)
         
         // Use router.replace for better session handling

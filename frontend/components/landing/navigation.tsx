@@ -30,8 +30,8 @@ export default function LandingNavigation() {
     <motion.nav 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-slate-200/50' 
-          : 'bg-white/80 backdrop-blur-sm'
+          ? 'bg-gray-950/95 backdrop-blur-md shadow-xl border-b border-gray-800/50' 
+          : 'bg-gray-950/80 backdrop-blur-sm'
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -55,10 +55,10 @@ export default function LandingNavigation() {
               A
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight" style={{ color: colors.ink }}>
+              <h1 className="text-xl font-bold tracking-tight text-white">
                 Ignitch
               </h1>
-              <p className="text-xs text-slate-500 -mt-1">Enterprise AI Platform</p>
+              <p className="text-xs text-gray-400 -mt-1">Enterprise AI Platform</p>
             </div>
           </motion.div>
 
@@ -68,14 +68,14 @@ export default function LandingNavigation() {
               <motion.a
                 key={item.label}
                 href={item.href}
-                className="text-slate-600 hover:text-slate-900 transition-colors duration-200 font-medium relative group"
+                className="text-gray-300 hover:text-white transition-colors duration-200 font-medium relative group"
                 whileHover={{ y: -2 }}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1, duration: 0.3 }}
               >
                 {item.label}
-                <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 group-hover:w-full"></div>
+                <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300 group-hover:w-full"></div>
               </motion.a>
             ))}
           </div>
@@ -90,7 +90,7 @@ export default function LandingNavigation() {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                className="font-medium text-gray-300 hover:text-white hover:bg-gray-800"
                 onClick={() => window.location.href = "/signin"}
               >
                 Sign In
@@ -103,11 +103,7 @@ export default function LandingNavigation() {
             >
               <Button 
                 size="sm" 
-                className="font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
-                style={{ 
-                  background: `linear-gradient(135deg, ${colors.primary}, ${colors.primary}dd)`,
-                  boxShadow: `0 4px 20px ${colors.primary}30`
-                }}
+                className="font-semibold bg-white text-gray-900 hover:bg-gray-100 shadow-lg hover:shadow-xl transition-all duration-200"
                 onClick={() => window.location.href = "/signup"}
               >
                 Start Free Trial

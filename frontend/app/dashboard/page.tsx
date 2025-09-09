@@ -10,6 +10,7 @@ import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import { AIBusinessCoach } from "@/components/ai-business-coach"
 import { AutoPilotMode } from "@/components/auto-pilot-mode"
+import SocialMediaManager from "@/components/social-media/SocialMediaManager"
 import { useAuth } from "@/contexts/auth-context"
 import { useRouter } from "next/navigation"
 import { 
@@ -42,7 +43,8 @@ import {
   Play,
   Pause,
   RefreshCw,
-  Filter
+  Filter,
+  Share2
 } from "lucide-react"
 
 interface DashboardStats {
@@ -515,6 +517,13 @@ export default function Dashboard() {
               Overview
             </TabsTrigger>
             <TabsTrigger 
+              value="social-media" 
+              className="data-[state=active]:bg-white data-[state=active]:shadow-sm font-medium"
+            >
+              <Share2 className="w-4 h-4 mr-2" />
+              Social Media
+            </TabsTrigger>
+            <TabsTrigger 
               value="ai-coach" 
               className="data-[state=active]:bg-white data-[state=active]:shadow-sm font-medium"
             >
@@ -527,13 +536,6 @@ export default function Dashboard() {
             >
               <Bot className="w-4 h-4 mr-2" />
               Auto-Pilot
-            </TabsTrigger>
-            <TabsTrigger 
-              value="analytics" 
-              className="data-[state=active]:bg-white data-[state=active]:shadow-sm font-medium"
-            >
-              <TrendingUp className="w-4 h-4 mr-2" />
-              Analytics
             </TabsTrigger>
           </TabsList>
 
@@ -803,6 +805,16 @@ export default function Dashboard() {
             </div>
           </TabsContent>
 
+          <TabsContent value="social-media">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <SocialMediaManager />
+            </motion.div>
+          </TabsContent>
+
           <TabsContent value="ai-coach">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -820,49 +832,6 @@ export default function Dashboard() {
               transition={{ duration: 0.5 }}
             >
               <AutoPilotMode />
-            </motion.div>
-          </TabsContent>
-
-          <TabsContent value="analytics">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="space-y-6"
-            >
-              <Card className="shadow-sm">
-                <CardHeader>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center">
-                      <BarChart3 className="w-6 h-6 text-brand-primary" />
-                    </div>
-                    <div>
-                      <h3 className="heading-lg text-neutral-900">Advanced Analytics</h3>
-                      <p className="body-small text-neutral-600">Deep insights into your performance</p>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="text-center py-12">
-                  <div className="w-20 h-20 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <TrendingUp className="w-10 h-10 text-neutral-400" />
-                  </div>
-                  <h4 className="heading-sm text-neutral-900 mb-3">Coming Soon</h4>
-                  <p className="body-medium text-neutral-600 mb-6 max-w-md mx-auto">
-                    We're building comprehensive analytics dashboard with real-time insights, 
-                    competitor analysis, and growth predictions.
-                  </p>
-                  <div className="flex justify-center space-x-3">
-                    <Button variant="outline">
-                      <Bell className="w-4 h-4 mr-2" />
-                      Notify Me
-                    </Button>
-                    <Button>
-                      <Eye className="w-4 h-4 mr-2" />
-                      View Current Data
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
             </motion.div>
           </TabsContent>
         </Tabs>

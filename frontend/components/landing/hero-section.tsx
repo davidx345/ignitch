@@ -30,8 +30,10 @@ export default function HeroSection({
 }: HeroSectionProps) {
   return (
     <section className="relative py-24 px-6 overflow-hidden">
-      {/* Professional background with subtle patterns */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-slate-100"></div>
+      {/* Dark professional background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-950 via-black to-gray-900">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-800/20 via-transparent to-transparent"></div>
+      </div>
       
       <div className="relative max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -48,39 +50,32 @@ export default function HeroSection({
                 transition={{ delay: 0.2, duration: 0.6 }}
               >
                 <Badge 
-                  className="px-4 py-2 mb-6 border-0 font-medium tracking-wide"
-                  style={{ 
-                    backgroundColor: `${colors.primary}15`, 
-                    color: colors.primary,
-                    backdropFilter: 'blur(10px)'
-                  }}
+                  className="px-4 py-2 mb-6 border-0 font-medium tracking-wide bg-gray-800/50 text-gray-200 backdrop-blur-md"
                 >
                   Enterprise AI-Powered Growth Platform
                 </Badge>
               </motion.div>
 
               <motion.h1 
-                className="text-5xl lg:text-6xl font-bold leading-tight mb-6 tracking-tight"
-                style={{ color: colors.ink }}
+                className="text-5xl lg:text-6xl font-bold leading-tight mb-6 tracking-tight text-white"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
               >
-                Transform Your Business with{" "}
-                <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                  AI-Driven
-                </span>{" "}
-                Social Media
+                Social media growth.{" "}
+                <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                  Using AI.
+                </span>
               </motion.h1>
 
               <motion.p 
-                className="text-xl text-slate-600 mb-8 leading-relaxed max-w-2xl"
+                className="text-xl text-gray-300 mb-8 leading-relaxed max-w-2xl"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
               >
-                Upload one image. Define your business objectives. Watch our enterprise AI create viral content, 
-                optimize posting schedules, and deliver measurable ROI across all major platforms.
+                Don't hire a social media agency. Create viral content, automate posting schedules, 
+                and grow your audience with AI that works 24/7.
               </motion.p>
 
               <motion.div 
@@ -93,10 +88,10 @@ export default function HeroSection({
                   <div className="relative flex-1">
                     <Input
                       placeholder="Enter your business email"
-                      className={`h-14 text-base border-2 transition-all duration-200 ${
-                        error ? 'border-red-300 focus:border-red-500' : 
-                        isEmailValid ? 'border-green-300 focus:border-green-500' : 
-                        'border-slate-200 focus:border-blue-500'
+                      className={`h-14 text-base border-2 transition-all duration-200 bg-gray-900/50 text-white placeholder:text-gray-400 ${
+                        error ? 'border-red-500 focus:border-red-400' : 
+                        isEmailValid ? 'border-green-500 focus:border-green-400' : 
+                        'border-gray-700 focus:border-gray-500'
                       }`}
                       value={email}
                       onChange={(e) => onEmailChange(e.target.value)}
@@ -112,8 +107,7 @@ export default function HeroSection({
                   </div>
                   <Button
                     size="lg"
-                    className="h-14 px-8 font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
-                    style={{ backgroundColor: colors.primary }}
+                    className="h-14 px-8 font-semibold text-lg bg-white text-gray-900 hover:bg-gray-100 shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
                     onClick={onEmailSubmit}
                     disabled={isLoading || !isEmailValid}
                   >
@@ -139,11 +133,27 @@ export default function HeroSection({
                   </motion.p>
                 )}
 
-                <p className="text-sm text-slate-500 flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                <p className="text-sm text-gray-400 flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-400" />
                   <span className="font-medium">Enterprise-grade security.</span> 
                   No credit card required. 14-day free trial.
                 </p>
+
+                {/* Social Proof - Like Ocoya */}
+                <motion.div 
+                  className="flex items-center gap-6 pt-6 border-t border-gray-700"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7, duration: 0.6 }}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-sm font-medium text-gray-300">LIVE</span>
+                  </div>
+                  <span className="text-sm text-gray-400">
+                    Trusted by <span className="font-semibold text-white">12,847+</span> growing businesses worldwide
+                  </span>
+                </motion.div>
               </motion.div>
             </div>
           </motion.div>
@@ -155,9 +165,9 @@ export default function HeroSection({
             className="relative"
           >
             <div className="relative">
-              <Card className="overflow-hidden shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
+              <Card className="overflow-hidden shadow-2xl border border-gray-700 bg-gray-900/50 backdrop-blur-sm">
                 <CardContent className="p-0">
-                  <div className="bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8 text-white">
+                  <div className="bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 p-8 text-white">
                     <div className="flex items-center space-x-3 mb-6">
                       <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm">
                         <Brain className="w-6 h-6" />

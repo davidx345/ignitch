@@ -60,8 +60,7 @@ export default function CTASection({
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              Join 15,000+ business leaders who've transformed their social media strategy 
-              and achieved measurable ROI with our enterprise-grade AI platform.
+              Explore an entirely fresh approach to social media management.
             </motion.p>
 
             <motion.div 

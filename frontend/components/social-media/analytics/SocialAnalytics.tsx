@@ -29,7 +29,13 @@ import {
   ArrowDown,
   Minus,
   Filter,
-  Search
+  Search,
+  Flame,
+  Hash,
+  Brain,
+  Lightbulb,
+  Sparkles,
+  TrendingDown
 } from "lucide-react"
 
 interface AnalyticsData {
@@ -77,6 +83,63 @@ export default function Analytics() {
     { type: "Image", posts: 25, avgEngagement: 3.1, bestTime: "12:00 PM", topPerformer: "Behind the Scenes" },
     { type: "Carousel", posts: 8, avgEngagement: 5.1, bestTime: "8:00 AM", topPerformer: "Product Features" },
     { type: "Story", posts: 45, avgEngagement: 2.8, bestTime: "9:00 PM", topPerformer: "Daily Updates" }
+  ]
+
+  // Phase 5: Advanced Trend Integration
+  const trendingHashtags = [
+    { tag: "#SmallBusiness", volume: 245000, growth: 18, opportunity: "high" },
+    { tag: "#SustainableLifestyle", volume: 189000, growth: 23, opportunity: "high" },
+    { tag: "#DigitalMarketing", volume: 567000, growth: 12, opportunity: "medium" },
+    { tag: "#EntrepreneurLife", volume: 134000, growth: 31, opportunity: "high" },
+    { tag: "#TechTrends", volume: 89000, growth: -5, opportunity: "low" }
+  ]
+
+  const emergingTrends = [
+    { 
+      trend: "AI-Generated Content", 
+      growth: 145, 
+      prediction: "Will peak in 2-3 weeks",
+      relevance: 92,
+      actionable: "Create AI-focused tutorials"
+    },
+    { 
+      trend: "Micro-Influencer Partnerships", 
+      growth: 78, 
+      prediction: "Steady growth expected",
+      relevance: 85,
+      actionable: "Connect with local influencers"
+    },
+    { 
+      trend: "Sustainable Business Practices", 
+      growth: 156, 
+      prediction: "Long-term upward trend",
+      relevance: 89,
+      actionable: "Highlight your eco-friendly initiatives"
+    }
+  ]
+
+  const contentPredictions = [
+    {
+      contentType: "Video Tutorial",
+      predictedEngagement: 87,
+      bestTime: "Tuesday 6:00 PM",
+      estimatedReach: 12500,
+      confidence: 94
+    },
+    {
+      contentType: "Behind the Scenes",
+      predictedEngagement: 73,
+      bestTime: "Thursday 2:00 PM", 
+      estimatedReach: 8900,
+      confidence: 88
+    },
+    {
+      contentType: "User Generated Content",
+      predictedEngagement: 91,
+      bestTime: "Saturday 10:00 AM",
+      estimatedReach: 15600,
+      confidence: 92
+    }
   ]
 
   const getStatusIcon = (status: string) => {
@@ -823,27 +886,156 @@ export default function Analytics() {
             </TabsContent>
 
             <TabsContent value="trends" className="space-y-4">
-              <div className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
-                <h4 className="font-semibold mb-4 text-purple-900">Trending Insights</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="text-purple-800 mb-2">
-                      <strong>🔥 Hot Trend:</strong> Sustainable fashion content is performing 40% better than average
-                    </p>
-                    <p className="text-purple-800 mb-2">
-                      <strong>📈 Growth Opportunity:</strong> Video content on TikTok showing 3x engagement increase
-                    </p>
+              {/* Phase 5: Advanced Trend Analysis */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Trending Hashtags */}
+                <Card className="p-4">
+                  <h4 className="font-semibold mb-4 flex items-center">
+                    <Hash className="w-5 h-5 mr-2 text-blue-600" />
+                    Trending Hashtags
+                  </h4>
+                  <div className="space-y-3">
+                    {trendingHashtags.map((hashtag, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                        <div>
+                          <span className="font-medium text-blue-600">{hashtag.tag}</span>
+                          <div className="text-sm text-gray-600">{hashtag.volume.toLocaleString()} posts</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="flex items-center space-x-2">
+                            <span className={`text-sm font-medium ${hashtag.growth > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                              {hashtag.growth > 0 ? '+' : ''}{hashtag.growth}%
+                            </span>
+                            {hashtag.growth > 0 ? <TrendingUp className="w-4 h-4 text-green-600" /> : <TrendingDown className="w-4 h-4 text-red-600" />}
+                          </div>
+                          <Badge 
+                            variant="secondary"
+                            className={
+                              hashtag.opportunity === 'high' ? 'bg-green-100 text-green-800' :
+                              hashtag.opportunity === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-gray-100 text-gray-800'
+                            }
+                          >
+                            {hashtag.opportunity} opportunity
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div>
-                    <p className="text-purple-800 mb-2">
-                      <strong>⏰ Timing Insight:</strong> Evening posts (6-8 PM) generate 25% more conversions
-                    </p>
-                    <p className="text-purple-800 mb-2">
-                      <strong>🎯 Audience Behavior:</strong> Your audience is most active on weekends
-                    </p>
+                </Card>
+
+                {/* Emerging Trends */}
+                <Card className="p-4">
+                  <h4 className="font-semibold mb-4 flex items-center">
+                    <Flame className="w-5 h-5 mr-2 text-orange-600" />
+                    Emerging Trends
+                  </h4>
+                  <div className="space-y-4">
+                    {emergingTrends.map((trend, index) => (
+                      <div key={index} className="p-4 rounded-lg border border-orange-200 bg-orange-50">
+                        <div className="flex justify-between items-start mb-2">
+                          <h5 className="font-medium text-orange-900">{trend.trend}</h5>
+                          <Badge className="bg-orange-100 text-orange-800">
+                            +{trend.growth}% growth
+                          </Badge>
+                        </div>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex items-center space-x-2">
+                            <Brain className="w-4 h-4 text-orange-600" />
+                            <span className="text-orange-700">{trend.prediction}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Target className="w-4 h-4 text-orange-600" />
+                            <span className="text-orange-700">Relevance: {trend.relevance}%</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Lightbulb className="w-4 h-4 text-orange-600" />
+                            <span className="text-orange-700 font-medium">{trend.actionable}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              </div>
+
+              {/* Content Performance Predictions */}
+              <Card className="p-4">
+                <h4 className="font-semibold mb-4 flex items-center">
+                  <Sparkles className="w-5 h-5 mr-2 text-purple-600" />
+                  AI Performance Predictions
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {contentPredictions.map((prediction, index) => (
+                    <div key={index} className="p-4 rounded-lg border border-purple-200 bg-purple-50">
+                      <h5 className="font-medium text-purple-900 mb-3">{prediction.contentType}</h5>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-purple-700">Predicted Engagement</span>
+                          <span className="font-bold text-purple-900">{prediction.predictedEngagement}%</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-purple-700">Best Time</span>
+                          <span className="font-medium text-purple-800">{prediction.bestTime}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-purple-700">Est. Reach</span>
+                          <span className="font-medium text-purple-800">{prediction.estimatedReach.toLocaleString()}</span>
+                        </div>
+                        <div className="mt-3">
+                          <div className="flex justify-between text-xs text-purple-600 mb-1">
+                            <span>Confidence</span>
+                            <span>{prediction.confidence}%</span>
+                          </div>
+                          <Progress value={prediction.confidence} className="h-2" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+
+              {/* AI Insights & Recommendations */}
+              <Card className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+                <h4 className="font-semibold mb-4 flex items-center text-blue-900">
+                  <Brain className="w-5 h-5 mr-2" />
+                  AI-Powered Insights
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <div className="p-3 rounded-lg bg-green-100 border border-green-200">
+                      <div className="flex items-center space-x-2 mb-1">
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        <span className="font-medium text-green-800">High Opportunity</span>
+                      </div>
+                      <p className="text-sm text-green-700">Video content posted on Tuesday evenings shows 3x higher engagement for your audience</p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-blue-100 border border-blue-200">
+                      <div className="flex items-center space-x-2 mb-1">
+                        <Zap className="w-4 h-4 text-blue-600" />
+                        <span className="font-medium text-blue-800">Quick Win</span>
+                      </div>
+                      <p className="text-sm text-blue-700">Adding #SmallBusiness to your posts could increase reach by 40%</p>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="p-3 rounded-lg bg-purple-100 border border-purple-200">
+                      <div className="flex items-center space-x-2 mb-1">
+                        <TrendingUp className="w-4 h-4 text-purple-600" />
+                        <span className="font-medium text-purple-800">Trending Strategy</span>
+                      </div>
+                      <p className="text-sm text-purple-700">Sustainable content themes are gaining 156% more traction this month</p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-yellow-100 border border-yellow-200">
+                      <div className="flex items-center space-x-2 mb-1">
+                        <AlertTriangle className="w-4 h-4 text-yellow-600" />
+                        <span className="font-medium text-yellow-800">Watch Out</span>
+                      </div>
+                      <p className="text-sm text-yellow-700">Tech trend posts are declining. Consider pivoting to business growth content</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Card>
             </TabsContent>
           </Tabs>
         </CardContent>

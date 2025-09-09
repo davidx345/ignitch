@@ -46,10 +46,7 @@ export default function PricingSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            Plans That{" "}
-            <span className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
-              Scale With You
-            </span>
+            Affordable pricing.
           </motion.h2>
 
           <motion.p 
@@ -58,8 +55,7 @@ export default function PricingSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
           >
-            Start free, upgrade when you see results. Enterprise-grade features with transparent pricing. 
-            No hidden fees, no surprises.
+            Plans for all types of businesses - from freelancers to brands and marketing agencies. Try now with a 14-day free trial!
           </motion.p>
         </motion.div>
 

@@ -50,6 +50,15 @@ try:
         traceback.print_exc()
         SOCIAL_AVAILABLE = False
     
+    # Import enhanced social media router
+    try:
+        from routers import social_media
+        SOCIAL_MEDIA_ENHANCED_AVAILABLE = True
+        print("✅ Enhanced social media router imported successfully")
+    except Exception as social_media_error:
+        print(f"❌ Enhanced social media router import failed: {social_media_error}")
+        SOCIAL_MEDIA_ENHANCED_AVAILABLE = False
+    
     # Try to import dashboard separately to catch SQLAlchemy issues
     try:
         from routers import dashboard
@@ -231,6 +240,18 @@ if ROUTERS_AVAILABLE:
             traceback.print_exc()
     else:
         print("⚠️ Social router not available - skipped inclusion")
+    
+    # Include enhanced social media router
+    if SOCIAL_MEDIA_ENHANCED_AVAILABLE:
+        try:
+            app.include_router(social_media.router, tags=["Enhanced Social Media"])
+            print("✅ Enhanced social media router included successfully")
+        except Exception as social_media_error:
+            print(f"❌ Enhanced social media router failed to include: {social_media_error}")
+            import traceback
+            traceback.print_exc()
+    else:
+        print("⚠️ Enhanced social media router not available - skipped inclusion")
     
     # Include billboard router for global billboard marketplace
     try:

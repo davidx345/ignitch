@@ -31,8 +31,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-// Update the import path to the correct location of Navigation component
-import Navigation from '@/components/enhanced-navigation'
+// Remove the enhanced-navigation import as it's not needed
 import { useAuth } from '@/contexts/auth-context'
 
 const colors = {
@@ -177,7 +176,6 @@ export default function SettingsPage() {
   if (loading || !settings) {
     return (
       <div className="min-h-screen" style={{ backgroundColor: colors.gray }}>
-        <Navigation />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
           <div className="animate-pulse space-y-6">
             <div className="h-32 bg-gray-200 rounded-lg" />
@@ -194,8 +192,6 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: colors.gray }}>
-      <Navigation />
-      
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">

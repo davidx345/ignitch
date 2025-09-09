@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import LandingNavigation from "@/components/landing/navigation"
 import HeroSection from "@/components/landing/hero-section"
 import FeaturesSection from "@/components/landing/features-section"
+import WorkflowsSection from "@/components/landing/workflows-section"
 import HowItWorksSection from "@/components/landing/how-it-works-section"
 import TestimonialsSection from "@/components/landing/testimonials-section"
 import PricingSection from "@/components/landing/pricing-section"
@@ -94,7 +95,7 @@ export default function LandingPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900">
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0 }}
@@ -114,6 +115,8 @@ export default function LandingPage() {
           />
           
           <FeaturesSection />
+          
+          <WorkflowsSection />
           
           <HowItWorksSection />
           

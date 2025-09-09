@@ -9,9 +9,9 @@ import { features, colors } from "@/constants/landing"
 
 export default function FeaturesSection() {
   return (
-    <section id="features" className="relative py-24 px-6 bg-white overflow-hidden">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50/50 via-white to-slate-50/50"></div>
+    <section id="features" className="relative py-24 px-6 bg-gray-900 overflow-hidden">
+      {/* Dark background pattern */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-950/50 via-gray-900 to-gray-800/50"></div>
       
       <div className="relative max-w-7xl mx-auto">
         <motion.div 
