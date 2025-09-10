@@ -181,6 +181,13 @@ const ContentCreator: React.FC<ContentCreatorProps> = ({
     setSuccess(null)
 
     try {
+      console.log('Generating content with:', {
+        prompt: prompt.trim(),
+        platforms: selectedPlatforms,
+        tone,
+        business_goal: businessGoal
+      })
+
       const response = await api.generateContent({
         prompt: prompt.trim(),
         platforms: selectedPlatforms,
@@ -190,34 +197,33 @@ const ContentCreator: React.FC<ContentCreatorProps> = ({
         include_trends: includeTrends
       })
 
+      console.log('Generate content response:', response)
+
       if (response.success && response.data) {
-        const contentData = response.data as any // Type assertion for API response
-        
-        // Transform the response to match our interface
-        const transformedContent: GeneratedContent[] = selectedPlatforms.map((platform, index) => ({
-          id: `content-${Date.now()}-${index}`,
-          platform,
-          content: contentData?.content || contentData?.[platform]?.content || prompt,
-          hashtags: contentData?.hashtags || contentData?.[platform]?.hashtags || [],
-          engagement_prediction: contentData?.engagement_prediction || Math.random() * 100,
-          variations: contentData?.variations?.map((v: any, vIndex: number) => ({
-            id: `variation-${Date.now()}-${vIndex}`,
-            variant_type: v.variant_type || 'casual',
-            content: v.content || v.text || '',
-            predicted_engagement: v.predicted_engagement || Math.random() * 100,
-            audience_match: v.audience_match || Math.random() * 100
-          })) || [],
-          performance_prediction: contentData?.performance_prediction || {
-            estimated_reach: Math.floor(Math.random() * 5000) + 1000,
-            estimated_engagement: Math.floor(Math.random() * 500) + 100,
-            optimal_posting_time: contentData?.optimal_posting_time || '2:00 PM',
-            confidence_score: Math.random() * 100,
-            factors: contentData?.factors || ['High engagement potential', 'Trending hashtags']
-          },
-          trend_integration: contentData?.trend_integration || [],
-          optimization_score: contentData?.optimization_score || Math.floor(Math.random() * 40) + 60,
-          optimization_suggestions: contentData?.optimization_suggestions || []
-        }))
+        const contentData: { [key: string]: any } = response.data;
+        // Handle both array and object responses
+        let transformedContent: GeneratedContent[] = [];
+        if (Array.isArray(contentData.content)) {
+          // New API format with array of content items
+          transformedContent = contentData.content.map((item: any, index: number) => ({
+            id: `content-${Date.now()}-${index}`,
+            platform: item.platform,
+            content: item.content || '',
+            hashtags: item.hashtags || [],
+            engagement_prediction: item.engagement_prediction || 75,
+            optimization_score: item.optimization_score || 75
+          }));
+        } else {
+          // Legacy format or single content item
+          transformedContent = selectedPlatforms.map((platform, index) => ({
+            id: `content-${Date.now()}-${index}`,
+            platform,
+            content: typeof contentData.content !== 'undefined' ? contentData.content : (contentData[platform]?.content || prompt),
+            hashtags: typeof contentData.hashtags !== 'undefined' ? contentData.hashtags : (contentData[platform]?.hashtags || []),
+            engagement_prediction: typeof contentData.engagement_prediction !== 'undefined' ? contentData.engagement_prediction : (Math.random() * 40 + 60),
+            optimization_score: typeof contentData.optimization_score !== 'undefined' ? contentData.optimization_score : (Math.floor(Math.random() * 40) + 60)
+          }));
+        }
 
         setGeneratedContent(transformedContent)
         setContentScore(transformedContent[0]?.optimization_score || 75)
@@ -230,20 +236,32 @@ const ContentCreator: React.FC<ContentCreatorProps> = ({
       }
     } catch (err: any) {
       console.error('Content generation error:', err)
-      setError(err.message || 'Failed to generate content. Please try again.')
       
-      // Fallback: Generate mock content for development
+      // Check if it's a network error or auth error
+      if (err.message?.includes('401') || err.message?.includes('Unauthorized')) {
+        setError('Authentication required. Please sign in again.')
+      } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+        setError('Network error. Please check your connection and try again.')
+      } else {
+        setError(err.message || 'Failed to generate content. Please try again.')
+      }
+      
+      // Fallback: Generate demo content for better UX
       const mockContent: GeneratedContent[] = selectedPlatforms.map((platform, index) => ({
-        id: `mock-content-${Date.now()}-${index}`,
+        id: `demo-content-${Date.now()}-${index}`,
         platform,
-        content: `${prompt} #${platform} #socialmedia #content`,
-        hashtags: [`#${platform}`, '#socialmedia', '#content', '#marketing'],
-        engagement_prediction: Math.random() * 100,
-        optimization_score: Math.floor(Math.random() * 40) + 60
+        content: `${prompt}\n\n🚀 Excited to share this with you!\n\n#${platform} #socialmedia #content #growth`,
+        hashtags: [platform, 'socialmedia', 'content', 'growth'],
+        engagement_prediction: Math.random() * 20 + 70,
+        optimization_score: Math.floor(Math.random() * 20) + 70
       }))
       
       setGeneratedContent(mockContent)
-      setError('Using demo content - backend integration in progress')
+      
+      // Show both error and demo notice
+      setTimeout(() => {
+        setError((prev) => prev + ' (Showing demo content)')
+      }, 1000)
     } finally {
       setLoading(false)
     }

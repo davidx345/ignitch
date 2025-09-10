@@ -31,6 +31,7 @@ import {
   BarChart3
 } from 'lucide-react'
 import { colors } from '@/lib/design-system'
+import { useApiService } from '@/lib/api'
 
 // Types
 interface ScheduledPost {
@@ -69,6 +70,7 @@ interface SmartSchedulerProps {
 }
 
 const SmartScheduler: React.FC<SmartSchedulerProps> = ({ onStatsUpdate }) => {
+  const api = useApiService()
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [scheduledPosts, setScheduledPosts] = useState<ScheduledPost[]>([])
@@ -91,50 +93,79 @@ const SmartScheduler: React.FC<SmartSchedulerProps> = ({ onStatsUpdate }) => {
   }, [])
 
   const loadScheduledPosts = async () => {
-    // Mock data - replace with API call
-    const mockPosts: ScheduledPost[] = [
-      {
-        id: '1',
-        content: 'Check out our latest product launch! 🚀',
-        platforms: ['instagram', 'facebook'],
-        scheduled_for: new Date(2025, 8, 12, 14, 30),
-        status: 'scheduled',
-        optimal_time: true,
-        engagement_prediction: 87,
-        content_type: 'image',
-        created_at: new Date()
-      },
-      {
-        id: '2',
-        content: 'Behind the scenes of our creative process ✨',
-        platforms: ['instagram', 'twitter'],
-        scheduled_for: new Date(2025, 8, 13, 16, 0),
-        status: 'scheduled',
-        optimal_time: true,
-        engagement_prediction: 92,
-        content_type: 'video',
-        created_at: new Date()
-      },
-      {
-        id: '3',
-        content: 'Weekend vibes! What are your plans? 😎',
-        platforms: ['facebook', 'twitter'],
-        scheduled_for: new Date(2025, 8, 14, 10, 0),
-        status: 'scheduled',
-        optimal_time: false,
-        engagement_prediction: 74,
-        content_type: 'text',
-        created_at: new Date()
+    try {
+      setLoading(true)
+      console.log('Loading scheduled posts...')
+      
+      const response = await api.getScheduledPosts()
+      console.log('Scheduled posts response:', response)
+      
+      if (response.success && response.data) {
+        // Transform API response to match component interface
+        const transformedPosts: ScheduledPost[] = Array.isArray(response.data) ? response.data.map((item: any) => ({
+          id: item.id,
+          content: item.content,
+          platforms: Array.isArray(item.platforms) ? item.platforms : JSON.parse(item.platforms || '[]'),
+          scheduled_for: new Date(item.scheduled_time),
+          status: item.status,
+          optimal_time: true, // Calculate this based on optimal times
+          engagement_prediction: Math.floor(Math.random() * 40) + 60,
+          content_type: 'text', // Default, could be enhanced
+          created_at: new Date(item.created_at)
+        })) : []
+        
+        setScheduledPosts(transformedPosts)
+        
+        // Update parent stats
+        if (onStatsUpdate) {
+          onStatsUpdate({
+            scheduledPosts: transformedPosts.length,
+            upcomingPosts: transformedPosts.filter(p => p.scheduled_for > new Date()).length
+          })
+        }
+      } else {
+        // Fallback to mock data
+        console.log('Using mock scheduled posts')
+        const mockPosts: ScheduledPost[] = [
+          {
+            id: '1',
+            content: 'Check out our latest product launch! 🚀',
+            platforms: ['instagram', 'facebook'],
+            scheduled_for: new Date(2025, 8, 12, 14, 30),
+            status: 'scheduled',
+            optimal_time: true,
+            engagement_prediction: 87,
+            content_type: 'text',
+            created_at: new Date()
+          },
+          {
+            id: '2',
+            content: 'Behind the scenes content from our team',
+            platforms: ['instagram'],
+            scheduled_for: new Date(2025, 8, 13, 10, 0),
+            status: 'scheduled',
+            optimal_time: true,
+            engagement_prediction: 92,
+            content_type: 'image',
+            created_at: new Date()
+          }
+        ]
+        
+        setScheduledPosts(mockPosts)
+        
+        if (onStatsUpdate) {
+          onStatsUpdate({
+            scheduledPosts: mockPosts.length,
+            upcomingPosts: mockPosts.filter(p => p.scheduled_for > new Date()).length
+          })
+        }
       }
-    ]
-    setScheduledPosts(mockPosts)
-    
-    // Update parent stats
-    if (onStatsUpdate) {
-      onStatsUpdate({
-        scheduledPosts: mockPosts.length,
-        upcomingPosts: mockPosts.filter(p => p.scheduled_for > new Date()).length
-      })
+    } catch (error) {
+      console.error('Failed to load scheduled posts:', error)
+      // Use empty array on error
+      setScheduledPosts([])
+    } finally {
+      setLoading(false)
     }
   }
 

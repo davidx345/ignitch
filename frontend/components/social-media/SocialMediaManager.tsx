@@ -117,8 +117,11 @@ const SocialMediaManager: React.FC<SocialMediaManagerProps> = ({ className = '',
       setLoading(true)
       setError(null)
       
+      console.log('Loading dashboard stats...')
+      
       // Get dashboard stats from backend
       const statsResponse = await api.getDashboardStats()
+      console.log('Dashboard stats response:', statsResponse)
       
       if (statsResponse.success && statsResponse.data) {
         const dashboardData = statsResponse.data as any
@@ -128,10 +131,19 @@ const SocialMediaManager: React.FC<SocialMediaManagerProps> = ({ className = '',
           connectedPlatforms: dashboardData?.stats?.connected_platforms || dashboardData?.connected_platforms || 0,
           avgEngagement: dashboardData?.stats?.avg_engagement || dashboardData?.avg_engagement || 0
         })
+      } else {
+        console.log('Dashboard stats failed, using fallback')
+        setStats({
+          totalPosts: 0,
+          scheduledPosts: 0,
+          connectedPlatforms: 0,
+          avgEngagement: 0
+        })
       }
 
       // Get social accounts to count connected platforms as fallback
       const accountsResponse = await api.getSocialAccounts()
+      console.log('Social accounts response:', accountsResponse)
       if (accountsResponse.success && accountsResponse.data && Array.isArray(accountsResponse.data)) {
         const connectedPlatforms = accountsResponse.data.filter((account: any) => account.is_active).length
         setStats(prev => ({

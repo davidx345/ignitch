@@ -6,6 +6,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { useApiService } from '@/lib/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -37,9 +38,11 @@ interface PlatformManagerProps {
 }
 
 const PlatformManager: React.FC<PlatformManagerProps> = ({ onStatsUpdate }) => {
-  const [connections, setConnections] = useState<PlatformConnection[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [connections, setConnections] = useState<PlatformConnection[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const api = useApiService();
 
   const platformConfigs = [
     {
@@ -131,12 +134,64 @@ const PlatformManager: React.FC<PlatformManagerProps> = ({ onStatsUpdate }) => {
   }
 
   const connectPlatform = async (platformId: string) => {
+    setLoading(true)
+    setError(null)
+    
     try {
-      // This would initiate OAuth flow
-      console.log('Connecting to', platformId)
-      // Placeholder for actual OAuth implementation
+      console.log('Connecting to platform:', platformId)
+      
+      const response = await api.connectSocialAccount(platformId)
+      console.log('Connect platform response:', response)
+      
+      if (response.success && response.data?.auth_url) {
+        // Open auth URL in new window
+        const authWindow = window.open(
+          response.data.auth_url,
+          'social-auth',
+          'width=600,height=600,scrollbars=yes,resizable=yes'
+        )
+        
+        // Listen for auth completion
+        const pollTimer = setInterval(() => {
+          try {
+            if (authWindow?.closed) {
+              clearInterval(pollTimer)
+              // Refresh connections after auth window closes
+              setTimeout(() => {
+                loadConnections()
+              }, 1000)
+            }
+          } catch (e) {
+            // Ignore cross-origin errors
+          }
+        }, 1000)
+        
+        // Auto-close timer (5 minutes)
+        setTimeout(() => {
+          clearInterval(pollTimer)
+          if (authWindow && !authWindow.closed) {
+            authWindow.close()
+          }
+        }, 300000)
+        
+        setSuccess(`Opening ${platformId} authentication window...`)
+        setTimeout(() => setSuccess(null), 3000)
+        
+      } else {
+        throw new Error(response.error || 'Failed to get authentication URL')
+      }
     } catch (err: any) {
-      setError(`Failed to connect to ${platformId}`)
+      console.error('Platform connection error:', err)
+      
+      if (err.message?.includes('401') || err.message?.includes('Unauthorized')) {
+        setError('Please sign in to connect social media accounts')
+      } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+        setError('Network error. Please check your connection.')
+      } else {
+        setError(err.message || `Failed to connect to ${platformId}`)
+      }
+    } finally {
+      setLoading(false)
     }
   }
 

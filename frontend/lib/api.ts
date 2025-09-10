@@ -41,8 +41,27 @@ interface SocialAccount {
 
 class ApiService {
   private getAuthHeaders(): HeadersInit {
-    // We'll get the token from Supabase auth context
-    const token = localStorage.getItem('supabase.auth.token')
+    // Get the token from Supabase auth context or localStorage
+    let token = '';
+    
+    // Try to get from Supabase session first
+    if (typeof window !== 'undefined') {
+      try {
+        const supabaseSession = localStorage.getItem('sb-' + (process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0] || 'project') + '-auth-token');
+        if (supabaseSession) {
+          const sessionData = JSON.parse(supabaseSession);
+          token = sessionData?.access_token || '';
+        }
+      } catch (e) {
+        console.error('Error getting Supabase token:', e);
+      }
+      
+      // Fallback to direct localStorage
+      if (!token) {
+        token = localStorage.getItem('supabase.auth.token') || '';
+      }
+    }
+    
     return {
       'Content-Type': 'application/json',
       'Authorization': token ? `Bearer ${token}` : '',
@@ -55,6 +74,8 @@ class ApiService {
   ): Promise<ApiResponse<T>> {
     try {
       const url = `${API_BASE_URL}${endpoint}`
+      console.log(`API Request: ${options.method || 'GET'} ${url}`)
+      
       const response = await fetch(url, {
         ...options,
         headers: {
@@ -63,21 +84,42 @@ class ApiService {
         },
       })
 
-      const data = await response.json()
+      console.log(`API Response: ${response.status} ${response.statusText}`)
+
+      // Handle different response types
+      let data
+      const contentType = response.headers.get('content-type')
+      
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json()
+      } else {
+        const text = await response.text()
+        data = text ? { message: text } : {}
+      }
 
       if (!response.ok) {
+        console.error('API Error Response:', data)
         return {
           success: false,
-          error: data.detail || data.message || 'Request failed'
+          error: data.detail || data.message || data.error || `HTTP ${response.status}: ${response.statusText}`
         }
       }
 
+      console.log('API Success Response:', data)
       return {
         success: true,
         data: data
       }
     } catch (error) {
       console.error('API Request failed:', error)
+      
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        return {
+          success: false,
+          error: 'Network error - please check your internet connection'
+        }
+      }
+      
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Network error'
@@ -126,17 +168,43 @@ class ApiService {
 
   // Content Creation
   async generateContent(request: ContentGenerationRequest): Promise<ApiResponse> {
-    return this.request('/api/ai/generate-content', {
-      method: 'POST',
-      body: JSON.stringify(request)
-    })
+    console.log('API: Generating content with request:', request)
+    
+    try {
+      const response = await this.request('/api/ai/generate-content', {
+        method: 'POST',
+        body: JSON.stringify(request)
+      })
+      
+      console.log('API: Generate content response:', response)
+      return response
+    } catch (error) {
+      console.error('API: Generate content error:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Content generation failed'
+      }
+    }
   }
 
   async createPost(postData: PostData): Promise<ApiResponse> {
-    return this.request('/api/social/post', {
-      method: 'POST',
-      body: JSON.stringify(postData)
-    })
+    console.log('API: Creating post with data:', postData)
+    
+    try {
+      const response = await this.request('/api/social/post', {
+        method: 'POST',
+        body: JSON.stringify(postData)
+      })
+      
+      console.log('API: Create post response:', response)
+      return response
+    } catch (error) {
+      console.error('API: Create post error:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Post creation failed'
+      }
+    }
   }
 
   // Analytics
@@ -181,24 +249,79 @@ class ApiService {
 
   // Content Management
   async getContentHistory(limit: number = 20): Promise<ApiResponse> {
-    return this.request(`/api/content/history?limit=${limit}`)
+    console.log('API: Getting content history, limit:', limit)
+    
+    try {
+      const response = await this.request(`/api/dashboard/content/recent?limit=${limit}`)
+      console.log('API: Content history response:', response)
+      return response
+    } catch (error) {
+      console.error('API: Content history error:', error)
+      return {
+        success: true,
+        data: { content: [], total: 0 }
+      }
+    }
   }
 
   async schedulePost(postData: PostData): Promise<ApiResponse> {
-    return this.request('/api/scheduler/schedule', {
-      method: 'POST',
-      body: JSON.stringify(postData)
-    })
+    console.log('API: Scheduling post:', postData)
+    
+    try {
+      const response = await this.request('/api/scheduler/schedule', {
+        method: 'POST',
+        body: JSON.stringify({
+          content: postData.content,
+          platforms: postData.platforms,
+          scheduled_for: postData.scheduled_for,
+          media_url: postData.media_url
+        })
+      })
+      
+      console.log('API: Schedule post response:', response)
+      return response
+    } catch (error) {
+      console.error('API: Schedule post error:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Scheduling failed'
+      }
+    }
   }
 
   async getScheduledPosts(): Promise<ApiResponse> {
-    return this.request('/api/scheduler/scheduled')
+    console.log('API: Getting scheduled posts')
+    
+    try {
+      const response = await this.request('/api/scheduler/scheduled')
+      console.log('API: Scheduled posts response:', response)
+      return response
+    } catch (error) {
+      console.error('API: Scheduled posts error:', error)
+      return {
+        success: true,
+        data: []
+      }
+    }
   }
 
   async cancelScheduledPost(postId: string): Promise<ApiResponse> {
-    return this.request(`/api/scheduler/cancel/${postId}`, {
-      method: 'DELETE'
-    })
+    console.log('API: Cancelling scheduled post:', postId)
+    
+    try {
+      const response = await this.request(`/api/scheduler/cancel/${postId}`, {
+        method: 'DELETE'
+      })
+      
+      console.log('API: Cancel post response:', response)
+      return response
+    } catch (error) {
+      console.error('API: Cancel post error:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Cancellation failed'
+      }
+    }
   }
 
   // Platform-specific operations
@@ -315,6 +438,8 @@ export function useApiService() {
     getDashboardStats: () => authenticatedRequest('/api/dashboard/stats'),
     getPlatformAnalytics: (platform: string, days: number = 30) => 
       authenticatedRequest(`/api/social/analytics/${platform}?days=${days}`),
+    getContentHistory: (limit: number = 20) => authenticatedRequest(`/api/dashboard/content/recent?limit=${limit}`),
+    getScheduledPosts: () => authenticatedRequest('/api/scheduler/scheduled'),
     uploadMedia: async (file: File) => {
       const formData = new FormData()
       formData.append('file', file)

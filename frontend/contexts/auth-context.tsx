@@ -34,6 +34,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('Initial session:', session?.user?.email)
       setSession(session)
       setUser(session?.user ?? null)
+      
+      // Store token for API service
+      if (session?.access_token && typeof window !== 'undefined') {
+        localStorage.setItem('supabase.auth.token', session.access_token)
+      }
+      
       setLoading(false)
     })
 
@@ -44,6 +50,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('Auth state changed:', _event, session?.user?.email)
       setSession(session)
       setUser(session?.user ?? null)
+      
+      // Update stored token
+      if (typeof window !== 'undefined') {
+        if (session?.access_token) {
+          localStorage.setItem('supabase.auth.token', session.access_token)
+        } else {
+          localStorage.removeItem('supabase.auth.token')
+        }
+      }
+      
       setLoading(false)
     })
 

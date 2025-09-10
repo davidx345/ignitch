@@ -18,7 +18,24 @@ load_dotenv()
 # Import essential routers only (avoiding problematic imports)
 try:
     from routers import auth, media, data_deletion, billboard, autopilot
-    from routers.media_enhanced import router as media_enhanced_router
+    
+    # Include new enhanced routers
+    try:
+        from routers.ai_content import router as ai_content_router
+        from routers.social_enhanced import router as social_enhanced_router
+        from routers.dashboard_enhanced import router as dashboard_enhanced_router
+        from routers.scheduler_enhanced import router as scheduler_enhanced_router
+        AI_CONTENT_AVAILABLE = True
+        SOCIAL_ENHANCED_AVAILABLE = True
+        DASHBOARD_ENHANCED_AVAILABLE = True
+        SCHEDULER_ENHANCED_AVAILABLE = True
+        print("✅ Enhanced AI, Social, Dashboard, and Scheduler routers imported successfully")
+    except Exception as enhanced_error:
+        print(f"❌ Enhanced routers import failed: {enhanced_error}")
+        AI_CONTENT_AVAILABLE = False
+        SOCIAL_ENHANCED_AVAILABLE = False
+        DASHBOARD_ENHANCED_AVAILABLE = False
+        SCHEDULER_ENHANCED_AVAILABLE = False
     
     # Import AdFlow Platform routers
     try:
@@ -227,19 +244,43 @@ if ROUTERS_AVAILABLE:
     
     # Media endpoints - both original and enhanced
     app.include_router(media.router, prefix="/api/media", tags=["Media Upload"])
-    app.include_router(media_enhanced_router, prefix="/api/media/v2", tags=["Enhanced Media Upload"])
+    # Removed media_enhanced_router inclusion (router not needed)
     
-    # Include social router only if available
-    if SOCIAL_AVAILABLE:
+    # Include new AI content router
+    if AI_CONTENT_AVAILABLE:
         try:
-            app.include_router(social.router, prefix="/api/social", tags=["Social Media"])
-            print("✅ Social router included successfully")
+            app.include_router(ai_content_router, prefix="/api/ai", tags=["AI Content Generation"])
+            print("✅ AI Content router included successfully")
+        except Exception as ai_error:
+            print(f"❌ AI Content router failed to include: {ai_error}")
+    
+    # Include new enhanced social router
+    if SOCIAL_ENHANCED_AVAILABLE:
+        try:
+            app.include_router(social_enhanced_router, prefix="/api/social", tags=["Social Media Management"])
+            print("✅ Enhanced Social router included successfully")
         except Exception as social_error:
-            print(f"❌ Social router failed to include: {social_error}")
+            print(f"❌ Enhanced Social router failed to include: {social_error}")
+    
+    # Include scheduler router
+    if SCHEDULER_ENHANCED_AVAILABLE:
+        try:
+            app.include_router(scheduler_enhanced_router, prefix="/api/scheduler", tags=["Content Scheduler"])
+            print("✅ Enhanced Scheduler router included successfully")
+        except Exception as scheduler_error:
+            print(f"❌ Enhanced Scheduler router failed to include: {scheduler_error}")
+    
+    # Include social router only if available (fallback)
+    if SOCIAL_AVAILABLE and not SOCIAL_ENHANCED_AVAILABLE:
+        try:
+            app.include_router(social.router, prefix="/api/social/v1", tags=["Social Media"])
+            print("✅ Original Social router included successfully")
+        except Exception as social_error:
+            print(f"❌ Original Social router failed to include: {social_error}")
             import traceback
             traceback.print_exc()
     else:
-        print("⚠️ Social router not available - skipped inclusion")
+        print("⚠️ Enhanced social router available, skipping original")
     
     # Include enhanced social media router
     if SOCIAL_MEDIA_ENHANCED_AVAILABLE:
@@ -275,15 +316,21 @@ if ROUTERS_AVAILABLE:
         print("⚠️ Billboard registration router not available")
     
     # Include dashboard only if available
-    if DASHBOARD_AVAILABLE:
+    if DASHBOARD_ENHANCED_AVAILABLE:
         try:
-            app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Analytics Dashboard"])
-            print("✅ Dashboard router included successfully")
+            app.include_router(dashboard_enhanced_router, prefix="/api/dashboard", tags=["Enhanced Dashboard"])
+            print("✅ Enhanced Dashboard router included successfully")
         except Exception as dashboard_include_error:
-            print(f"❌ Dashboard router failed to include: {dashboard_include_error}")
+            print(f"❌ Enhanced Dashboard router failed to include: {dashboard_include_error}")
+    elif DASHBOARD_AVAILABLE:
+        try:
+            app.include_router(dashboard.router, prefix="/api/dashboard/v1", tags=["Analytics Dashboard"])
+            print("✅ Original Dashboard router included successfully")
+        except Exception as dashboard_include_error:
+            print(f"❌ Original Dashboard router failed to include: {dashboard_include_error}")
             DASHBOARD_AVAILABLE = False
     else:
-        print("⚠️ Dashboard router not available, using fallback endpoint only")
+        print("⚠️ No dashboard router available, using fallback endpoint only")
     
     app.include_router(data_deletion.router, prefix="/api/data-deletion", tags=["Data Deletion"])
     

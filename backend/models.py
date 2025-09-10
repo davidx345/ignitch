@@ -18,6 +18,12 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     is_pro = Column(Boolean, default=False)
     
+    # Role system
+    is_admin = Column(Boolean, default=False)
+    is_billboard_owner = Column(Boolean, default=False)
+    is_advertiser = Column(Boolean, default=True)  # Default role
+    last_login = Column(DateTime(timezone=True))
+    
     # Scoring system
     visibility_score = Column(Integer, default=0)
     content_score = Column(Integer, default=0)
