@@ -27,10 +27,14 @@ export default function CTASection({
   isEmailValid
 }: CTASectionProps) {
   return (
-    <section className="relative py-24 px-6 overflow-hidden">
-      {/* Professional gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.1),transparent_50%)]"></div>
+    <section className="relative py-24 px-6 bg-gray-900 overflow-hidden">
+      {/* Professional dotted background pattern */}
+      <div className="absolute inset-0" style={{
+        backgroundImage: `radial-gradient(circle, #4b5563 1px, transparent 1px)`,
+        backgroundSize: '20px 20px',
+        opacity: 0.3
+      }}></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-800/60 to-gray-900/80"></div>
       
       <div className="relative max-w-6xl mx-auto">
         <motion.div 
@@ -48,7 +52,7 @@ export default function CTASection({
               <h2 className="text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
                 Ready to Scale Your Business with{" "}
                 <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  Enterprise AI
+                  Multi-Platform AI
                 </span>
                 ?
               </h2>
@@ -60,7 +64,7 @@ export default function CTASection({
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              Explore an entirely fresh approach to social media management.
+              Explore an entirely fresh approach to social media and billboard advertising management.
             </motion.p>
 
             <motion.div 

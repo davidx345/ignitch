@@ -30,37 +30,37 @@ export const features = [
   {
     icon: Upload,
     title: "Smart Upload & Auto-Crop",
-    description: "Upload any image and AI automatically crops it perfectly for every platform - Instagram, TikTok, Facebook.",
+    description: "Upload any image and AI automatically crops it perfectly for every platform - Instagram, TikTok, Facebook, and digital billboards.",
     gradient: "from-blue-500 to-purple-600"
   },
   {
-    icon: Sparkles,
+    icon: TrendingUp,
     title: "Business-Goal AI Content",
-    description: "Tell us your goal (sales, visits, awareness) and AI creates viral captions, hashtags, and CTAs that convert.",
+    description: "Tell us your goal (sales, visits, awareness) and AI creates viral captions, hashtags, and CTAs that convert across all channels.",
     gradient: "from-purple-500 to-pink-600"
   },
   {
     icon: TrendingUp,
-    title: "Performance Prediction",
-    description: "See predicted engagement rates before posting. AI analyzes trends to optimize timing and content style.",
+    title: "Digital Billboard Network",
+    description: "Access Nigeria's largest digital billboard network. Deploy campaigns instantly with real-time monitoring and performance tracking.",
     gradient: "from-green-500 to-teal-600"
   },
   {
     icon: Zap,
-    title: "One-Click Distribution",
-    description: "Publish to all platforms simultaneously or schedule for optimal times. Track performance in real-time.",
+    title: "Multi-Platform Distribution",
+    description: "Publish to social media and billboards simultaneously. Track performance across all channels from one unified dashboard.",
     gradient: "from-orange-500 to-red-600"
   },
   {
     icon: BarChart3,
-    title: "ROI Analytics Dashboard",
-    description: "Track actual business results - website clicks, store visits, sales conversions, not just likes.",
+    title: "Unified Analytics Dashboard",
+    description: "Track social media engagement, billboard impressions, website clicks, store visits, and sales conversions in one place.",
     gradient: "from-indigo-500 to-blue-600"
   },
   {
     icon: Users,
-    title: "Audience Growth Engine",
-    description: "AI identifies and targets your ideal customers with precision, growing quality followers who convert.",
+    title: "Cross-Platform Targeting",
+    description: "AI identifies and targets your ideal customers across social media and high-traffic billboard locations for maximum reach.",
     gradient: "from-pink-500 to-rose-600"
   }
 ]
@@ -68,20 +68,20 @@ export const features = [
 export const steps = [
   {
     step: "01",
-    title: "Upload & Set Goals",
-    description: "Drop your product image and tell us your business goal - more sales, store visits, or brand awareness.",
+    title: "Upload & Set Campaign Goals",
+    description: "Upload your creative assets and set your advertising goals - social media engagement, billboard impressions, or both.",
     icon: Upload,
   },
   {
     step: "02", 
-    title: "AI Creates Everything",
-    description: "Our AI generates viral captions, hashtags, and optimizes content for each platform automatically.",
-    icon: Brain,
+    title: "AI Optimizes Everything",
+    description: "Our AI generates platform-specific content, optimizes for each social channel, and prepares billboard-ready formats.",
+    icon: TrendingUp,
   },
   {
     step: "03",
-    title: "Watch Results Grow", 
-    description: "Smart scheduling posts at optimal times while you track real business impact and ROI.",
+    title: "Deploy & Track Results", 
+    description: "Launch campaigns across social media and billboard networks simultaneously while tracking unified analytics and ROI.",
     icon: TrendingUp,
   },
 ]
@@ -118,10 +118,10 @@ export const pricingPlans = [
     name: "Starter",
     price: "Free",
     period: "forever",
-    description: "Perfect for testing the waters",
+    description: "Perfect for testing social media automation",
     features: [
-      "5 AI-generated posts per month",
-      "Basic auto-cropping",
+      "5 AI-generated social posts per month",
+      "Basic auto-cropping for all platforms",
       "Instagram + Facebook publishing",
       "Basic analytics dashboard",
       "Email support"
@@ -130,15 +130,16 @@ export const pricingPlans = [
     popular: false
   },
   {
-    name: "Growth", 
-    price: "₦15,000",
+    name: "Professional", 
+    price: "₦25,000",
     period: "month",
-    description: "For serious business growth",
+    description: "Complete advertising solution",
     features: [
-      "Unlimited AI posts",
-      "Advanced auto-cropping + enhancement",
-      "All platforms (Instagram, TikTok, Facebook)",
-      "ROI tracking & business analytics",
+      "Unlimited AI social media posts",
+      "All social platforms (Instagram, TikTok, Facebook, Twitter)",
+      "Digital billboard campaign management", 
+      "Billboard network access (Nigeria)",
+      "Advanced ROI tracking & analytics",
       "Smart scheduling & optimization",
       "Priority support"
     ],
@@ -146,17 +147,19 @@ export const pricingPlans = [
     popular: true
   },
   {
-    name: "Scale",
-    price: "₦45,000", 
+    name: "Enterprise",
+    price: "₦75,000", 
     period: "month",
-    description: "For growing teams and agencies",
+    description: "For agencies and large businesses",
     features: [
-      "Everything in Growth",
+      "Everything in Professional",
       "Team collaboration tools",
       "Multiple business accounts",
-      "Advanced audience targeting",
+      "Custom billboard targeting",
+      "Advanced audience analytics",
       "Custom brand voice training",
-      "Dedicated account manager"
+      "Dedicated account manager",
+      "API access"
     ],
     cta: "Contact Sales",
     popular: false

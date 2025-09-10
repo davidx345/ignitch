@@ -10,9 +10,14 @@ import { pricingPlans, colors } from "@/constants/landing"
 
 export default function PricingSection() {
   return (
-    <section id="pricing" className="relative py-24 px-6 bg-gradient-to-br from-slate-50 via-white to-slate-50 overflow-hidden">
-      {/* Subtle background elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/30"></div>
+    <section id="pricing" className="relative py-24 px-6 bg-gray-50 overflow-hidden">
+      {/* Professional dotted background pattern */}
+      <div className="absolute inset-0" style={{
+        backgroundImage: `radial-gradient(circle, #e5e7eb 1px, transparent 1px)`,
+        backgroundSize: '20px 20px',
+        opacity: 0.6
+      }}></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-gray-50/60 to-white/80"></div>
       
       <div className="relative max-w-7xl mx-auto">
         <motion.div 
@@ -40,22 +45,22 @@ export default function PricingSection() {
           </motion.div>
 
           <motion.h2 
-            className="text-5xl lg:text-6xl font-bold mb-8 tracking-tight"
-            style={{ color: colors.ink }}
+            className="text-5xl lg:text-6xl font-bold mb-8 tracking-tight text-gray-900"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            Affordable pricing.
+            Transparent pricing.
           </motion.h2>
 
           <motion.p 
-            className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed"
+            className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
           >
-            Plans for all types of businesses - from freelancers to brands and marketing agencies. Try now with a 14-day free trial!
+            Complete social media and billboard advertising solution. Transparent pricing for businesses 
+            of all sizes - from startups to enterprises. Try now with a 14-day free trial!
           </motion.p>
         </motion.div>
 
@@ -100,16 +105,16 @@ export default function PricingSection() {
                   
                   <div className="relative z-10 flex-1">
                     <div className="text-center mb-8">
-                      <h3 className="text-2xl font-bold mb-4 group-hover:text-slate-900 transition-colors duration-300" style={{ color: colors.ink }}>
+                      <h3 className="text-2xl font-bold mb-4 group-hover:text-gray-900 transition-colors duration-300 text-gray-900">
                         {plan.name}
                       </h3>
                       <div className="mb-4">
-                        <span className="text-5xl font-bold" style={{ color: colors.primary }}>
+                        <span className="text-5xl font-bold text-blue-600">
                           {plan.price}
                         </span>
-                        <span className="text-slate-600">/{plan.period}</span>
+                        <span className="text-gray-600">/{plan.period}</span>
                       </div>
-                      <p className="text-slate-600 group-hover:text-slate-700 transition-colors duration-300">
+                      <p className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
                         {plan.description}
                       </p>
                     </div>
@@ -117,8 +122,8 @@ export default function PricingSection() {
                     <div className="space-y-4 mb-8">
                       {plan.features.map((feature, featureIndex) => (
                         <div key={featureIndex} className="flex items-start space-x-3">
-                          <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: colors.mint }} />
-                          <span className="text-slate-700 group-hover:text-slate-800 transition-colors duration-300">
+                          <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-green-600" />
+                          <span className="text-gray-700 group-hover:text-gray-800 transition-colors duration-300">
                             {feature}
                           </span>
                         </div>
@@ -130,8 +135,8 @@ export default function PricingSection() {
                     <Button
                       className={`w-full font-semibold py-4 shadow-lg hover:shadow-xl transition-all duration-300 ${
                         plan.popular 
-                          ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" 
-                          : "bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-700 hover:text-slate-900"
+                          ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white" 
+                          : "bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 hover:text-gray-900"
                       }`}
                     >
                       {plan.cta}
@@ -152,7 +157,7 @@ export default function PricingSection() {
           transition={{ delay: 0.8, duration: 0.8 }}
         >
           <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-            <h3 className="text-2xl font-bold mb-8" style={{ color: colors.ink }}>
+            <h3 className="text-2xl font-bold mb-8 text-gray-900">
               Enterprise Guarantees
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -161,8 +166,8 @@ export default function PricingSection() {
                   <Shield className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="font-semibold text-slate-900">30-Day Money Back</div>
-                  <div className="text-sm text-slate-600">Full refund guarantee</div>
+                  <div className="font-semibold text-gray-900">30-Day Money Back</div>
+                  <div className="text-sm text-gray-600">Full refund guarantee</div>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
@@ -170,8 +175,8 @@ export default function PricingSection() {
                   <Zap className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="font-semibold text-slate-900">Instant Setup</div>
-                  <div className="text-sm text-slate-600">No technical expertise needed</div>
+                  <div className="font-semibold text-gray-900">Instant Setup</div>
+                  <div className="text-sm text-gray-600">No technical expertise needed</div>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
@@ -179,8 +184,8 @@ export default function PricingSection() {
                   <Star className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="font-semibold text-slate-900">Premium Support</div>
-                  <div className="text-sm text-slate-600">24/7 enterprise support</div>
+                  <div className="font-semibold text-gray-900">Premium Support</div>
+                  <div className="text-sm text-gray-600">24/7 enterprise support</div>
                 </div>
               </div>
             </div>

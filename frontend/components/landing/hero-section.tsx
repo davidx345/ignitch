@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Instagram, Brain, Loader2, AlertCircle, CheckCircle } from "lucide-react"
+import { Instagram, Zap, Loader2, AlertCircle, CheckCircle } from "lucide-react"
 import { colors } from "@/constants/landing"
 
 interface HeroSectionProps {
@@ -62,7 +62,7 @@ export default function HeroSection({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
               >
-                Social media growth.{" "}
+                Multi-platform advertising.{" "}
                 <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
                   Using AI.
                 </span>
@@ -74,8 +74,8 @@ export default function HeroSection({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
               >
-                Don't hire a social media agency. Create viral content, automate posting schedules, 
-                and grow your audience with AI that works 24/7.
+                Manage social media campaigns and digital billboard advertising from one platform. 
+                Create viral content, schedule posts, and distribute campaigns to billboards across Nigeria with AI that works 24/7.
               </motion.p>
 
               <motion.div 
@@ -170,7 +170,7 @@ export default function HeroSection({
                   <div className="bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 p-8 text-white">
                     <div className="flex items-center space-x-3 mb-6">
                       <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                        <Brain className="w-6 h-6" />
+                        <Zap className="w-6 h-6" />
                       </div>
                       <div>
                         <span className="font-semibold text-lg">AI Processing</span>

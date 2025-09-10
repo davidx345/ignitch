@@ -9,9 +9,14 @@ import { features, colors } from "@/constants/landing"
 
 export default function FeaturesSection() {
   return (
-    <section id="features" className="relative py-24 px-6 bg-gray-900 overflow-hidden">
-      {/* Dark background pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-950/50 via-gray-900 to-gray-800/50"></div>
+    <section id="features" className="relative py-24 px-6 bg-gray-50 overflow-hidden">
+      {/* Professional dotted background pattern */}
+      <div className="absolute inset-0" style={{
+        backgroundImage: `radial-gradient(circle, #e5e7eb 1px, transparent 1px)`,
+        backgroundSize: '20px 20px',
+        opacity: 0.6
+      }}></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-gray-50/60 to-white/80"></div>
       
       <div className="relative max-w-7xl mx-auto">
         <motion.div 
@@ -39,8 +44,7 @@ export default function FeaturesSection() {
           </motion.div>
 
           <motion.h2 
-            className="text-5xl lg:text-6xl font-bold mb-8 tracking-tight"
-            style={{ color: colors.ink }}
+            className="text-5xl lg:text-6xl font-bold mb-8 tracking-tight text-gray-900"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
@@ -52,7 +56,7 @@ export default function FeaturesSection() {
           </motion.h2>
 
           <motion.p 
-            className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed"
+            className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
@@ -82,20 +86,20 @@ export default function FeaturesSection() {
                       <feature.icon className="w-8 h-8 text-white" />
                     </div>
                     
-                    <h3 className="text-xl font-bold mb-4 group-hover:text-slate-900 transition-colors duration-300" style={{ color: colors.ink }}>
+                    <h3 className="text-xl font-bold mb-4 group-hover:text-gray-900 transition-colors duration-300 text-gray-900">
                       {feature.title}
                     </h3>
                     
-                    <p className="text-slate-600 leading-relaxed flex-grow mb-6 group-hover:text-slate-700 transition-colors duration-300">
+                    <p className="text-gray-600 leading-relaxed flex-grow mb-6 group-hover:text-gray-700 transition-colors duration-300">
                       {feature.description}
                     </p>
                     
-                    <div className="flex items-center justify-between pt-4 border-t border-slate-100 group-hover:border-slate-200 transition-colors duration-300">
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100 group-hover:border-gray-200 transition-colors duration-300">
                       <div className="flex items-center space-x-2">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                         <span className="text-sm text-green-600 font-medium">Enterprise Ready</span>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 group-hover:translate-x-1 transition-all duration-300" />
+                      <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all duration-300" />
                     </div>
                   </div>
                 </CardContent>
@@ -115,24 +119,24 @@ export default function FeaturesSection() {
             <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
               <CheckCircle className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900">99.9% Uptime</h3>
-            <p className="text-slate-600">Enterprise-grade reliability with SLA guarantees</p>
+            <h3 className="text-xl font-bold text-gray-900">99.9% Uptime</h3>
+            <p className="text-gray-600">Enterprise-grade reliability with SLA guarantees</p>
           </div>
           
           <div className="text-center space-y-4">
             <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
               <CheckCircle className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900">SOC 2 Compliant</h3>
-            <p className="text-slate-600">Bank-level security and data protection</p>
+            <h3 className="text-xl font-bold text-gray-900">SOC 2 Compliant</h3>
+            <p className="text-gray-600">Bank-level security and data protection</p>
           </div>
           
           <div className="text-center space-y-4">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
               <CheckCircle className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900">24/7 Support</h3>
-            <p className="text-slate-600">Dedicated enterprise support team</p>
+            <h3 className="text-xl font-bold text-gray-900">24/7 Support</h3>
+            <p className="text-gray-600">Dedicated enterprise support team</p>
           </div>
         </motion.div>
       </div>
