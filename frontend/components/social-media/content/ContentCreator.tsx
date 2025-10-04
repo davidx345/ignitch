@@ -47,6 +47,7 @@ interface ContentCreatorProps {
   onStatsUpdate?: (stats: any) => void
   apiService?: any
   refreshStats?: () => void
+  onNavigate?: (tab: string) => void
 }
 
 interface GeneratedContent {
@@ -88,7 +89,8 @@ interface TrendData {
 const ContentCreator: React.FC<ContentCreatorProps> = ({ 
   onStatsUpdate, 
   apiService, 
-  refreshStats 
+  refreshStats,
+  onNavigate 
 }) => {
   const { user, session } = useAuth()
   const api = useApiService()
@@ -134,6 +136,13 @@ const ContentCreator: React.FC<ContentCreatorProps> = ({
     { id: 'facebook', name: 'Facebook', icon: <Facebook className="w-4 h-4" />, color: 'bg-blue-600' },
     { id: 'twitter', name: 'Twitter', icon: <MessageCircle className="w-4 h-4" />, color: 'bg-blue-400' }
   ]
+
+  const handlePlatformClick = (platformId: string) => {
+    // Navigate to platforms tab for connection
+    if (onNavigate) {
+      onNavigate('platforms')
+    }
+  }
 
   const togglePlatform = (platformId: string) => {
     setSelectedPlatforms(prev => 
@@ -427,7 +436,7 @@ const ContentCreator: React.FC<ContentCreatorProps> = ({
                         ? 'border-gray-900 bg-gray-50'
                         : 'border-gray-300 hover:border-gray-400'
                     }`}
-                    onClick={() => togglePlatform(platform.id)}
+                    onClick={() => handlePlatformClick(platform.id)}
                   >
                     <div className="flex items-center space-x-3">
                       <div className={`w-8 h-8 rounded-lg ${platform.color} flex items-center justify-center text-white flex-shrink-0`}>

@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { 
   Instagram, 
   Facebook, 
@@ -42,6 +43,7 @@ const PlatformManager: React.FC<PlatformManagerProps> = ({ onStatsUpdate }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [showApprovalPopup, setShowApprovalPopup] = useState(false);
   const api = useApiService();
 
   const platformConfigs = [
@@ -82,117 +84,91 @@ const PlatformManager: React.FC<PlatformManagerProps> = ({ onStatsUpdate }) => {
   const loadConnections = async () => {
     try {
       setLoading(true)
-      // Mock data - replace with actual API call
-      const mockConnections: PlatformConnection[] = [
-        {
-          id: '1',
-          platform: 'instagram',
-          connected: true,
-          account_name: '@adflow_official',
-          followers: 12500,
-          last_sync: '2025-09-09T10:30:00Z',
-          status: 'active'
-        },
-        {
-          id: '2',
-          platform: 'facebook',
-          connected: true,
-          account_name: 'AdFlow Marketing',
-          followers: 8200,
-          last_sync: '2025-09-09T10:25:00Z',
-          status: 'active'
-        },
-        {
-          id: '3',
-          platform: 'twitter',
-          connected: false,
-          status: 'disconnected'
-        },
-        {
-          id: '4',
-          platform: 'linkedin',
-          connected: false,
-          status: 'disconnected'
-        }
-      ]
       
-      setConnections(mockConnections)
+      // Try to get actual connections from API
+      const response = await api.getSocialAccounts()
       
-      // Update parent stats
-      if (onStatsUpdate) {
-        const connectedCount = mockConnections.filter(c => c.connected).length
-        onStatsUpdate({
-          connectedPlatforms: connectedCount,
-          totalFollowers: mockConnections.reduce((sum, c) => sum + (c.followers || 0), 0)
+      if (response.success && Array.isArray(response.data)) {
+        // Transform API response to component format
+        const apiConnections: PlatformConnection[] = response.data.map((account: any) => ({
+          id: account.id,
+          platform: account.platform,
+          connected: account.is_active,
+          account_name: account.username,
+          followers: account.followers || 0,
+          last_sync: account.last_used || account.connected_at,
+          status: account.is_active ? 'active' as const : 'disconnected' as const
+        }))
+        
+        // Add any missing platforms as disconnected
+        const connectedPlatforms = new Set(apiConnections.map((c: PlatformConnection) => c.platform))
+        const allConnections: PlatformConnection[] = platformConfigs.map((platform: any) => {
+          const existing = apiConnections.find((c: PlatformConnection) => c.platform === platform.id)
+          return existing || {
+            id: platform.id,
+            platform: platform.id,
+            connected: false,
+            status: 'disconnected' as const
+          }
         })
+        
+        setConnections(allConnections)
+        
+        // Update parent stats
+        if (onStatsUpdate) {
+          const connectedCount = allConnections.filter((c: any) => c.connected).length
+          onStatsUpdate({
+            connectedPlatforms: connectedCount,
+            totalFollowers: allConnections.reduce((sum: number, c: any) => sum + (c.followers || 0), 0)
+          })
+        }
+      } else {
+        // Show empty state - no connected platforms
+        const emptyConnections: PlatformConnection[] = platformConfigs.map((platform: any) => ({
+          id: platform.id,
+          platform: platform.id,
+          connected: false,
+          status: 'disconnected'
+        }))
+        
+        setConnections(emptyConnections)
+        
+        // Update parent stats with zero values
+        if (onStatsUpdate) {
+          onStatsUpdate({
+            connectedPlatforms: 0,
+            totalFollowers: 0
+          })
+        }
       }
     } catch (err: any) {
       setError('Failed to load platform connections')
+      
+      // Show empty state on error too
+      const emptyConnections: PlatformConnection[] = platformConfigs.map((platform: any) => ({
+        id: platform.id,
+        platform: platform.id,
+        connected: false,
+        status: 'disconnected'
+      }))
+      
+      setConnections(emptyConnections)
+      
+      // Update parent stats with zero values
+      if (onStatsUpdate) {
+        onStatsUpdate({
+          connectedPlatforms: 0,
+          totalFollowers: 0
+        })
+      }
     } finally {
       setLoading(false)
     }
   }
 
   const connectPlatform = async (platformId: string) => {
-    setLoading(true)
-    setError(null)
-    
-    try {
-      console.log('Connecting to platform:', platformId)
-      
-      const response = await api.connectSocialAccount(platformId)
-      console.log('Connect platform response:', response)
-      
-      if (response.success && response.data?.auth_url) {
-        // Open auth URL in new window
-        const authWindow = window.open(
-          response.data.auth_url,
-          'social-auth',
-          'width=600,height=600,scrollbars=yes,resizable=yes'
-        )
-        
-        // Listen for auth completion
-        const pollTimer = setInterval(() => {
-          try {
-            if (authWindow?.closed) {
-              clearInterval(pollTimer)
-              // Refresh connections after auth window closes
-              setTimeout(() => {
-                loadConnections()
-              }, 1000)
-            }
-          } catch (e) {
-            // Ignore cross-origin errors
-          }
-        }, 1000)
-        
-        // Auto-close timer (5 minutes)
-        setTimeout(() => {
-          clearInterval(pollTimer)
-          if (authWindow && !authWindow.closed) {
-            authWindow.close()
-          }
-        }, 300000)
-        
-        setSuccess(`Opening ${platformId} authentication window...`)
-        setTimeout(() => setSuccess(null), 3000)
-        
-      } else {
-        throw new Error(response.error || 'Failed to get authentication URL')
-      }
-    } catch (err: any) {
-      console.error('Platform connection error:', err)
-      
-      if (err.message?.includes('401') || err.message?.includes('Unauthorized')) {
-        setError('Please sign in to connect social media accounts')
-      } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
-        setError('Network error. Please check your connection.')
-      } else {
-        setError(err.message || `Failed to connect to ${platformId}`)
-      }
-    } finally {
-      setLoading(false)
-    }
+    // Show production approval popup instead of actual connection
+    setShowApprovalPopup(true)
   }
 
   const disconnectPlatform = async (platformId: string) => {
@@ -418,6 +394,29 @@ const PlatformManager: React.FC<PlatformManagerProps> = ({ onStatsUpdate }) => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Production Approval Popup */}
+      <Dialog open={showApprovalPopup} onOpenChange={setShowApprovalPopup}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="text-center">
+            <DialogTitle className="text-xl font-semibold text-gray-900">
+              Awaiting Production Approval
+            </DialogTitle>
+            <DialogDescription className="text-gray-600 mt-2">
+              Social media platform connections are currently pending production approval. 
+              This feature will be available once our app is approved by the respective platforms.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-center mt-6">
+            <Button 
+              onClick={() => setShowApprovalPopup(false)}
+              className="bg-gray-900 hover:bg-gray-800 text-white px-8"
+            >
+              Got it
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

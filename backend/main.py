@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File
+from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
@@ -8,7 +8,8 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 import uvicorn
 import os
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
+import uuid
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 
@@ -254,13 +255,15 @@ if ROUTERS_AVAILABLE:
         except Exception as ai_error:
             print(f"❌ AI Content router failed to include: {ai_error}")
     
-    # Include new enhanced social router
+    # Include enhanced social router - this provides all social endpoints with service backing
     if SOCIAL_ENHANCED_AVAILABLE:
         try:
             app.include_router(social_enhanced_router, prefix="/api/social", tags=["Social Media Management"])
             print("✅ Enhanced Social router included successfully")
         except Exception as social_error:
             print(f"❌ Enhanced Social router failed to include: {social_error}")
+            import traceback
+            traceback.print_exc()
     
     # Include scheduler router
     if SCHEDULER_ENHANCED_AVAILABLE:
@@ -315,13 +318,15 @@ if ROUTERS_AVAILABLE:
     else:
         print("⚠️ Billboard registration router not available")
     
-    # Include dashboard only if available
+    # Include enhanced dashboard router - this provides all dashboard endpoints with analytics service backing
     if DASHBOARD_ENHANCED_AVAILABLE:
         try:
             app.include_router(dashboard_enhanced_router, prefix="/api/dashboard", tags=["Enhanced Dashboard"])
             print("✅ Enhanced Dashboard router included successfully")
         except Exception as dashboard_include_error:
             print(f"❌ Enhanced Dashboard router failed to include: {dashboard_include_error}")
+            import traceback
+            traceback.print_exc()
     elif DASHBOARD_AVAILABLE:
         try:
             app.include_router(dashboard.router, prefix="/api/dashboard/v1", tags=["Analytics Dashboard"])
@@ -486,45 +491,14 @@ async def api_info():
         }
     }
 
-# Temporary fallback endpoints for social media (while debugging router issues)
-@app.get("/api/social/accounts")
-async def get_social_accounts_fallback():
-    """Temporary fallback for social accounts endpoint"""
-    return {
-        "accounts": [],
-        "message": "No social media accounts connected yet",
-        "available_platforms": ["Instagram", "Facebook", "Twitter", "TikTok"],
-        "status": "ready",
-        "note": "This is a temporary endpoint while debugging router issues"
-    }
+# All endpoints now handled by proper routers with service backing
 
-@app.post("/api/social/auth/instagram")
-async def connect_instagram_fallback():
-    """Temporary fallback for Instagram connection"""
-    instagram_client_id = os.getenv("INSTAGRAM_CLIENT_ID", "747326327930933")
-    return {
-        "auth_url": f"https://www.facebook.com/v18.0/dialog/oauth?client_id={instagram_client_id}&redirect_uri=https://ignitch.vercel.app/auth/instagram/callback&scope=instagram_basic,instagram_content_publish,pages_show_list,pages_read_engagement&response_type=code&state=temp_state_token",
-        "state": "temp_state_token",
-        "platform": "instagram",
-        "status": "ready",
-        "message": "Visit the auth_url to connect your Instagram account",
-        "note": "This is a temporary endpoint while debugging router issues"
-    }
+# Media upload handled by media router with proper service backing
 
-@app.post("/api/social/auth/facebook")
-async def connect_facebook_fallback():
-    """Temporary fallback for Facebook connection"""
-    facebook_client_id = os.getenv("FACEBOOK_CLIENT_ID", "747326327930933")
-    return {
-        "auth_url": f"https://www.facebook.com/v18.0/dialog/oauth?client_id={facebook_client_id}&redirect_uri=https://ignitch.vercel.app/auth/facebook/callback&scope=pages_manage_posts,pages_read_engagement,business_management&response_type=code&state=temp_state_token",
-        "state": "temp_state_token", 
-        "platform": "facebook",
-        "status": "ready",
-        "message": "Visit the auth_url to connect your Facebook account",
-        "note": "This is a temporary endpoint while debugging router issues"
-    }
+# All API endpoints handled by proper routers with service implementations
 
-# Direct dashboard endpoint to bypass import issues
+# Dashboard endpoints handled by dashboard_enhanced router with analytics service
+
 @app.get("/api/dashboard/overview")
 async def dashboard_overview():
     """Dashboard overview with real zero data - bypasses import issues"""

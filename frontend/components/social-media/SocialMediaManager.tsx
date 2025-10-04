@@ -321,6 +321,7 @@ const SocialMediaManager: React.FC<SocialMediaManagerProps> = ({ className = '',
                     onStatsUpdate={setStats} 
                     apiService={api}
                     refreshStats={loadDashboardStats}
+                    onNavigate={setActiveTab}
                   />
                 </Suspense>
               </div>

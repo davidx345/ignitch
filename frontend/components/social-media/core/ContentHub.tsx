@@ -93,51 +93,17 @@ const ContentHub: React.FC<ContentHubProps> = ({ onStatsUpdate }) => {
           })
         }
       } else {
-        // Fallback to mock data if API fails
-        console.log('Using mock content data')
-        const mockContent: SocialContent[] = [
-          {
-            id: '1',
-            platform: 'instagram',
-            content: 'Check out our latest product launch! 🚀 #innovation #startup',
-            hashtags: ['innovation', 'startup', 'product'],
-            scheduled_for: '2025-09-10T14:00:00Z',
-            status: 'scheduled',
-            engagement_score: 85,
-            ai_generated: true,
-            created_at: '2025-09-09T10:00:00Z'
-          },
-          {
-            id: '2',
-            platform: 'facebook',
-            content: 'Behind the scenes of our development process. Hard work pays off!',
-            hashtags: ['development', 'team', 'progress'],
-            status: 'draft',
-            engagement_score: 72,
-            ai_generated: false,
-            created_at: '2025-09-09T09:30:00Z'
-          },
-          {
-            id: '3',
-            platform: 'twitter',
-            content: 'Just published our new blog post about social media automation!',
-            hashtags: ['automation', 'blog', 'socialmedia'],
-            status: 'published',
-            engagement_score: 91,
-            ai_generated: false,
-            created_at: '2025-09-08T16:20:00Z'
-          }
-        ]
+        // Show empty state instead of mock data
+        console.log('No content available - showing empty state')
+        setContent([])
         
-        setContent(mockContent)
-        
-        // Update parent stats with mock data
+        // Update parent stats with zero values
         if (onStatsUpdate) {
           onStatsUpdate({
-            totalPosts: mockContent.length,
-            scheduledPosts: mockContent.filter(c => c.status === 'scheduled').length,
-            connectedPlatforms: 3,
-            avgEngagement: 82.6
+            totalPosts: 0,
+            scheduledPosts: 0,
+            connectedPlatforms: 0,
+            avgEngagement: 0
           })
         }
       }
@@ -145,20 +111,18 @@ const ContentHub: React.FC<ContentHubProps> = ({ onStatsUpdate }) => {
       console.error('Failed to load content:', error)
       setError('Failed to load content. Please try again.')
       
-      // Still provide mock data on error for better UX
-      const fallbackContent: SocialContent[] = [
-        {
-          id: 'demo-1',
-          platform: 'instagram',
-          content: 'Welcome to your content hub! Start creating amazing content.',
-          hashtags: ['welcome', 'content', 'create'],
-          status: 'draft',
-          engagement_score: 75,
-          ai_generated: false,
-          created_at: new Date().toISOString()
-        }
-      ]
-      setContent(fallbackContent)
+      // Show empty state instead of fallback content
+      setContent([])
+      
+      // Update parent stats with zero values
+      if (onStatsUpdate) {
+        onStatsUpdate({
+          totalPosts: 0,
+          scheduledPosts: 0,
+          connectedPlatforms: 0,
+          avgEngagement: 0
+        })
+      }
     } finally {
       setLoading(false)
     }
