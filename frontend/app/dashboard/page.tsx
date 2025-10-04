@@ -26,7 +26,6 @@ import {
   Heart,
   Brain,
   Bot,
-  Zap,
   Target,
   Loader,
   ChevronUp,
@@ -414,7 +413,6 @@ export default function Dashboard() {
             <div className="flex items-center space-x-8">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <h1 className="text-xl font-bold text-neutral-900">Ignitch</h1>
@@ -519,10 +517,6 @@ export default function Dashboard() {
             </div>
             
             <div className="flex items-center space-x-3">
-              <Badge variant="secondary" className="bg-brand-primary/10 text-brand-primary border-brand-primary/20">
-                <Star className="w-3 h-3 mr-1" />
-                Pro Account
-              </Badge>
             </div>
           </div>
         </motion.div>
