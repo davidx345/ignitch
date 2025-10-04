@@ -246,68 +246,97 @@ export function AutoPilotMode() {
         </div>
         
         <div className="flex items-center gap-4">
-          {config && (
-            <div className="flex items-center gap-2">
-              <Label htmlFor="autopilot-toggle">Auto-Pilot</Label>
-              <Switch
-                id="autopilot-toggle"
-                checked={config.is_enabled}
-                onCheckedChange={toggleAutoPilot}
-                disabled={saving}
-              />
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            <Label className="text-gray-500">Auto-Pilot</Label>
+            <Switch
+              checked={false}
+              disabled={true}
+              className="opacity-50"
+            />
+            <span className="text-sm text-gray-500">Coming Soon</span>
+          </div>
         </div>
       </div>
 
-      {/* Status Alert */}
-      {config?.is_enabled ? (
-        <Alert className="border-green-200 bg-green-50">
-          <CheckCircle className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-800">
-            Auto-Pilot is active and managing your content strategy. 
-            {stats?.next_post_time && ` Next post scheduled for ${formatDate(stats.next_post_time)}.`}
-          </AlertDescription>
-        </Alert>
-      ) : (
-        <Alert>
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            Auto-Pilot is currently disabled. Enable it to start autonomous content creation and posting.
-          </AlertDescription>
-        </Alert>
-      )}
+      {/* Coming Soon Alert */}
+      <Alert className="border-purple-200 bg-purple-50">
+        <AlertTriangle className="h-4 w-4 text-purple-600" />
+        <AlertDescription className="text-purple-800">
+          <strong>Auto-Pilot Mode is under development!</strong> This feature is coming soon and will allow AI to manage your content strategy and posting schedule automatically.
+        </AlertDescription>
+      </Alert>
 
-      {/* Stats Overview */}
-      {stats && (
+      {/* Coming Soon Content */}
+      <Card className="mt-6">
+        <CardContent className="p-8 text-center">
+          <Bot className="h-16 w-16 text-purple-600 mx-auto mb-4 opacity-50" />
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">Auto-Pilot Mode Coming Soon</h3>
+          <p className="text-gray-600 mb-4">
+            We're working on bringing you intelligent content automation. This feature will include:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto">
+            <div className="flex items-start gap-3">
+              <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+              <div>
+                <p className="font-medium">AI Content Generation</p>
+                <p className="text-sm text-gray-600">Automated post creation based on your goals</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+              <div>
+                <p className="font-medium">Smart Scheduling</p>
+                <p className="text-sm text-gray-600">Optimal timing for maximum engagement</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+              <div>
+                <p className="font-medium">Performance Optimization</p>
+                <p className="text-sm text-gray-600">Continuous improvement based on analytics</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+              <div>
+                <p className="font-medium">Multi-Platform Management</p>
+                <p className="text-sm text-gray-600">Consistent presence across all platforms</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Hide all other content when coming soon */}
+      {false && stats && (
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-blue-600">{stats.posts_generated}</div>
+              <div className="text-2xl font-bold text-blue-600">{stats?.posts_generated}</div>
               <div className="text-sm text-muted-foreground">Posts Generated</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.posts_published}</div>
+              <div className="text-2xl font-bold text-green-600">{stats?.posts_published}</div>
               <div className="text-sm text-muted-foreground">Posts Published</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-purple-600">{stats.avg_performance_score.toFixed(1)}</div>
+              <div className="text-2xl font-bold text-purple-600">{stats?.avg_performance_score.toFixed(1)}</div>
               <div className="text-sm text-muted-foreground">Avg Performance</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-orange-600">{stats.goal_progress.toFixed(1)}%</div>
+              <div className="text-2xl font-bold text-orange-600">{stats?.goal_progress.toFixed(1)}%</div>
               <div className="text-sm text-muted-foreground">Goal Progress</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-indigo-600">{stats.time_saved_hours}</div>
+              <div className="text-2xl font-bold text-indigo-600">{stats?.time_saved_hours}</div>
               <div className="text-sm text-muted-foreground">Hours Saved</div>
             </CardContent>
           </Card>

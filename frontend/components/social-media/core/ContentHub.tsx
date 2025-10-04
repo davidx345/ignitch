@@ -43,9 +43,10 @@ interface SocialContent {
 
 interface ContentHubProps {
   onStatsUpdate?: (stats: any) => void
+  onNavigate?: (tab: string) => void
 }
 
-const ContentHub: React.FC<ContentHubProps> = ({ onStatsUpdate }) => {
+const ContentHub: React.FC<ContentHubProps> = ({ onStatsUpdate, onNavigate }) => {
   const [content, setContent] = useState<SocialContent[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -192,7 +193,10 @@ const ContentHub: React.FC<ContentHubProps> = ({ onStatsUpdate }) => {
                 Manage and review all your social media content
               </CardDescription>
             </div>
-            <Button className="bg-gray-900 text-white hover:bg-gray-800">
+            <Button 
+              className="bg-gray-900 text-white hover:bg-gray-800"
+              onClick={() => onNavigate && onNavigate('create')}
+            >
               <Plus className="w-4 h-4 mr-2" />
               New Content
             </Button>
@@ -258,7 +262,10 @@ const ContentHub: React.FC<ContentHubProps> = ({ onStatsUpdate }) => {
                   : 'Start creating content to see it here'
                 }
               </p>
-              <Button className="bg-gray-900 text-white hover:bg-gray-800">
+              <Button 
+                className="bg-gray-900 text-white hover:bg-gray-800"
+                onClick={() => onNavigate && onNavigate('create')}
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 Create Content
               </Button>

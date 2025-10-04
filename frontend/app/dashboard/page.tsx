@@ -15,7 +15,6 @@ import OnboardingTrigger from "@/components/onboarding/OnboardingTrigger"
 import { useAuth } from "@/contexts/auth-context"
 import { useRouter } from "next/navigation"
 import { 
-  Sparkles, 
   Upload, 
   BarChart3, 
   Calendar, 
@@ -781,7 +780,7 @@ export default function Dashboard() {
                           >
                             <div className="flex items-start space-x-3">
                               <div className="w-6 h-6 bg-accent-orange/10 rounded-full flex items-center justify-center mt-0.5">
-                                <Sparkles className="w-3 h-3 text-accent-orange" />
+                                <TrendingUp className="w-3 h-3 text-accent-orange" />
                               </div>
                               <p className="body-small text-neutral-700 leading-relaxed flex-1">{tip}</p>
                             </div>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Sparkles, Megaphone, ArrowRight, Users, Zap } from 'lucide-react'
+import { X, Megaphone, ArrowRight, Users, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 
@@ -18,9 +18,9 @@ export default function OnboardingGuide({ onClose, onNavigate }: OnboardingGuide
   const steps = [
     {
       id: 'welcome',
-      title: 'Welcome to Ignitch! 🎉',
+      title: 'Welcome to Ignitch!',
       description: 'Your all-in-one marketing automation platform',
-      icon: <Sparkles className="w-8 h-8 text-purple-600" />,
+      icon: <ArrowRight className="w-8 h-8 text-purple-600" />,
       content: (
         <div className="text-center space-y-4">
           <div className="bg-gradient-to-r from-purple-100 to-blue-100 p-6 rounded-lg">
@@ -51,7 +51,7 @@ export default function OnboardingGuide({ onClose, onNavigate }: OnboardingGuide
       content: (
         <div className="space-y-4">
           <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-lg border border-blue-200">
-            <h4 className="font-semibold text-blue-900 mb-3">🎯 Social Media Manager Features:</h4>
+            <h4 className="font-semibold text-blue-900 mb-3">Social Media Manager Features:</h4>
             <ul className="space-y-2 text-blue-800">
               <li className="flex items-center gap-2">
                 <Zap className="w-4 h-4" />
@@ -252,7 +252,7 @@ export default function OnboardingGuide({ onClose, onNavigate }: OnboardingGuide
                       className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
                     >
                       Get Started
-                      <Sparkles className="w-4 h-4" />
+                      <ArrowRight className="w-4 h-4" />
                     </Button>
                   )}
                 </div>

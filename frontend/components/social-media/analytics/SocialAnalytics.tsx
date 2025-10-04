@@ -34,7 +34,6 @@ import {
   Hash,
   Brain,
   Lightbulb,
-  Sparkles,
   TrendingDown
 } from "lucide-react"
 
@@ -63,84 +62,13 @@ export default function Analytics() {
   const [goalFilter, setGoalFilter] = useState("all")
   const [competitorView, setCompetitorView] = useState("overview")
 
-  // Enhanced Phase 4 data
-  const goals = [
-    { id: 1, title: "Increase Instagram Engagement", target: 1000, current: 847, deadline: "2024-01-15", status: "on-track", type: "engagement" },
-    { id: 2, title: "Facebook Page Followers", target: 5000, current: 4205, deadline: "2024-02-01", status: "ahead", type: "followers" },
-    { id: 3, title: "Monthly Revenue Target", target: 10000, current: 6500, deadline: "2024-01-31", status: "behind", type: "revenue" },
-    { id: 4, title: "Content Creation Goal", target: 50, current: 38, deadline: "2024-01-20", status: "on-track", type: "content" }
-  ]
-
-  const competitors = [
-    { name: "Competitor A", followers: 25000, engagement: 3.2, growth: 12, trend: "up" },
-    { name: "Competitor B", followers: 18000, engagement: 4.1, growth: -2, trend: "down" },
-    { name: "Competitor C", followers: 32000, engagement: 2.8, growth: 8, trend: "up" },
-    { name: "Your Brand", followers: 15000, engagement: 3.8, growth: 15, trend: "up" }
-  ]
-
-  const contentPerformance = [
-    { type: "Video", posts: 12, avgEngagement: 4.2, bestTime: "6:00 PM", topPerformer: "Product Demo #3" },
-    { type: "Image", posts: 25, avgEngagement: 3.1, bestTime: "12:00 PM", topPerformer: "Behind the Scenes" },
-    { type: "Carousel", posts: 8, avgEngagement: 5.1, bestTime: "8:00 AM", topPerformer: "Product Features" },
-    { type: "Story", posts: 45, avgEngagement: 2.8, bestTime: "9:00 PM", topPerformer: "Daily Updates" }
-  ]
-
-  // Phase 5: Advanced Trend Integration
-  const trendingHashtags = [
-    { tag: "#SmallBusiness", volume: 245000, growth: 18, opportunity: "high" },
-    { tag: "#SustainableLifestyle", volume: 189000, growth: 23, opportunity: "high" },
-    { tag: "#DigitalMarketing", volume: 567000, growth: 12, opportunity: "medium" },
-    { tag: "#EntrepreneurLife", volume: 134000, growth: 31, opportunity: "high" },
-    { tag: "#TechTrends", volume: 89000, growth: -5, opportunity: "low" }
-  ]
-
-  const emergingTrends = [
-    { 
-      trend: "AI-Generated Content", 
-      growth: 145, 
-      prediction: "Will peak in 2-3 weeks",
-      relevance: 92,
-      actionable: "Create AI-focused tutorials"
-    },
-    { 
-      trend: "Micro-Influencer Partnerships", 
-      growth: 78, 
-      prediction: "Steady growth expected",
-      relevance: 85,
-      actionable: "Connect with local influencers"
-    },
-    { 
-      trend: "Sustainable Business Practices", 
-      growth: 156, 
-      prediction: "Long-term upward trend",
-      relevance: 89,
-      actionable: "Highlight your eco-friendly initiatives"
-    }
-  ]
-
-  const contentPredictions = [
-    {
-      contentType: "Video Tutorial",
-      predictedEngagement: 87,
-      bestTime: "Tuesday 6:00 PM",
-      estimatedReach: 12500,
-      confidence: 94
-    },
-    {
-      contentType: "Behind the Scenes",
-      predictedEngagement: 73,
-      bestTime: "Thursday 2:00 PM", 
-      estimatedReach: 8900,
-      confidence: 88
-    },
-    {
-      contentType: "User Generated Content",
-      predictedEngagement: 91,
-      bestTime: "Saturday 10:00 AM",
-      estimatedReach: 15600,
-      confidence: 92
-    }
-  ]
+  // Remove all mock data - show empty state
+  const goals: any[] = []
+  const competitors: any[] = []
+  const contentPerformance: any[] = []
+  const trendingHashtags: any[] = []
+  const emergingTrends: any[] = []
+  const contentPredictions: any[] = []
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -962,7 +890,7 @@ export default function Analytics() {
               {/* Content Performance Predictions */}
               <Card className="p-4">
                 <h4 className="font-semibold mb-4 flex items-center">
-                  <Sparkles className="w-5 h-5 mr-2 text-purple-600" />
+                  <TrendingUp className="w-5 h-5 mr-2 text-purple-600" />
                   AI Performance Predictions
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

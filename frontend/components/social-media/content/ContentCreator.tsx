@@ -16,7 +16,6 @@ import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Switch } from '@/components/ui/switch'
 import { 
-  Sparkles, 
   Wand2, 
   Target, 
   Hash, 
@@ -38,7 +37,8 @@ import {
   AlertCircle,
   Upload,
   Calendar,
-  Clock
+  Clock,
+  Zap
 } from 'lucide-react'
 import { useApiService } from '@/lib/api'
 import { useAuth } from '@/contexts/auth-context'
@@ -259,7 +259,7 @@ const ContentCreator: React.FC<ContentCreatorProps> = ({
       const mockContent: GeneratedContent[] = selectedPlatforms.map((platform, index) => ({
         id: `demo-content-${Date.now()}-${index}`,
         platform,
-        content: `${prompt}\n\n🚀 Excited to share this with you!\n\n#${platform} #socialmedia #content #growth`,
+        content: `${prompt}\n\nExcited to share this with you!\n\n#${platform} #socialmedia #content #growth`,
         hashtags: [platform, 'socialmedia', 'content', 'growth'],
         engagement_prediction: Math.random() * 20 + 70,
         optimization_score: Math.floor(Math.random() * 20) + 70
@@ -538,7 +538,7 @@ const ContentCreator: React.FC<ContentCreatorProps> = ({
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 mr-2" />
+                  <Zap className="w-4 h-4 mr-2" />
                   Generate Content
                 </>
               )}

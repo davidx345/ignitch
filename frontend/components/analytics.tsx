@@ -828,10 +828,10 @@ export default function Analytics() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="text-purple-800 mb-2">
-                      <strong>🔥 Hot Trend:</strong> Sustainable fashion content is performing 40% better than average
+                      <strong>Hot Trend:</strong> Sustainable fashion content is performing 40% better than average
                     </p>
                     <p className="text-purple-800 mb-2">
-                      <strong>📈 Growth Opportunity:</strong> Video content on TikTok showing 3x engagement increase
+                      <strong>Growth Opportunity:</strong> Video content on TikTok showing 3x engagement increase
                     </p>
                   </div>
                   <div>
@@ -839,7 +839,7 @@ export default function Analytics() {
                       <strong>⏰ Timing Insight:</strong> Evening posts (6-8 PM) generate 25% more conversions
                     </p>
                     <p className="text-purple-800 mb-2">
-                      <strong>🎯 Audience Behavior:</strong> Your audience is most active on weekends
+                      <strong>Audience Behavior:</strong> Your audience is most active on weekends
                     </p>
                   </div>
                 </div>

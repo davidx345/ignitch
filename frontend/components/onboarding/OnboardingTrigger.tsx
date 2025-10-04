@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { HelpCircle, Sparkles } from 'lucide-react'
+import { HelpCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import OnboardingGuide from './OnboardingGuide'
 
@@ -69,7 +69,7 @@ export default function OnboardingTrigger({ onNavigate, showInitialGuide = false
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
               >
-                <Sparkles className="w-6 h-6" />
+                <HelpCircle className="w-6 h-6" />
               </motion.div>
             </Button>
           </motion.div>

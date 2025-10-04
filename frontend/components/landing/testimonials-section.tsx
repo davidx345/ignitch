@@ -35,7 +35,7 @@ export default function TestimonialsSection() {
                 backdropFilter: 'blur(10px)'
               }}
             >
-              ⭐ Verified Success Stories
+              Verified Success Stories
             </Badge>
           </motion.div>
 

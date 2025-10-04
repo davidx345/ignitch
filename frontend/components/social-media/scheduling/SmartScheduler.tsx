@@ -124,39 +124,15 @@ const SmartScheduler: React.FC<SmartSchedulerProps> = ({ onStatsUpdate }) => {
           })
         }
       } else {
-        // Fallback to mock data
-        console.log('Using mock scheduled posts')
-        const mockPosts: ScheduledPost[] = [
-          {
-            id: '1',
-            content: 'Check out our latest product launch! 🚀',
-            platforms: ['instagram', 'facebook'],
-            scheduled_for: new Date(2025, 8, 12, 14, 30),
-            status: 'scheduled',
-            optimal_time: true,
-            engagement_prediction: 87,
-            content_type: 'text',
-            created_at: new Date()
-          },
-          {
-            id: '2',
-            content: 'Behind the scenes content from our team',
-            platforms: ['instagram'],
-            scheduled_for: new Date(2025, 8, 13, 10, 0),
-            status: 'scheduled',
-            optimal_time: true,
-            engagement_prediction: 92,
-            content_type: 'image',
-            created_at: new Date()
-          }
-        ]
+        // Show empty state instead of mock data
+        console.log('No scheduled posts available - showing empty state')
+        setScheduledPosts([])
         
-        setScheduledPosts(mockPosts)
-        
+        // Update parent stats with zero values
         if (onStatsUpdate) {
           onStatsUpdate({
-            scheduledPosts: mockPosts.length,
-            upcomingPosts: mockPosts.filter(p => p.scheduled_for > new Date()).length
+            scheduledPosts: 0,
+            upcomingPosts: 0
           })
         }
       }

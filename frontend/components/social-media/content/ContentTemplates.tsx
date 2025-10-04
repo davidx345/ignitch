@@ -1,7 +1,7 @@
 /**
  * Content Templates Component - Phase 2
  * Template library and customization system
- * Integrates with existing BusinessGoal enums and content generation
+ * Integrates with existing BusinessGoal enums and content ge      content: `Behind the Scenes: {{process_name}}eration
  */
 
 'use client'
@@ -22,7 +22,7 @@ import {
   Edit, 
   Trash2,
   Filter,
-  Sparkles,
+  TrendingUp,
   Target,
   Zap
 } from 'lucide-react'
@@ -83,11 +83,11 @@ const ContentTemplates: React.FC<ContentTemplatesProps> = ({
       category: 'promotional',
       platforms: ['instagram', 'facebook', 'linkedin'],
       businessGoal: 'sales',
-      content: `🚀 Exciting News! Introducing {{product_name}} 
+      content: `Exciting News! Introducing {{product_name}} 
 
 {{product_description}}
 
-✨ Key Features:
+Key Features:
 • {{feature_1}}
 • {{feature_2}}
 • {{feature_3}}
@@ -118,7 +118,7 @@ Available now at {{website_url}}
       category: 'educational',
       platforms: ['instagram', 'linkedin', 'twitter'],
       businessGoal: 'awareness',
-      content: `💡 Pro Tip: {{tip_title}}
+      content: `Pro Tip: {{tip_title}}
 
 {{tip_explanation}}
 
@@ -158,7 +158,7 @@ Today I'm sharing a peek into {{what_youre_showing}}
 
 {{interesting_detail}}
 
-✨ Fun fact: {{fun_fact}}
+Fun fact: {{fun_fact}}
 
 What would you like to see behind the scenes next?
 
@@ -184,13 +184,13 @@ What would you like to see behind the scenes next?
       category: 'promotional',
       platforms: ['linkedin', 'facebook', 'instagram'],
       businessGoal: 'sales',
-      content: `🌟 Customer Success Story
+      content: `Customer Success Story
 
 Meet {{customer_name}} who achieved {{achievement}}!
 
 "{{customer_quote}}"
 
-📈 Results:
+Results:
 • {{result_1}}
 • {{result_2}}
 • {{result_3}}
@@ -577,7 +577,7 @@ Ready to achieve similar results? {{call_to_action}}
                   )}
                   className="bg-gray-900 hover:bg-gray-800 text-white"
                 >
-                  <Sparkles className="w-4 h-4 mr-2" />
+                  <TrendingUp className="w-4 h-4 mr-2" />
                   Create Content
                 </Button>
               </div>

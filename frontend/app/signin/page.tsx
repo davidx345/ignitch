@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
 import { useAuth } from "@/contexts/auth-context"
-import { Eye, EyeOff, Sparkles, ArrowRight, Mail, Lock } from "lucide-react"
+import { Eye, EyeOff, ArrowRight, Mail, Lock } from "lucide-react"
 
 export default function SignInPage() {
   const router = useRouter()
@@ -66,8 +66,8 @@ export default function SignInPage() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
           <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+              I
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
               Ignitch
